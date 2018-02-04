@@ -15,6 +15,10 @@ public:
     
     // implement the "static create()" method manually
 	CREATE_FUNC(GameScene);
+
+private:
+	bool touchBegan(cocos2d::Touch * touch, cocos2d::Event * event);
+	void touchEnded(cocos2d::Touch * touch, cocos2d::Event * event);
 };
 
 #endif // __HELLOWORLD_SCENE_H__

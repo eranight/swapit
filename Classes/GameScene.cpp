@@ -48,6 +48,11 @@ bool GameScene::init()
 	blueball->setPosition(Vec2((origin + visibleSize).x - ballSize * 2.0f, ballSize));
 	this->addChild(blueball);
 
+	auto touchListener = EventListenerTouchOneByOne::create();
+	touchListener->onTouchBegan = CC_CALLBACK_2(GameScene::touchBegan, this);
+	touchListener->onTouchEnded = CC_CALLBACK_2(GameScene::touchEnded, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+
     return true;
 }
 
@@ -67,4 +72,14 @@ void GameScene::menuCloseCallback(Ref* pSender)
     //_eventDispatcher->dispatchEvent(&customEndEvent);
     
     
+}
+
+bool GameScene::touchBegan(Touch * touch, Event * event)
+{
+	return true;
+}
+
+void GameScene::touchEnded(Touch * touch, Event * event)
+{
+
 }
