@@ -1,0 +1,11 @@
+proj.android/
+proj.ios_mac/
+proj.linux/
+proj.tizen/
+proj.win10/
+proj.win32/
+proj.win8.1-universal/
+cocos2d/
+proj.android-studio/
+.cocos-project.json
+CMakeLists.txt
