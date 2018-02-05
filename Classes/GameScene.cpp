@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "SimpleAudioEngine.h"
+#include "PlayingLayer.h"
 
 USING_NS_CC;
 
@@ -33,25 +34,8 @@ bool GameScene::init()
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 1);
 
-	auto spriteBall = Sprite::create("ball.png");
-	float ballSize = spriteBall->getContentSize().height * Director::getInstance()->getContentScaleFactor();
-
-	auto redball = Sprite::createWithTexture(spriteBall->getTexture());
-	redball->setAnchorPoint(Vec2(0.0f, 0.0f));
-	redball->setColor(Color3B::RED);
-	redball->setPosition(Vec2(ballSize, ballSize));
-	this->addChild(redball);
-
-	auto blueball = Sprite::createWithTexture(spriteBall->getTexture());
-	blueball->setAnchorPoint(Vec2(0.0f, 0.0f));
-	blueball->setColor(Color3B::BLUE);
-	blueball->setPosition(Vec2((origin + visibleSize).x - ballSize * 2.0f, ballSize));
-	this->addChild(blueball);
-
-	auto touchListener = EventListenerTouchOneByOne::create();
-	touchListener->onTouchBegan = CC_CALLBACK_2(GameScene::touchBegan, this);
-	touchListener->onTouchEnded = CC_CALLBACK_2(GameScene::touchEnded, this);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+	auto playingLayer = PlayingLayer::create();
+	this->addChild(playingLayer);
 
     return true;
 }
@@ -72,14 +56,4 @@ void GameScene::menuCloseCallback(Ref* pSender)
     //_eventDispatcher->dispatchEvent(&customEndEvent);
     
     
-}
-
-bool GameScene::touchBegan(Touch * touch, Event * event)
-{
-	return true;
-}
-
-void GameScene::touchEnded(Touch * touch, Event * event)
-{
-
 }
