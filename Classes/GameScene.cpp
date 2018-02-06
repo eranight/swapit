@@ -19,15 +19,14 @@ bool GameScene::init()
 		return false;
 	}
     
+	Director::getInstance()->getTextureCache()->addImage("ball.png");
+
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	Texture2D * ballTexture = Director::getInstance()->getTextureCache()->addImage("ball.png");
-	float ballSize = ballTexture->getContentSize().height * Director::getInstance()->getContentScaleFactor();
-
-	float leftColumn = origin.x + ballSize * 1.5f;
 	float centerColumn = (origin + visibleSize).x * 0.5f;
-	float rightColumn = (origin + visibleSize).x - ballSize * 1.5f;
+	float leftColumn = (origin + visibleSize).x * 0.2f;
+	float rightColumn = (origin + visibleSize).x * 0.8f;
 
     auto closeItem = MenuItemImage::create(
                                            "CloseNormal.png",
