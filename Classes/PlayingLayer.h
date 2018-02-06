@@ -14,6 +14,12 @@ public:
 		StandOnOppositeSides
 	};
 
+	enum class BallOrder
+	{
+		RedBlue,
+		BlueRed
+	};
+
 public:
 	virtual ~PlayingLayer();
 
@@ -26,9 +32,18 @@ private:
 	bool touchBegan(cocos2d::Touch * touch, cocos2d::Event * event);
 	void touchEnded(cocos2d::Touch * touch, cocos2d::Event * event);
 
+	void setStandInCenterState();
+	void setStandOnOppositeSidesState();
+
+	void changeVisibility(float violetVisibility);
+
 private:
+	float velocity;
 	BallState state;
-	cocos2d::MoveBy * moveToCenterAction;
+	BallOrder ballOrder;
+	cocos2d::Vec2 centerPosition;
+	cocos2d::Vec2 leftPosition;
+	cocos2d::Vec2 rightPosition;
 
 	cocos2d::Sprite * redBall;
 	cocos2d::Sprite * blueBall;

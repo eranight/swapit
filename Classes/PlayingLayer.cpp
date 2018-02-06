@@ -3,11 +3,8 @@
 
 USING_NS_CC;
 
-static const float tocentertime = 0.7f;
-
 PlayingLayer::~PlayingLayer()
 {
-	moveToCenterAction->release();
 }
 
 bool PlayingLayer::init()
@@ -18,6 +15,7 @@ bool PlayingLayer::init()
 	}
     
 	state = BallState::StandOnOppositeSides;
+	ballOrder = BallOrder::RedBlue;
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -25,25 +23,32 @@ bool PlayingLayer::init()
 	auto spriteBall = Sprite::create("ball.png");
 	float ballSize = spriteBall->getContentSize().height * Director::getInstance()->getContentScaleFactor();
 
+	centerPosition = Vec2((origin + visibleSize).x * 0.5f, ballSize);
+	leftPosition = Vec2(origin.x + ballSize * 1.5f, ballSize);
+	rightPosition = Vec2((origin + visibleSize).x - ballSize * 1.5f, ballSize);
+
+	velocity = (centerPosition - leftPosition).x / 0.7f;
+
 	redBall = Sprite::createWithTexture(spriteBall->getTexture());
-	redBall->setAnchorPoint(Vec2(0.0f, 0.0f));
 	redBall->setColor(Color3B::RED);
-	redBall->setPosition(Vec2(ballSize, ballSize));
+	redBall->setPosition(leftPosition);
 	this->addChild(redBall);
 
 	blueBall = Sprite::createWithTexture(spriteBall->getTexture());
-	blueBall->setAnchorPoint(Vec2(0.0f, 0.0f));
 	blueBall->setColor(Color3B::BLUE);
-	blueBall->setPosition(Vec2((origin + visibleSize).x - ballSize * 2.0f, ballSize));
+	blueBall->setPosition(rightPosition);
 	this->addChild(blueBall);
+
+	violetBall = Sprite::createWithTexture(spriteBall->getTexture());
+	violetBall->setColor(Color3B::MAGENTA);
+	violetBall->setPosition(centerPosition);
+	violetBall->setVisible(false);
+	this->addChild(violetBall);
 
 	auto touchListener = EventListenerTouchOneByOne::create();
 	touchListener->onTouchBegan = CC_CALLBACK_2(PlayingLayer::touchBegan, this);
 	touchListener->onTouchEnded = CC_CALLBACK_2(PlayingLayer::touchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
-
-	moveToCenterAction = MoveBy::create(tocentertime, Vec2((origin + visibleSize).x * 0.5f - 1.5f * ballSize, 0.0f));
-	moveToCenterAction->retain();
 
     return true;
 }
@@ -54,12 +59,11 @@ bool PlayingLayer::touchBegan(Touch * touch, Event * event)
 	{
 		CCLOG("starts moving to center");
 		state = BallState::MovingToCenter;
-		redBall->runAction(moveToCenterAction->clone());
-		blueBall->runAction(moveToCenterAction->reverse());
-	}
-	else
-	{
-		CCLOG("wrong state");
+		float timer = (centerPosition - leftPosition).x / velocity;
+		redBall->runAction(MoveTo::create(timer, centerPosition));
+		blueBall->runAction(MoveTo::create(timer, centerPosition));
+		auto sequence = Sequence::createWithTwoActions(DelayTime::create(timer), CallFunc::create(CC_CALLBACK_0(PlayingLayer::setStandInCenterState, this)));
+		this->runAction(sequence);
 	}
 	return true;
 }
@@ -69,10 +73,54 @@ void PlayingLayer::touchEnded(Touch * touch, Event * event)
 	if (state == BallState::MovingToCenter || state == BallState::StandInCenter)
 	{
 		CCLOG("starts moving to opposite sides");
+		if (state == BallState::MovingToCenter)
+		{
+			this->stopAllActions();
+		}
+		else
+		{
+			changeVisibility(false);
+		}
 		state = BallState::MovingToOppositeSides;
+		redBall->stopAllActions();
+		blueBall->stopAllActions();
+		float timer = 0.0f;
+		if (ballOrder == BallOrder::RedBlue)
+		{
+			float t1 = (rightPosition - redBall->getPosition()).x / velocity;
+			redBall->runAction(MoveTo::create(t1, rightPosition));
+			float t2 = (blueBall->getPosition() - leftPosition).x / velocity;
+			blueBall->runAction(MoveTo::create(t2, leftPosition));
+			timer = MAX(t1, t2);
+		}
+		else
+		{
+			float t1 = (redBall->getPosition() - leftPosition).x / velocity;
+			redBall->runAction(MoveTo::create(t1, leftPosition));
+			float t2 = (rightPosition - blueBall->getPosition()).x / velocity;
+			blueBall->runAction(MoveTo::create(t2, rightPosition));
+			timer = MAX(t1, t2);
+		}
+		auto sequence = Sequence::createWithTwoActions(DelayTime::create(timer), CallFunc::create(CC_CALLBACK_0(PlayingLayer::setStandOnOppositeSidesState, this)));
+		this->runAction(sequence);
 	}
-	else
-	{
-		CCLOG("wrong state");
-	}
+}
+
+void PlayingLayer::setStandInCenterState()
+{
+	state = BallState::StandInCenter;
+	changeVisibility(true);
+}
+
+void PlayingLayer::setStandOnOppositeSidesState()
+{
+	state = BallState::StandOnOppositeSides;
+	ballOrder = ballOrder == BallOrder::RedBlue ? BallOrder::BlueRed : BallOrder::RedBlue;
+}
+
+void PlayingLayer::changeVisibility(float violetVisibility)
+{
+	violetBall->setVisible(violetVisibility);
+	redBall->setVisible(!violetVisibility);
+	blueBall->setVisible(!violetVisibility);
 }
