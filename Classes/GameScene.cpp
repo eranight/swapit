@@ -22,6 +22,13 @@ bool GameScene::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+	Texture2D * ballTexture = Director::getInstance()->getTextureCache()->addImage("ball.png");
+	float ballSize = ballTexture->getContentSize().height * Director::getInstance()->getContentScaleFactor();
+
+	float leftColumn = origin.x + ballSize * 1.5f;
+	float centerColumn = (origin + visibleSize).x * 0.5f;
+	float rightColumn = (origin + visibleSize).x - ballSize * 1.5f;
+
     auto closeItem = MenuItemImage::create(
                                            "CloseNormal.png",
                                            "CloseSelected.png",
@@ -34,7 +41,7 @@ bool GameScene::init()
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 1);
 
-	auto playingLayer = PlayingLayer::create();
+	auto playingLayer = PlayingLayer::create(leftColumn, centerColumn, rightColumn);
 	this->addChild(playingLayer);
 
     return true;

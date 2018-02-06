@@ -24,8 +24,8 @@ public:
 	virtual ~PlayingLayer();
 
 public:
-    virtual bool init();
-	CREATE_FUNC(PlayingLayer);
+	bool init(float leftColumn, float centerColumn, float rightColumn);
+	static PlayingLayer * create(float leftColumn, float centerColumn, float rightColumn);
 	BallState getState() { return state; }
 
 private:

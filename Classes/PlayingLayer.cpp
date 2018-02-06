@@ -14,7 +14,22 @@ PlayingLayer::~PlayingLayer()
 {
 }
 
-bool PlayingLayer::init()
+PlayingLayer * PlayingLayer::create(float leftColumn, float centerColumn, float rightColumn)
+{
+	PlayingLayer * pRet = new (std::nothrow) PlayingLayer();
+	if (pRet && pRet->init(leftColumn, centerColumn, rightColumn))
+	{
+		pRet->autorelease();
+		return pRet;
+	}
+	else
+	{
+		CC_SAFE_DELETE(pRet);
+		return nullptr;
+	}
+}
+
+bool PlayingLayer::init(float leftColumn, float centerColumn, float rightColumn)
 {
 	if (!Layer::init())
 	{
@@ -27,26 +42,26 @@ bool PlayingLayer::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto spriteBall = Sprite::create("ball.png");
-	float ballSize = spriteBall->getContentSize().height * Director::getInstance()->getContentScaleFactor();
+	Texture2D * tx = Director::getInstance()->getTextureCache()->getTextureForKey(FileUtils::getInstance()->fullPathForFilename("ball.png"));
+	float ballSize = tx->getContentSize().height * Director::getInstance()->getContentScaleFactor();
 
-	centerPosition = Vec2((origin + visibleSize).x * 0.5f, ballSize);
-	leftPosition = Vec2(origin.x + ballSize * 1.5f, ballSize);
-	rightPosition = Vec2((origin + visibleSize).x - ballSize * 1.5f, ballSize);
+	centerPosition = Vec2(centerColumn, ballSize);
+	leftPosition = Vec2(leftColumn, ballSize);
+	rightPosition = Vec2(rightColumn, ballSize);
 
 	velocity = (centerPosition - leftPosition).x / 0.7f;
 
-	redBall = Sprite::createWithTexture(spriteBall->getTexture());
+	redBall = Sprite::createWithTexture(tx);
 	redBall->setColor(Color3B::RED);
 	redBall->setPosition(leftPosition);
 	this->addChild(redBall, static_cast<int>(BallZOrder::left));
 
-	blueBall = Sprite::createWithTexture(spriteBall->getTexture());
+	blueBall = Sprite::createWithTexture(tx);
 	blueBall->setColor(Color3B::BLUE);
 	blueBall->setPosition(rightPosition);
 	this->addChild(blueBall, static_cast<int>(BallZOrder::right));
 
-	violetBall = Sprite::createWithTexture(spriteBall->getTexture());
+	violetBall = Sprite::createWithTexture(tx);
 	violetBall->setColor(Color3B::MAGENTA);
 	violetBall->setPosition(centerPosition);
 	violetBall->setVisible(false);
