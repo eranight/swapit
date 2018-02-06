@@ -3,6 +3,13 @@
 
 USING_NS_CC;
 
+static const enum class BallZOrder
+{
+	right = 0,
+	left,
+	center
+};
+
 PlayingLayer::~PlayingLayer()
 {
 }
@@ -32,18 +39,18 @@ bool PlayingLayer::init()
 	redBall = Sprite::createWithTexture(spriteBall->getTexture());
 	redBall->setColor(Color3B::RED);
 	redBall->setPosition(leftPosition);
-	this->addChild(redBall);
+	this->addChild(redBall, static_cast<int>(BallZOrder::left));
 
 	blueBall = Sprite::createWithTexture(spriteBall->getTexture());
 	blueBall->setColor(Color3B::BLUE);
 	blueBall->setPosition(rightPosition);
-	this->addChild(blueBall);
+	this->addChild(blueBall, static_cast<int>(BallZOrder::right));
 
 	violetBall = Sprite::createWithTexture(spriteBall->getTexture());
 	violetBall->setColor(Color3B::MAGENTA);
 	violetBall->setPosition(centerPosition);
 	violetBall->setVisible(false);
-	this->addChild(violetBall);
+	this->addChild(violetBall, static_cast<int>(BallZOrder::center));
 
 	auto touchListener = EventListenerTouchOneByOne::create();
 	touchListener->onTouchBegan = CC_CALLBACK_2(PlayingLayer::touchBegan, this);
@@ -115,7 +122,13 @@ void PlayingLayer::setStandInCenterState()
 void PlayingLayer::setStandOnOppositeSidesState()
 {
 	state = BallState::StandOnOppositeSides;
-	ballOrder = ballOrder == BallOrder::RedBlue ? BallOrder::BlueRed : BallOrder::RedBlue;
+	ballOrder = ballOrder == BallOrder::RedBlue ?
+		(redBall->setZOrder(static_cast<int>(BallZOrder::right)),
+		blueBall->setZOrder(static_cast<int>(BallZOrder::left)),
+		BallOrder::BlueRed) :
+		(redBall->setZOrder(static_cast<int>(BallZOrder::left)),
+		blueBall->setZOrder(static_cast<int>(BallZOrder::right)),
+		BallOrder::RedBlue);
 }
 
 void PlayingLayer::changeVisibility(float violetVisibility)
