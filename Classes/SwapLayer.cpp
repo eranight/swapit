@@ -1,4 +1,4 @@
-#include "PlayingLayer.h"
+#include "SwapLayer.h"
 #include "SimpleAudioEngine.h"
 
 USING_NS_CC;
@@ -10,13 +10,13 @@ static const enum class BallZOrder
 	center
 };
 
-PlayingLayer::~PlayingLayer()
+SwapLayer::~SwapLayer()
 {
 }
 
-PlayingLayer * PlayingLayer::create(float leftColumn, float centerColumn, float rightColumn)
+SwapLayer * SwapLayer::create(float leftColumn, float centerColumn, float rightColumn)
 {
-	PlayingLayer * pRet = new (std::nothrow) PlayingLayer();
+	SwapLayer * pRet = new (std::nothrow) SwapLayer();
 	if (pRet && pRet->init(leftColumn, centerColumn, rightColumn))
 	{
 		pRet->autorelease();
@@ -29,7 +29,7 @@ PlayingLayer * PlayingLayer::create(float leftColumn, float centerColumn, float 
 	}
 }
 
-bool PlayingLayer::init(float leftColumn, float centerColumn, float rightColumn)
+bool SwapLayer::init(float leftColumn, float centerColumn, float rightColumn)
 {
 	if (!Layer::init())
 	{
@@ -68,14 +68,14 @@ bool PlayingLayer::init(float leftColumn, float centerColumn, float rightColumn)
 	this->addChild(violetBall, static_cast<int>(BallZOrder::center));
 
 	auto touchListener = EventListenerTouchOneByOne::create();
-	touchListener->onTouchBegan = CC_CALLBACK_2(PlayingLayer::touchBegan, this);
-	touchListener->onTouchEnded = CC_CALLBACK_2(PlayingLayer::touchEnded, this);
+	touchListener->onTouchBegan = CC_CALLBACK_2(SwapLayer::touchBegan, this);
+	touchListener->onTouchEnded = CC_CALLBACK_2(SwapLayer::touchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
 
     return true;
 }
 
-bool PlayingLayer::touchBegan(Touch * touch, Event * event)
+bool SwapLayer::touchBegan(Touch * touch, Event * event)
 {
 	if (state == BallState::StandOnOppositeSides)
 	{
@@ -84,13 +84,13 @@ bool PlayingLayer::touchBegan(Touch * touch, Event * event)
 		float timer = (centerPosition - leftPosition).x / velocity;
 		redBall->runAction(MoveTo::create(timer, centerPosition));
 		blueBall->runAction(MoveTo::create(timer, centerPosition));
-		auto sequence = Sequence::createWithTwoActions(DelayTime::create(timer), CallFunc::create(CC_CALLBACK_0(PlayingLayer::setStandInCenterState, this)));
+		auto sequence = Sequence::createWithTwoActions(DelayTime::create(timer), CallFunc::create(CC_CALLBACK_0(SwapLayer::setStandInCenterState, this)));
 		this->runAction(sequence);
 	}
 	return true;
 }
 
-void PlayingLayer::touchEnded(Touch * touch, Event * event)
+void SwapLayer::touchEnded(Touch * touch, Event * event)
 {
 	if (state == BallState::MovingToCenter || state == BallState::StandInCenter)
 	{
@@ -123,18 +123,18 @@ void PlayingLayer::touchEnded(Touch * touch, Event * event)
 			blueBall->runAction(MoveTo::create(t2, rightPosition));
 			timer = MAX(t1, t2);
 		}
-		auto sequence = Sequence::createWithTwoActions(DelayTime::create(timer), CallFunc::create(CC_CALLBACK_0(PlayingLayer::setStandOnOppositeSidesState, this)));
+		auto sequence = Sequence::createWithTwoActions(DelayTime::create(timer), CallFunc::create(CC_CALLBACK_0(SwapLayer::setStandOnOppositeSidesState, this)));
 		this->runAction(sequence);
 	}
 }
 
-void PlayingLayer::setStandInCenterState()
+void SwapLayer::setStandInCenterState()
 {
 	state = BallState::StandInCenter;
 	changeVisibility(true);
 }
 
-void PlayingLayer::setStandOnOppositeSidesState()
+void SwapLayer::setStandOnOppositeSidesState()
 {
 	state = BallState::StandOnOppositeSides;
 	ballOrder = ballOrder == BallOrder::RedBlue ?
@@ -146,7 +146,7 @@ void PlayingLayer::setStandOnOppositeSidesState()
 		BallOrder::RedBlue);
 }
 
-void PlayingLayer::changeVisibility(float violetVisibility)
+void SwapLayer::changeVisibility(float violetVisibility)
 {
 	violetBall->setVisible(violetVisibility);
 	redBall->setVisible(!violetVisibility);

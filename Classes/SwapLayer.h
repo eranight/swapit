@@ -1,9 +1,9 @@
-#ifndef __PLAYING_LAYER_H__
-#define __PLAYING_LAYER_H__
+#ifndef __SWAP_LAYER_H__
+#define __SWAP_LAYER_H__
 
 #include "cocos2d.h"
 
-class PlayingLayer : public cocos2d::Layer
+class SwapLayer : public cocos2d::Layer
 {
 public:
 	enum class BallState
@@ -21,11 +21,11 @@ public:
 	};
 
 public:
-	virtual ~PlayingLayer();
+	virtual ~SwapLayer();
 
 public:
 	bool init(float leftColumn, float centerColumn, float rightColumn);
-	static PlayingLayer * create(float leftColumn, float centerColumn, float rightColumn);
+	static SwapLayer * create(float leftColumn, float centerColumn, float rightColumn);
 	BallState getState() { return state; }
 
 private:

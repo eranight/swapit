@@ -1,6 +1,6 @@
 #include "GameScene.h"
 #include "SimpleAudioEngine.h"
-#include "PlayingLayer.h"
+#include "SwapLayer.h"
 
 USING_NS_CC;
 
@@ -40,7 +40,7 @@ bool GameScene::init()
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 1);
 
-	auto playingLayer = PlayingLayer::create(leftColumn, centerColumn, rightColumn);
+	auto playingLayer = SwapLayer::create(leftColumn, centerColumn, rightColumn);
 	this->addChild(playingLayer);
 
     return true;
