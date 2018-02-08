@@ -18,8 +18,6 @@ bool GameScene::init()
 	{
 		return false;
 	}
-    
-	Director::getInstance()->getTextureCache()->addImage("ball.png");
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();

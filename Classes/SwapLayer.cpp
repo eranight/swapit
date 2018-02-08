@@ -42,7 +42,7 @@ bool SwapLayer::init(float leftColumn, float centerColumn, float rightColumn)
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	Texture2D * tx = Director::getInstance()->getTextureCache()->getTextureForKey(FileUtils::getInstance()->fullPathForFilename("ball.png"));
+	Texture2D * tx = Director::getInstance()->getTextureCache()->addImage("ball.png");
 	float ballSize = tx->getContentSize().height * Director::getInstance()->getContentScaleFactor();
 
 	centerPosition = Vec2(centerColumn, ballSize);

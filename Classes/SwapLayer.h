@@ -50,4 +50,4 @@ private:
 	cocos2d::Sprite * violetBall;
 };
 
-#endif // __PLAYING_LAYER_H__
+#endif // __SWAP_LAYER_H__
