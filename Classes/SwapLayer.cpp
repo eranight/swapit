@@ -1,5 +1,6 @@
 #include "SwapLayer.h"
 #include "SimpleAudioEngine.h"
+#include "SpriteManager.h"
 
 USING_NS_CC;
 
@@ -10,25 +11,9 @@ static const enum class BallZOrder
 	center
 };
 
-SwapLayer::~SwapLayer()
-{
-}
+SwapLayer::~SwapLayer() {}
 
-SwapLayer * SwapLayer::create(float leftColumn, float centerColumn, float rightColumn)
-{
-	SwapLayer * pRet = new (std::nothrow) SwapLayer();
-	if (pRet && pRet->init(leftColumn, centerColumn, rightColumn))
-	{
-		pRet->autorelease();
-	}
-	else
-	{
-		CC_SAFE_DELETE(pRet);
-	}
-	return pRet;
-}
-
-bool SwapLayer::init(float leftColumn, float centerColumn, float rightColumn)
+bool SwapLayer::init()
 {
 	if (!Layer::init())
 	{
@@ -41,27 +26,24 @@ bool SwapLayer::init(float leftColumn, float centerColumn, float rightColumn)
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	Texture2D * tx = Director::getInstance()->getTextureCache()->addImage("ball.png");
-	float ballSize = tx->getContentSize().height * Director::getInstance()->getContentScaleFactor();
+	
+	float ballSize = SPR_MANAGER->getSpriteSize();
 
-	centerPosition = Vec2(centerColumn, ballSize);
-	leftPosition = Vec2(leftColumn, ballSize);
-	rightPosition = Vec2(rightColumn, ballSize);
+	centerPosition = Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::center), ballSize);
+	leftPosition = Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::left), ballSize);
+	rightPosition = Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::right), ballSize);
 
 	velocity = (centerPosition - leftPosition).x / 0.7f;
 
-	redBall = Sprite::createWithTexture(tx);
-	redBall->setColor(Color3B::RED);
+	redBall = SPR_MANAGER->getSprite(SpriteManager::SpriteType::red);
 	redBall->setPosition(leftPosition);
 	this->addChild(redBall, static_cast<int>(BallZOrder::left));
 
-	blueBall = Sprite::createWithTexture(tx);
-	blueBall->setColor(Color3B::BLUE);
+	blueBall = SPR_MANAGER->getSprite(SpriteManager::SpriteType::blue);
 	blueBall->setPosition(rightPosition);
 	this->addChild(blueBall, static_cast<int>(BallZOrder::right));
 
-	violetBall = Sprite::createWithTexture(tx);
-	violetBall->setColor(Color3B::MAGENTA);
+	violetBall = SPR_MANAGER->getSprite(SpriteManager::SpriteType::violet);
 	violetBall->setPosition(centerPosition);
 	violetBall->setVisible(false);
 	this->addChild(violetBall, static_cast<int>(BallZOrder::center));

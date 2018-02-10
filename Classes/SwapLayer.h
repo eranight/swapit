@@ -24,9 +24,10 @@ public:
 	virtual ~SwapLayer();
 
 public:
-	bool init(float leftColumn, float centerColumn, float rightColumn);
-	static SwapLayer * create(float leftColumn, float centerColumn, float rightColumn);
 	BallState getState() { return state; }
+
+	bool init() override;
+	CREATE_FUNC(SwapLayer);
 
 private:
 	bool touchBegan(cocos2d::Touch * touch, cocos2d::Event * event);

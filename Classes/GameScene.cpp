@@ -1,8 +1,15 @@
 #include "GameScene.h"
 #include "SimpleAudioEngine.h"
+#include "SpriteManager.h"
 #include "SwapLayer.h"
+#include "GenerateLayer.h"
 
 USING_NS_CC;
+
+GameScene::~GameScene()
+{
+	SpriteManager::getInstance()->release();
+}
 
 Scene* GameScene::createScene()
 {
@@ -19,12 +26,10 @@ bool GameScene::init()
 		return false;
 	}
 
+	SpriteManager::getInstance()->retain(); //initialization of the SpriteManager instance
+
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
-	float centerColumn = (origin + visibleSize).x * 0.5f;
-	float leftColumn = (origin + visibleSize).x * 0.2f;
-	float rightColumn = (origin + visibleSize).x * 0.8f;
 
     auto closeItem = MenuItemImage::create(
                                            "CloseNormal.png",
@@ -38,8 +43,11 @@ bool GameScene::init()
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 1);
 
-	auto playingLayer = SwapLayer::create(leftColumn, centerColumn, rightColumn);
+	auto playingLayer = SwapLayer::create();
 	this->addChild(playingLayer);
+
+	//auto generateLayer = GenerateLayer::create();
+	//this->addChild(generateLayer);
 
     return true;
 }
