@@ -1,13 +1,12 @@
 #include "LineSprites.h"
+#include "SpriteManager.h"
 
 USING_NS_CC;
 
-LineSprites::LineSprites() : sprites({ nullptr, nullptr, nullptr }) {}
-
-LineSprites * LineSprites::create(const std::vector<LineSprites::LineElement> & elements)
+LineSprites * LineSprites::create(LineElement leftElement, LineElement centerElement, LineElement rightElement)
 {
 	LineSprites * pRet = new (std::nothrow) LineSprites();
-	if (pRet && pRet->init(elements))
+	if (pRet && pRet->init(leftElement, centerElement, rightElement))
 	{
 		pRet->autorelease();
 	}
@@ -18,58 +17,51 @@ LineSprites * LineSprites::create(const std::vector<LineSprites::LineElement> & 
 	return pRet;
 }
 
-bool LineSprites::init(const std::vector<LineSprites::LineElement> & elements)
+bool LineSprites::init(LineElement leftElement, LineElement centerElement, LineElement rightElement)
 {
 	if (!Node::init())
 	{
 		return false;
 	}
+	this->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+	float halfBallSize = SPR_MANAGER->getSpriteSize() * 0.5f;
 
-	this->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-
-	auto & lineSprite = sprites.begin();
-	for (auto & element = elements.begin(); element != elements.end(); ++element, ++lineSprite)
-	{
-		Sprite * sprite = nullptr;
-		if (*element != LineElement::none)
-		{
-			sprite = createSprite(*element);
-		}
-		*lineSprite = sprite;
-	}
+	leftSprite = initSpriteLike(leftElement, Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::left), halfBallSize));
+	centerSprite = initSpriteLike(centerElement, Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::center), halfBallSize));
+	rightSprite = initSpriteLike(rightElement, Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::right), halfBallSize));
 
 	return true;
 }
 
-Sprite * LineSprites::getSprite(const LinePosition &position)
+SpriteManager::SpriteType convertLineElementToSpriteType(LineSprites::LineElement lineElement)
 {
-	return sprites.at(static_cast<int>(position));
+	switch (lineElement)
+	{
+	case LineSprites::LineElement::none:
+		throw std::exception("invalid enums values");
+		break;
+	case LineSprites::LineElement::red:
+		return SpriteManager::SpriteType::red;
+	case LineSprites::LineElement::blue:
+		return SpriteManager::SpriteType::blue;
+	case LineSprites::LineElement::violet:
+		return SpriteManager::SpriteType::violet;
+	case LineSprites::LineElement::green:
+		return SpriteManager::SpriteType::green;
+	default:
+		throw std::exception("invalid enums values");
+		break;
+	}
 }
 
-Sprite * LineSprites::createSprite(const LineElement & element)
+Sprite * LineSprites::initSpriteLike(LineElement lineElement, const Vec2 & position)
 {
-	Sprite * sprite = Sprite::createWithTexture(
-		element != LineElement::green ?
-			Director::getInstance()->getTextureCache()->getTextureForKey(FileUtils::getInstance()->fullPathForFilename("ball.png")) :
-				Director::getInstance()->getTextureCache()->getTextureForKey(FileUtils::getInstance()->fullPathForFilename("square.png"))
-	);
-
-	switch (element)
+	Sprite * sprite = nullptr;
+	if (lineElement != LineElement::none)
 	{
-	case LineElement::red:
-		sprite->setColor(Color3B::RED);
-		break;
-	case LineElement::blue:
-		sprite->setColor(Color3B::BLUE);
-		break;
-	case LineElement::violet:
-		sprite->setColor(Color3B::MAGENTA);
-		break;
-	case LineElement::green:
-		sprite->setColor(Color3B::GREEN);
-		break;
-	default:
-		break;
+		sprite = SPR_MANAGER->getSprite(convertLineElementToSpriteType(lineElement));
+		sprite->setPosition(position);
+		this->addChild(sprite);
 	}
 	return sprite;
 }

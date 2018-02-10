@@ -6,9 +6,15 @@
 class GenerateLayer : public cocos2d::Layer
 {
 public:
-	virtual ~GenerateLayer();
-	static GenerateLayer * create(float leftColumn, float centerColumn, float rightColumn);
-	bool init(float leftColumn, float centerColumn, float rightColumn);
+	~GenerateLayer();
+
+public:
+	CREATE_FUNC(GenerateLayer);
+	bool init();
+
+private:
+	cocos2d::Vec2 startPosition;
+	cocos2d::Vec2 finishPosition;
 };
 
 #endif // __PLAYING_LAYER_H__

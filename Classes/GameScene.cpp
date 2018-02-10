@@ -43,11 +43,11 @@ bool GameScene::init()
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 1);
 
+	auto generateLayer = GenerateLayer::create();
+	this->addChild(generateLayer);
+
 	auto playingLayer = SwapLayer::create();
 	this->addChild(playingLayer);
-
-	//auto generateLayer = GenerateLayer::create();
-	//this->addChild(generateLayer);
 
     return true;
 }

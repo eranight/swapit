@@ -15,26 +15,21 @@ public:
 		green
 	};
 
-	enum class LinePosition
-	{
-		left = 0,
-		center,
-		right
-	};
-
 public:
-	LineSprites();
+	static LineSprites * create(LineSprites::LineElement leftElement, LineSprites::LineElement centerElement, LineSprites::LineElement rightElement);
+	bool init(LineSprites::LineElement leftElement, LineSprites::LineElement centerElement, LineSprites::LineElement rightElement);
 
-	static LineSprites * create(const std::vector<LineSprites::LineElement> &);
-	bool init(const std::vector<LineSprites::LineElement> &);
-	
 	//getters
-	cocos2d::Sprite * getSprite(const LineSprites::LinePosition &);
+	cocos2d::Sprite * getLeftSprite() { return leftSprite; }
+	cocos2d::Sprite * getCenterSprite() { return centerSprite; }
+	cocos2d::Sprite * getRightSprite() { return rightSprite; }
 
 private:
-	cocos2d::Vector<cocos2d::Sprite *> sprites;
+	cocos2d::Sprite * leftSprite;
+	cocos2d::Sprite * centerSprite;
+	cocos2d::Sprite * rightSprite;
 
-	cocos2d::Sprite * createSprite(const LineSprites::LineElement & element);
+	cocos2d::Sprite * initSpriteLike(LineSprites::LineElement lineElement, const cocos2d::Vec2 & position);
 };
 
 #endif //__LINE_SPRITES_H__
