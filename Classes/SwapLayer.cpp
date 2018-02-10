@@ -20,13 +20,12 @@ SwapLayer * SwapLayer::create(float leftColumn, float centerColumn, float rightC
 	if (pRet && pRet->init(leftColumn, centerColumn, rightColumn))
 	{
 		pRet->autorelease();
-		return pRet;
 	}
 	else
 	{
 		CC_SAFE_DELETE(pRet);
-		return nullptr;
 	}
+	return pRet;
 }
 
 bool SwapLayer::init(float leftColumn, float centerColumn, float rightColumn)
@@ -79,7 +78,6 @@ bool SwapLayer::touchBegan(Touch * touch, Event * event)
 {
 	if (state == BallState::StandOnOppositeSides)
 	{
-		CCLOG("starts moving to center");
 		state = BallState::MovingToCenter;
 		float timer = (centerPosition - leftPosition).x / velocity;
 		redBall->runAction(MoveTo::create(timer, centerPosition));
@@ -94,7 +92,6 @@ void SwapLayer::touchEnded(Touch * touch, Event * event)
 {
 	if (state == BallState::MovingToCenter || state == BallState::StandInCenter)
 	{
-		CCLOG("starts moving to opposite sides");
 		if (state == BallState::MovingToCenter)
 		{
 			this->stopAllActions();
