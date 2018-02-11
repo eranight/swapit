@@ -22,6 +22,7 @@ bool GenerateLayer::init()
 	nextGenerationPosition = Vec2(origin.x, origin.y + 2.0f * SPR_MANAGER->getSpriteSize());
 
 	velocity = (startPosition - finishPosition).length() / 5.0f;
+	timeToNextGeneration = (startPosition - nextGenerationPosition).length() / velocity;
 
 	generateNewLine();
 
@@ -34,12 +35,10 @@ void GenerateLayer::generateNewLine()
 	line->setPosition(startPosition);
 	this->addChild(line);
 	line->runAction(
-		Sequence::create(
-			MoveTo::create((startPosition - nextGenerationPosition).length() / velocity, nextGenerationPosition),
-			CallFunc::create(CC_CALLBACK_0(GenerateLayer::generateNewLine, this)),
-			MoveTo::create((nextGenerationPosition - finishPosition).length() / velocity, finishPosition),
-			RemoveSelf::create(),
-			nullptr
+		Sequence::createWithTwoActions(
+			MoveTo::create((startPosition - finishPosition).length() / velocity, finishPosition),
+			RemoveSelf::create()
 		)
 	);
+	this->runAction(Sequence::createWithTwoActions(DelayTime::create(timeToNextGeneration), CallFunc::create(CC_CALLBACK_0(GenerateLayer::generateNewLine, this))));
 }

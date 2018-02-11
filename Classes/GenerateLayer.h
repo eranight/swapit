@@ -20,6 +20,7 @@ private:
 	cocos2d::Vector<LineSprites *> lines;
 
 	float velocity;
+	float timeToNextGeneration;
 
 	void generateNewLine();
 };
