@@ -26,6 +26,9 @@ bool GameScene::init()
 		return false;
 	}
 
+	gameOver = false;
+	goals = 0;
+
 	SpriteManager::getInstance()->retain(); //initialization of the SpriteManager instance
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -66,7 +69,12 @@ void GameScene::update(float dt) {
 				lineForCollisionDetect = nullptr;
 			}
 			else {
-
+				collisionUpdate();
+				if (lineForCollisionDetect->getLeftSprite() == nullptr &&
+					lineForCollisionDetect->getCenterSprite() == nullptr &&
+					lineForCollisionDetect->getRightSprite() == nullptr) {
+					lineForCollisionDetect = nullptr;
+				}
 			}
 		}
 	}
@@ -91,29 +99,37 @@ void GameScene::menuCloseCallback(Ref* pSender)
 }
 
 void GameScene::collisionUpdate() {
-	const Sprite * middleSprite = lineForCollisionDetect->getCenterSprite();
-	if (middleSprite != nullptr) {
-		if (swapLayer->getState() == SwapLayer::BallState::StandInCenter) {
-			if (middleSprite->getBoundingBox().intersectsRect(swapLayer->getVioletBallSprite()->getBoundingBox())) {
-				//collision detect!
-			}
+	int prevGoals = goals;
+	const Sprite * sprite = lineForCollisionDetect->getLeftSprite();
+	if (sprite != nullptr) {
+		checkCollision(sprite, swapLayer->getRedBallSprite());
+		checkCollision(sprite, swapLayer->getBlueBallSprite());
+		if (!gameOver && goals != prevGoals) {
+			lineForCollisionDetect->destroyLeftSprite();
 		}
 	}
-	else {
-		const Sprite * sprite = lineForCollisionDetect->getLeftSprite();
-		if (sprite != nullptr) {
+	prevGoals = goals;
+	sprite = lineForCollisionDetect->getCenterSprite();
+	if (sprite != nullptr) {
+		if (swapLayer->getState() == SwapLayer::BallState::StandInCenter) {
+			checkCollision(sprite, swapLayer->getVioletBallSprite());
+			if (!gameOver && goals != prevGoals) {
+				//collision detect!
+				lineForCollisionDetect->destroyCenterSprite();
+			}
+		}
+		else {
 			checkCollision(sprite, swapLayer->getRedBallSprite());
 			checkCollision(sprite, swapLayer->getBlueBallSprite());
 		}
-		sprite = lineForCollisionDetect->getCenterSprite();
-		if (sprite != nullptr) {
-			checkCollision(sprite, swapLayer->getRedBallSprite());
-			checkCollision(sprite, swapLayer->getBlueBallSprite());
-		}
-		sprite = lineForCollisionDetect->getRightSprite();
-		if (sprite != nullptr) {
-			checkCollision(sprite, swapLayer->getRedBallSprite());
-			checkCollision(sprite, swapLayer->getBlueBallSprite());
+	}
+	prevGoals = goals;
+	sprite = lineForCollisionDetect->getRightSprite();
+	if (sprite != nullptr) {
+		checkCollision(sprite, swapLayer->getRedBallSprite());
+		checkCollision(sprite, swapLayer->getBlueBallSprite());
+		if (!gameOver && goals != prevGoals) {
+			lineForCollisionDetect->destroyRightSprite();
 		}
 	}
 }
@@ -122,9 +138,11 @@ void GameScene::checkCollision(const Sprite * spriteA, const cocos2d::Sprite * s
 	if (spriteA->getBoundingBox().intersectsRect(spriteB->getBoundingBox())) {
 		if (spriteA->getColor() == spriteB->getColor()) {
 			//increment goals
+			++goals;
 		}
 		else {
 			//game over
+			//gameOver = true;
 		}
 	}
 }

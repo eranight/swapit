@@ -37,3 +37,24 @@ Sprite * LineSprites::initSpriteLike(LineInfo::Element element, const Vec2 & pos
 	}
 	return sprite;
 }
+
+void LineSprites::destroyLeftSprite() {
+	if (leftSprite != nullptr) {
+		this->removeChild(leftSprite);
+		leftSprite = nullptr;
+	}
+}
+
+void LineSprites::destroyCenterSprite() {
+	if (centerSprite != nullptr) {
+		this->removeChild(centerSprite);
+		centerSprite = nullptr;
+	}
+}
+
+void LineSprites::destroyRightSprite() {
+	if (rightSprite != nullptr) {
+		this->removeChild(rightSprite);
+		rightSprite = nullptr;
+	}
+}

@@ -22,6 +22,8 @@ public:
     void menuCloseCallback(cocos2d::Ref *);
 	
 private:
+	bool gameOver;
+	int goals;
 	GenerateLayer * generateLayer;
 	SwapLayer * swapLayer;
 

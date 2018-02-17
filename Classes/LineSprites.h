@@ -17,6 +17,10 @@ public:
 	const cocos2d::Sprite * getCenterSprite() { return centerSprite; }
 	const cocos2d::Sprite * getRightSprite() { return rightSprite; }
 
+	void destroyLeftSprite();
+	void destroyCenterSprite();
+	void destroyRightSprite();
+
 private:
 	cocos2d::Sprite * leftSprite;
 	cocos2d::Sprite * centerSprite;
