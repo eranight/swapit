@@ -31,7 +31,7 @@ void LineBuilder::generateFirstLine(LineInfo & line) {
 void LineBuilder::generateBalls(LineInfo & line) {
 	if (prevLine.middle == LineInfo::Element::violet) {
 		generateSwap(line);
-		prevSidesLine = line;
+		generateBallCount(line);
 	}
 	else {
 		int prob = RandomHelper::random_int(0, 100);
@@ -39,21 +39,12 @@ void LineBuilder::generateBalls(LineInfo & line) {
 			prob = RandomHelper::random_int(0, 100);
 			if (prob < swapProb) {
 				generateSwap(line);
-				prevSidesLine = line; //line can be incomplete, but it is not important
 			}
 			else {
 				line.left = prevLine.left;
 				line.right = prevLine.right;
 			}
-			prob = RandomHelper::random_int(0, 100);
-			if (prob < singleProb) {
-				if (RandomHelper::random_int(0, 100) % 2 == 0) {
-					line.left = LineInfo::Element::none;
-				}
-				else {
-					line.right = LineInfo::Element::none;
-				}
-			}
+			generateBallCount(line);
 		}
 		else {
 			line.middle = LineInfo::Element::violet;
@@ -75,8 +66,21 @@ void LineBuilder::generateWalls(LineInfo & line) {
 void LineBuilder::generateSwap(LineInfo & line) {
 	line.left = getOppositeElement(prevSidesLine.left);
 	line.right = getOppositeElement(prevSidesLine.right);
+	std::swap(prevSidesLine.left, prevSidesLine.right);
 }
 
 LineInfo::Element LineBuilder::getOppositeElement(LineInfo::Element element) {
 	return element == LineInfo::Element::red ? LineInfo::Element::blue : LineInfo::Element::red;
+}
+
+void LineBuilder::generateBallCount(LineInfo & line) {
+	int prob = RandomHelper::random_int(0, 100);
+	if (prob < singleProb) {
+		if (RandomHelper::random_int(0, 100) % 2 == 0) {
+			line.left = LineInfo::Element::none;
+		}
+		else {
+			line.right = LineInfo::Element::none;
+		}
+	}
 }

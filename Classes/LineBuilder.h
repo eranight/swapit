@@ -16,6 +16,7 @@ private: //methods
 	void generateWalls(LineInfo &);
 
 	void generateSwap(LineInfo &);
+	void generateBallCount(LineInfo &);
 	inline LineInfo::Element getOppositeElement(LineInfo::Element);
 
 private: //fields
