@@ -16,6 +16,10 @@ LineInfo LineBuilder::getNextLine() {
 		generateWalls(lineInfo);
 	}
 
+	if (lineInfo.middle != LineInfo::Element::violet) {
+		CCASSERT(lineInfo.left != LineInfo::Element::none || lineInfo.right != LineInfo::Element::none, "lol");
+	}
+
 	prevLine = lineInfo;
 	++lineCounter;
 	return lineInfo;
@@ -41,8 +45,8 @@ void LineBuilder::generateBalls(LineInfo & line) {
 				generateSwap(line);
 			}
 			else {
-				line.left = prevLine.left;
-				line.right = prevLine.right;
+				line.left = prevSidesLine.left;
+				line.right = prevSidesLine.right;
 			}
 			generateBallCount(line);
 		}

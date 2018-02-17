@@ -25,6 +25,7 @@ private:
 
 	LineBuilder lineBuilder;
 	void generateNewLine();
+	void eraseLine(LineSprites * line);
 };
 
 #endif // __PLAYING_LAYER_H__

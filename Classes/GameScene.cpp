@@ -43,15 +43,18 @@ bool GameScene::init()
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 1);
 
-	auto generateLayer = GenerateLayer::create();
+	generateLayer = GenerateLayer::create();
 	this->addChild(generateLayer);
 
-	auto playingLayer = SwapLayer::create();
-	this->addChild(playingLayer);
+	swapLayer = SwapLayer::create();
+	this->addChild(swapLayer);
 
     return true;
 }
 
+void GameScene::update(float dt) {
+	
+}
 
 void GameScene::menuCloseCallback(Ref* pSender)
 {

@@ -36,11 +36,18 @@ void GenerateLayer::generateNewLine()
 	line->setPosition(startPosition);
 	this->addChild(line);
 	line->runAction(
-		Sequence::createWithTwoActions(
+		Sequence::create(
 			MoveTo::create((startPosition - finishPosition).length() / velocity, finishPosition),
-			RemoveSelf::create()
+			CallFunc::create(CC_CALLBACK_0(GenerateLayer::eraseLine, this, line)),
+			RemoveSelf::create(),
+			nullptr
 		)
 	);
 	lines.pushBack(line);
+	CCLOG("%d", lines.size());
 	this->runAction(Sequence::createWithTwoActions(DelayTime::create(timeToNextGeneration), CallFunc::create(CC_CALLBACK_0(GenerateLayer::generateNewLine, this))));
+}
+
+void GenerateLayer::eraseLine(LineSprites * line) {
+	lines.eraseObject(line);
 }

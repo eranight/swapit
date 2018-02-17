@@ -3,6 +3,9 @@
 
 #include "cocos2d.h"
 
+class GenerateLayer;
+class SwapLayer;
+
 class GameScene : public cocos2d::LayerColor
 {
 public:
@@ -11,13 +14,15 @@ public:
 public:
     static cocos2d::Scene* createScene();
 
-    virtual bool init();
-    
-    // a selector callback
-    void menuCloseCallback(cocos2d::Ref* pSender);
-    
-    // implement the "static create()" method manually
 	CREATE_FUNC(GameScene);
+    virtual bool init() override;
+	void update(float) override;
+    
+    void menuCloseCallback(cocos2d::Ref *);
+	
+private:
+	GenerateLayer * generateLayer;
+	SwapLayer * swapLayer;
 };
 
 #endif // __GAME_SCENE_H__
