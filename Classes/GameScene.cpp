@@ -51,26 +51,26 @@ bool GameScene::init()
 
 	lineForCollisionDetect = nullptr;
 
-	//scheduleUpdate();
+	scheduleUpdate();
 
     return true;
 }
 
 void GameScene::update(float dt) {
-	/*if (lineForCollisionDetect == nullptr) {
-		LineSprites * lineSprites = generateLayer->getFirstHighLine();
-		if (std::abs(lineSprites->getPosition().y - swapLayer->getLinePosition()) < SPR_MANAGER->getSpriteSize()) {
-			lineForCollisionDetect = lineSprites;
-			CCLOG("");
-		}
-	}*/
+	if (lineForCollisionDetect == nullptr) {
+		lineForCollisionDetect = generateLayer->getFirstHighLine(swapLayer->getLinePosition());
+	}
 	if (lineForCollisionDetect != nullptr) {
+		if (lineForCollisionDetect->getPosition().y < swapLayer->getLinePosition() + SPR_MANAGER->getSpriteSize()) {
+			if (lineForCollisionDetect->getPosition().y < swapLayer->getLinePosition() - SPR_MANAGER->getSpriteSize()) {
+				lineForCollisionDetect = nullptr;
+			}
+			else {
 
-		if (swapLayer->getLinePosition() - lineForCollisionDetect->getPosition().y > SPR_MANAGER->getSpriteSize()) {
-			lineForCollisionDetect = nullptr;
-			CCLOG("");
+			}
 		}
 	}
+
 }
 
 void GameScene::menuCloseCallback(Ref* pSender)
