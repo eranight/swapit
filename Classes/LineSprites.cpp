@@ -19,11 +19,11 @@ bool LineSprites::init(LineInfo & line) {
 	}
 
 	this->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
-	float halfBallSize = SPR_MANAGER->getSpriteSize() * 0.5f;
+	float ballSize = SPR_MANAGER->getSpriteSize();
 
-	leftSprite = initSpriteLike(line.getLeft(), Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::left), halfBallSize));
-	centerSprite = initSpriteLike(line.getMiddle(), Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::center), halfBallSize));
-	rightSprite = initSpriteLike(line.getRight(), Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::right), halfBallSize));
+	leftSprite = initSpriteLike(line.getLeft(), Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::left), 0));
+	centerSprite = initSpriteLike(line.getMiddle(), Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::center), 0));
+	rightSprite = initSpriteLike(line.getRight(), Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::right), 0));
 
 	return true;
 }

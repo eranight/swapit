@@ -29,6 +29,8 @@ public:
 	bool init() override;
 	CREATE_FUNC(SwapLayer);
 
+	float getLinePosition() { return centerPosition.y; }
+
 private:
 	bool touchBegan(cocos2d::Touch * touch, cocos2d::Event * event);
 	void touchEnded(cocos2d::Touch * touch, cocos2d::Event * event);

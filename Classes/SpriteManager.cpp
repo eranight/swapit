@@ -33,9 +33,10 @@ bool SpriteManager::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	leftColumn = (origin + visibleSize).x * 0.2f;
-	centerColumn = (origin + visibleSize).x * 0.5f;
-	rightColumn = (origin + visibleSize).x * 0.8f;
+	float halfSize = ballTexture->getContentSize().height * 0.5f;
+	leftColumn = (origin + visibleSize).x * 0.2f - halfSize;
+	centerColumn = (origin + visibleSize).x * 0.5f - halfSize;
+	rightColumn = (origin + visibleSize).x * 0.8f - halfSize;
 
 	colorsMap[LineInfo::Element::red] = Color3B::RED;
 	colorsMap[LineInfo::Element::blue] = Color3B::BLUE;
@@ -61,6 +62,7 @@ Sprite * SpriteManager::getSprite(LineInfo::Element spriteType)
 	if (spriteType == LineInfo::Element::none)
 		return nullptr;
 	Sprite * sprite = Sprite::createWithTexture(spriteType != LineInfo::Element::green ? ballTexture : squareTexture);
+	sprite->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
 	sprite->setColor(colorsMap[spriteType]);
 	return sprite;
 }

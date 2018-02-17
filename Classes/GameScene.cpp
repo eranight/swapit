@@ -49,11 +49,28 @@ bool GameScene::init()
 	swapLayer = SwapLayer::create();
 	this->addChild(swapLayer);
 
+	lineForCollisionDetect = nullptr;
+
+	//scheduleUpdate();
+
     return true;
 }
 
 void GameScene::update(float dt) {
-	
+	/*if (lineForCollisionDetect == nullptr) {
+		LineSprites * lineSprites = generateLayer->getFirstHighLine();
+		if (std::abs(lineSprites->getPosition().y - swapLayer->getLinePosition()) < SPR_MANAGER->getSpriteSize()) {
+			lineForCollisionDetect = lineSprites;
+			CCLOG("");
+		}
+	}*/
+	if (lineForCollisionDetect != nullptr) {
+
+		if (swapLayer->getLinePosition() - lineForCollisionDetect->getPosition().y > SPR_MANAGER->getSpriteSize()) {
+			lineForCollisionDetect = nullptr;
+			CCLOG("");
+		}
+	}
 }
 
 void GameScene::menuCloseCallback(Ref* pSender)

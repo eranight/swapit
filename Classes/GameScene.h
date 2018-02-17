@@ -5,6 +5,7 @@
 
 class GenerateLayer;
 class SwapLayer;
+class LineSprites;
 
 class GameScene : public cocos2d::LayerColor
 {
@@ -23,6 +24,8 @@ public:
 private:
 	GenerateLayer * generateLayer;
 	SwapLayer * swapLayer;
+
+	LineSprites * lineForCollisionDetect;
 };
 
 #endif // __GAME_SCENE_H__

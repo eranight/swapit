@@ -14,6 +14,8 @@ public:
 	CREATE_FUNC(GenerateLayer);
 	bool init();
 
+	LineSprites * getFrontLine() { return lines.at(0); }
+	LineSprites * getFirstHighLine(float y);
 private:
 	cocos2d::Vec2 startPosition;
 	cocos2d::Vec2 finishPosition;
