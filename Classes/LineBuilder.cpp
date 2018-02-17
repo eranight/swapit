@@ -31,6 +31,7 @@ void LineBuilder::generateFirstLine(LineInfo & line) {
 void LineBuilder::generateBalls(LineInfo & line) {
 	if (prevLine.middle == LineInfo::Element::violet) {
 		generateSwap(line);
+		prevSidesLine = line;
 	}
 	else {
 		int prob = RandomHelper::random_int(0, 100);
