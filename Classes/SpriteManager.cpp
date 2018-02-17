@@ -37,10 +37,10 @@ bool SpriteManager::init()
 	centerColumn = (origin + visibleSize).x * 0.5f;
 	rightColumn = (origin + visibleSize).x * 0.8f;
 
-	colorsMap[SpriteManager::SpriteType::red] = Color3B::RED;
-	colorsMap[SpriteManager::SpriteType::blue] = Color3B::BLUE;
-	colorsMap[SpriteManager::SpriteType::violet] = Color3B::MAGENTA;
-	colorsMap[SpriteManager::SpriteType::green] = Color3B::GREEN;
+	colorsMap[LineInfo::Element::red] = Color3B::RED;
+	colorsMap[LineInfo::Element::blue] = Color3B::BLUE;
+	colorsMap[LineInfo::Element::violet] = Color3B::MAGENTA;
+	colorsMap[LineInfo::Element::green] = Color3B::GREEN;
 
 	return true;
 }
@@ -56,9 +56,11 @@ float SpriteManager::getColumn(SpriteManager::SpriteColumn spriteColumn)
 		(spriteColumn == SpriteManager::SpriteColumn::center ? centerColumn : rightColumn);
 }
 
-Sprite * SpriteManager::getSprite(SpriteManager::SpriteType spriteType)
+Sprite * SpriteManager::getSprite(LineInfo::Element spriteType)
 {
-	Sprite * sprite = Sprite::createWithTexture(spriteType != SpriteManager::SpriteType::green ? ballTexture : squareTexture);
+	if (spriteType == LineInfo::Element::none)
+		return nullptr;
+	Sprite * sprite = Sprite::createWithTexture(spriteType != LineInfo::Element::green ? ballTexture : squareTexture);
 	sprite->setColor(colorsMap[spriteType]);
 	return sprite;
 }

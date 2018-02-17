@@ -35,15 +35,15 @@ bool SwapLayer::init()
 
 	velocity = (centerPosition - leftPosition).x / 0.7f;
 
-	redBall = SPR_MANAGER->getSprite(SpriteManager::SpriteType::red);
+	redBall = SPR_MANAGER->getSprite(LineInfo::Element::red);
 	redBall->setPosition(leftPosition);
 	this->addChild(redBall, static_cast<int>(BallZOrder::left));
 
-	blueBall = SPR_MANAGER->getSprite(SpriteManager::SpriteType::blue);
+	blueBall = SPR_MANAGER->getSprite(LineInfo::Element::blue);
 	blueBall->setPosition(rightPosition);
 	this->addChild(blueBall, static_cast<int>(BallZOrder::right));
 
-	violetBall = SPR_MANAGER->getSprite(SpriteManager::SpriteType::violet);
+	violetBall = SPR_MANAGER->getSprite(LineInfo::Element::violet);
 	violetBall->setPosition(centerPosition);
 	violetBall->setVisible(false);
 	this->addChild(violetBall, static_cast<int>(BallZOrder::center));

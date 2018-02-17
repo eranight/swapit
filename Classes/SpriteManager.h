@@ -2,17 +2,11 @@
 #define __SPRITE_MANAGER_H__
 
 #include "cocos2d.h"
+#include "LineInfo.h"
 
 class SpriteManager : public cocos2d::Ref
 {
 public: //enums
-	enum class SpriteType
-	{
-		red = 0,
-		blue,
-		violet,
-		green  //square
-	};
 	enum class SpriteColumn
 	{
 		left = 0,
@@ -30,13 +24,13 @@ public:
 public: //interface
 	float getSpriteSize();
 	float getColumn(SpriteManager::SpriteColumn);
-	cocos2d::Sprite * getSprite(SpriteManager::SpriteType);
+	cocos2d::Sprite * getSprite(LineInfo::Element);
 
 private:
 	float leftColumn, centerColumn, rightColumn;
 	cocos2d::Texture2D * ballTexture;
 	cocos2d::Texture2D * squareTexture;
-	std::map<SpriteManager::SpriteType, cocos2d::Color3B> colorsMap;
+	std::map<LineInfo::Element, cocos2d::Color3B> colorsMap;
 
 	bool init();
 };

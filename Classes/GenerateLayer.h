@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "LineSprites.h"
+#include "LineBuilder.h"
 
 class GenerateLayer : public cocos2d::Layer
 {
@@ -22,6 +23,7 @@ private:
 	float velocity;
 	float timeToNextGeneration;
 
+	LineBuilder lineBuilder;
 	void generateNewLine();
 };
 

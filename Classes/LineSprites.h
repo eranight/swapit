@@ -2,22 +2,15 @@
 #define __LINE_SPRITES_H__
 
 #include "cocos2d.h"
+#include "LineInfo.h"
+#include "SpriteManager.h"
 
 class LineSprites : public cocos2d::Node
 {
 public:
-	enum class LineElement
-	{
-		none = 0,
-		red,
-		blue,
-		violet,
-		green
-	};
 
-public:
-	static LineSprites * create(LineSprites::LineElement leftElement, LineSprites::LineElement centerElement, LineSprites::LineElement rightElement);
-	bool init(LineSprites::LineElement leftElement, LineSprites::LineElement centerElement, LineSprites::LineElement rightElement);
+	static LineSprites * create(LineInfo &);
+	bool init(LineInfo &);
 
 	//getters
 	cocos2d::Sprite * getLeftSprite() { return leftSprite; }
@@ -29,7 +22,7 @@ private:
 	cocos2d::Sprite * centerSprite;
 	cocos2d::Sprite * rightSprite;
 
-	cocos2d::Sprite * initSpriteLike(LineSprites::LineElement lineElement, const cocos2d::Vec2 & position);
+	cocos2d::Sprite * initSpriteLike(LineInfo::Element, const cocos2d::Vec2 &);
 };
 
 #endif //__LINE_SPRITES_H__
