@@ -31,6 +31,10 @@ public:
 
 	float getLinePosition() { return centerPosition.y; }
 
+	const cocos2d::Sprite * getRedBallSprite() { return redBall; }
+	const cocos2d::Sprite * getBlueBallSprite() { return blueBall; }
+	const cocos2d::Sprite * getVioletBallSprite() { return violetBall; }
+
 private:
 	bool touchBegan(cocos2d::Touch * touch, cocos2d::Event * event);
 	void touchEnded(cocos2d::Touch * touch, cocos2d::Event * event);

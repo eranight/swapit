@@ -89,3 +89,42 @@ void GameScene::menuCloseCallback(Ref* pSender)
     
     
 }
+
+void GameScene::collisionUpdate() {
+	const Sprite * middleSprite = lineForCollisionDetect->getCenterSprite();
+	if (middleSprite != nullptr) {
+		if (swapLayer->getState() == SwapLayer::BallState::StandInCenter) {
+			if (middleSprite->getBoundingBox().intersectsRect(swapLayer->getVioletBallSprite()->getBoundingBox())) {
+				//collision detect!
+			}
+		}
+	}
+	else {
+		const Sprite * sprite = lineForCollisionDetect->getLeftSprite();
+		if (sprite != nullptr) {
+			checkCollision(sprite, swapLayer->getRedBallSprite());
+			checkCollision(sprite, swapLayer->getBlueBallSprite());
+		}
+		sprite = lineForCollisionDetect->getCenterSprite();
+		if (sprite != nullptr) {
+			checkCollision(sprite, swapLayer->getRedBallSprite());
+			checkCollision(sprite, swapLayer->getBlueBallSprite());
+		}
+		sprite = lineForCollisionDetect->getRightSprite();
+		if (sprite != nullptr) {
+			checkCollision(sprite, swapLayer->getRedBallSprite());
+			checkCollision(sprite, swapLayer->getBlueBallSprite());
+		}
+	}
+}
+
+void GameScene::checkCollision(const Sprite * spriteA, const cocos2d::Sprite * spriteB) {
+	if (spriteA->getBoundingBox().intersectsRect(spriteB->getBoundingBox())) {
+		if (spriteA->getColor() == spriteB->getColor()) {
+			//increment goals
+		}
+		else {
+			//game over
+		}
+	}
+}

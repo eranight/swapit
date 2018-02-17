@@ -26,6 +26,9 @@ private:
 	SwapLayer * swapLayer;
 
 	LineSprites * lineForCollisionDetect;
+
+	void collisionUpdate();
+	void checkCollision(const cocos2d::Sprite *, const cocos2d::Sprite *);
 };
 
 #endif // __GAME_SCENE_H__

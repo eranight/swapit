@@ -13,9 +13,9 @@ public:
 	bool init(LineInfo &);
 
 	//getters
-	cocos2d::Sprite * getLeftSprite() { return leftSprite; }
-	cocos2d::Sprite * getCenterSprite() { return centerSprite; }
-	cocos2d::Sprite * getRightSprite() { return rightSprite; }
+	const cocos2d::Sprite * getLeftSprite() { return leftSprite; }
+	const cocos2d::Sprite * getCenterSprite() { return centerSprite; }
+	const cocos2d::Sprite * getRightSprite() { return rightSprite; }
 
 private:
 	cocos2d::Sprite * leftSprite;
