@@ -78,7 +78,6 @@ void GameScene::update(float dt) {
 			}
 		}
 	}
-
 }
 
 void GameScene::menuCloseCallback(Ref* pSender)
@@ -133,30 +132,30 @@ void GameScene::collisionUpdate() {
 	}
 }
 
-static const float PERCENT = 1.0f;
+static const float PERCENT = 0.8f;
 
 //spriteB is always a ball from SwapLayer, but spriteA is might be a square
 void GameScene::checkCollision(const Sprite * spriteA, const cocos2d::Sprite * spriteB) {
 	Rect bbA = spriteA->getBoundingBox();
-	Vec2 centerA = lineForCollisionDetect->convertToWorldSpace(Vec2(bbA.getMidX(), bbA.getMidY()));
+	Vec2 centerA = convertToNodeSpace(lineForCollisionDetect->convertToWorldSpace(Vec2(bbA.getMidX(), bbA.getMidY())));
 	Rect bbB = spriteB->getBoundingBox();
-	Vec2 centerB = swapLayer->convertToWorldSpace(Vec2(bbB.getMidX(), bbB.getMidY()));
+	Vec2 centerB = convertToNodeSpace(swapLayer->convertToWorldSpace(Vec2(bbB.getMidX(), bbB.getMidY())));
 	float diameter = SPR_MANAGER->getSpriteSize() * PERCENT;
 	float radius = diameter * 0.5f;
 	if (spriteA->getColor() != SPR_MANAGER->getColor(LineInfo::Element::green)) {
-		if ((centerA - centerB).length() < radius) {
+		if ((centerA - centerB).length() <= diameter) {
 			if (spriteA->getColor() == spriteB->getColor()) {
 				++goals;
 			}
 			else {
-				//gameOver = true;
+				gameOver = true;
 			}
 		}
 	}
 	else {
 		Rect collisionRect = Rect(centerA.x - radius, centerA.y - radius, diameter, diameter);
 		if (collisionRect.intersectsCircle(centerB, radius)) {
-			//gameOver = true;
+			gameOver = true;
 		}
 	}
 }
