@@ -24,6 +24,8 @@ public:
 private:
 	bool gameOver;
 	int goals;
+	cocos2d::Label * goalsLabel;
+
 	GenerateLayer * generateLayer;
 	SwapLayer * swapLayer;
 

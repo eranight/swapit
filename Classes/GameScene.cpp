@@ -52,6 +52,11 @@ bool GameScene::init()
 	swapLayer = SwapLayer::create();
 	this->addChild(swapLayer);
 
+	goalsLabel = Label::create(String::createWithFormat("%d", goals)->getCString(), "fonts/Marker Felt.ttf", 25);
+	goalsLabel->setColor(Color3B::BLACK);
+	goalsLabel->setPosition(origin + Vec2(visibleSize.width * 0.5f, visibleSize.height - 26.0f));
+	this->addChild(goalsLabel);
+
 	lineForCollisionDetect = nullptr;
 
 	scheduleUpdate();
@@ -60,6 +65,7 @@ bool GameScene::init()
 }
 
 void GameScene::update(float dt) {
+	int prevGoals = goals;
 	if (lineForCollisionDetect == nullptr) {
 		lineForCollisionDetect = generateLayer->getFirstHighLine(swapLayer->getLinePosition());
 	}
@@ -77,6 +83,9 @@ void GameScene::update(float dt) {
 				}
 			}
 		}
+	}
+	if (prevGoals != goals) {
+		goalsLabel->setString(String::createWithFormat("%d", goals)->getCString());
 	}
 }
 
