@@ -26,6 +26,8 @@ private:
 	int goals;
 	cocos2d::Label * goalsLabel;
 
+	float velocity;
+
 	GenerateLayer * generateLayer;
 	SwapLayer * swapLayer;
 

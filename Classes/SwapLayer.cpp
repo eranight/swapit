@@ -33,8 +33,6 @@ bool SwapLayer::init()
 	leftPosition = Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::left), ballSize);
 	rightPosition = Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::right), ballSize);
 
-	velocity = (centerPosition - leftPosition).x / 0.7f;
-
 	redBall = SPR_MANAGER->getSprite(LineInfo::Element::red);
 	redBall->setPosition(leftPosition);
 	this->addChild(redBall, static_cast<int>(BallZOrder::left));
@@ -130,4 +128,8 @@ void SwapLayer::changeVisibility(float violetVisibility)
 	violetBall->setVisible(violetVisibility);
 	redBall->setVisible(!violetVisibility);
 	blueBall->setVisible(!violetVisibility);
+}
+
+void SwapLayer::setVelocity(float velocity) {
+	this->velocity = velocity * 1.3f;
 }

@@ -21,11 +21,6 @@ bool GenerateLayer::init()
 	finishPosition = Vec2(origin.x, origin.y - SPR_MANAGER->getSpriteSize());
 	nextGenerationPosition = Vec2(origin.x, origin.y + 4.0f * SPR_MANAGER->getSpriteSize());
 
-	velocity = (startPosition - finishPosition).length() / 5.0f;
-	timeToNextGeneration = (startPosition - nextGenerationPosition).length() / velocity;
-
-	generateNewLine();
-
 	return true;
 }
 
@@ -58,4 +53,14 @@ LineSprites * GenerateLayer::getFirstHighLine(float y) {
 		}
 	}
 	return nullptr;
+}
+
+void GenerateLayer::start(float velocity) {
+	setVelocity(velocity);
+	generateNewLine();
+}
+
+void GenerateLayer::setVelocity(float velocity) {
+	this->velocity = velocity;
+	timeToNextGeneration = (startPosition - nextGenerationPosition).length() / velocity;
 }

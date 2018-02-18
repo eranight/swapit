@@ -16,6 +16,8 @@ public:
 
 	LineSprites * getFrontLine() { return lines.at(0); }
 	LineSprites * getFirstHighLine(float y);
+	void start(float velocity);
+	void setVelocity(float velocity);
 private:
 	cocos2d::Vec2 startPosition;
 	cocos2d::Vec2 finishPosition;

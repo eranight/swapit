@@ -34,6 +34,8 @@ bool GameScene::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+	velocity = visibleSize.height / 7.0f;
+
     auto closeItem = MenuItemImage::create(
                                            "CloseNormal.png",
                                            "CloseSelected.png",
@@ -47,9 +49,11 @@ bool GameScene::init()
     this->addChild(menu, 1);
 
 	generateLayer = GenerateLayer::create();
+	generateLayer->start(velocity);
 	this->addChild(generateLayer);
 
 	swapLayer = SwapLayer::create();
+	swapLayer->setVelocity(velocity);
 	this->addChild(swapLayer);
 
 	goalsLabel = Label::create(String::createWithFormat("%d", goals)->getCString(), "fonts/Marker Felt.ttf", 25);
@@ -86,6 +90,12 @@ void GameScene::update(float dt) {
 	}
 	if (prevGoals != goals) {
 		goalsLabel->setString(String::createWithFormat("%d", goals)->getCString());
+		if (goals % 5 == 0) {
+			velocity *= 1.1;
+			generateLayer->setVelocity(velocity);
+			swapLayer->setVelocity(velocity);
+			CCLOG("new velocity: %.3f", velocity);
+		}
 	}
 }
 
