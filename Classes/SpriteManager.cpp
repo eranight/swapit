@@ -38,10 +38,10 @@ bool SpriteManager::init()
 	centerColumn = (origin + visibleSize).x * 0.5f - halfSize;
 	rightColumn = (origin + visibleSize).x * 0.8f - halfSize;
 
-	colorsMap[LineInfo::Element::red] = Color3B::RED;
-	colorsMap[LineInfo::Element::blue] = Color3B::BLUE;
-	colorsMap[LineInfo::Element::violet] = Color3B::MAGENTA;
-	colorsMap[LineInfo::Element::green] = Color3B::GREEN;
+	colorsMap[LineInfo::Element::red] = Color3B(255, 51, 51);
+	colorsMap[LineInfo::Element::blue] = Color3B(0, 128, 255);
+	colorsMap[LineInfo::Element::violet] = Color3B(178, 102, 255);
+	colorsMap[LineInfo::Element::green] = Color3B(0, 153, 76);
 
 	return true;
 }
