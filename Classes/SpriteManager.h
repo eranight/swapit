@@ -25,6 +25,7 @@ public: //interface
 	float getSpriteSize();
 	float getColumn(SpriteManager::SpriteColumn);
 	cocos2d::Sprite * getSprite(LineInfo::Element);
+	cocos2d::Color3B getColor(LineInfo::Element el) { return colorsMap[el]; }
 
 private:
 	float leftColumn, centerColumn, rightColumn;

@@ -114,7 +114,6 @@ void GameScene::collisionUpdate() {
 		if (swapLayer->getState() == SwapLayer::BallState::StandInCenter) {
 			checkCollision(sprite, swapLayer->getVioletBallSprite());
 			if (!gameOver && goals != prevGoals) {
-				//collision detect!
 				lineForCollisionDetect->destroyCenterSprite();
 			}
 		}
@@ -134,14 +133,29 @@ void GameScene::collisionUpdate() {
 	}
 }
 
+static const float PERCENT = 1.0f;
+
+//spriteB is always a ball from SwapLayer, but spriteA is might be a square
 void GameScene::checkCollision(const Sprite * spriteA, const cocos2d::Sprite * spriteB) {
-	if (spriteA->getBoundingBox().intersectsRect(spriteB->getBoundingBox())) {
-		if (spriteA->getColor() == spriteB->getColor()) {
-			//increment goals
-			++goals;
+	Rect bbA = spriteA->getBoundingBox();
+	Vec2 centerA = lineForCollisionDetect->convertToWorldSpace(Vec2(bbA.getMidX(), bbA.getMidY()));
+	Rect bbB = spriteB->getBoundingBox();
+	Vec2 centerB = swapLayer->convertToWorldSpace(Vec2(bbB.getMidX(), bbB.getMidY()));
+	float diameter = SPR_MANAGER->getSpriteSize() * PERCENT;
+	float radius = diameter * 0.5f;
+	if (spriteA->getColor() != SPR_MANAGER->getColor(LineInfo::Element::green)) {
+		if ((centerA - centerB).length() < radius) {
+			if (spriteA->getColor() == spriteB->getColor()) {
+				++goals;
+			}
+			else {
+				//gameOver = true;
+			}
 		}
-		else {
-			//game over
+	}
+	else {
+		Rect collisionRect = Rect(centerA.x - radius, centerA.y - radius, diameter, diameter);
+		if (collisionRect.intersectsCircle(centerB, radius)) {
 			//gameOver = true;
 		}
 	}
