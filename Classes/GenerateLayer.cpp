@@ -21,7 +21,25 @@ bool GenerateLayer::init()
 	finishPosition = Vec2(origin.x, origin.y - SPR_MANAGER->getSpriteSize());
 	nextGenerationPosition = Vec2(origin.x, origin.y + 4.0f * SPR_MANAGER->getSpriteSize());
 
+	scheduleUpdate();
+
 	return true;
+}
+
+void GenerateLayer::update(float dt) {
+	Vec2 ds = Vec2(0.0f, dt * velocity);
+	for (auto & line = lines.begin(); line != lines.end();) {
+		Vec2 currentPosition = (*line)->getPosition();
+		Vec2 nextPosition = currentPosition - ds;
+		(*line)->setPosition(nextPosition);
+		if (nextPosition.y <= finishPosition.y) {
+			this->removeChild(*line);
+			line = lines.erase(line);
+		}
+		else {
+			++line;
+		}
+	}
 }
 
 void GenerateLayer::generateNewLine()
@@ -30,20 +48,8 @@ void GenerateLayer::generateNewLine()
 	LineSprites * line = LineSprites::create(lineInfo);
 	line->setPosition(startPosition);
 	this->addChild(line);
-	line->runAction(
-		Sequence::create(
-			MoveTo::create((startPosition - finishPosition).length() / velocity, finishPosition),
-			CallFunc::create(CC_CALLBACK_0(GenerateLayer::eraseLine, this, line)),
-			RemoveSelf::create(),
-			nullptr
-		)
-	);
 	lines.pushBack(line);
 	this->runAction(Sequence::createWithTwoActions(DelayTime::create(timeToNextGeneration), CallFunc::create(CC_CALLBACK_0(GenerateLayer::generateNewLine, this))));
-}
-
-void GenerateLayer::eraseLine(LineSprites * line) {
-	lines.eraseObject(line);
 }
 
 LineSprites * GenerateLayer::getFirstHighLine(float y) {

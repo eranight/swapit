@@ -12,8 +12,10 @@ public:
 
 public:
 	CREATE_FUNC(GenerateLayer);
-	bool init();
+	bool init() override;
+	void update(float) override;
 
+public:
 	LineSprites * getFrontLine() { return lines.at(0); }
 	LineSprites * getFirstHighLine(float y);
 	void start(float velocity);
@@ -29,7 +31,6 @@ private:
 
 	LineBuilder lineBuilder;
 	void generateNewLine();
-	void eraseLine(LineSprites * line);
 };
 
 #endif // __PLAYING_LAYER_H__
