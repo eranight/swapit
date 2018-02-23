@@ -66,6 +66,11 @@ void GenerateLayer::start(float velocity) {
 	generateNewLine();
 }
 
+void GenerateLayer::stop() {
+	this->stopAllActions();
+	unscheduleUpdate();
+}
+
 void GenerateLayer::setVelocity(float velocity) {
 	this->velocity = velocity;
 	timeToNextGeneration = (startPosition - nextGenerationPosition).length() / velocity;

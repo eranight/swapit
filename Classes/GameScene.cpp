@@ -33,20 +33,10 @@ bool GameScene::init()
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
-	velocity = visibleSize.height / 7.0f;
-
-    auto closeItem = MenuItemImage::create(
-                                           "CloseNormal.png",
-                                           "CloseSelected.png",
-                                           CC_CALLBACK_1(GameScene::menuCloseCallback, this));
-    
-    closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
-                                origin.y + closeItem->getContentSize().height/2));
-
-    auto menu = Menu::create(closeItem, NULL);
-    menu->setPosition(Vec2::ZERO);
-    this->addChild(menu, 1);
+	
+	goalLevel = 5;
+	velocity = visibleSize.height / 6.0f;
+	lineForCollisionDetect = nullptr;
 
 	generateLayer = GenerateLayer::create();
 	generateLayer->start(velocity);
@@ -61,7 +51,22 @@ bool GameScene::init()
 	goalsLabel->setPosition(origin + Vec2(visibleSize.width * 0.5f, visibleSize.height - 26.0f));
 	this->addChild(goalsLabel);
 
-	lineForCollisionDetect = nullptr;
+	gameOverLabel = Label::create("Game Over", "fonts/Marker Felt.ttf", 25);
+	gameOverLabel->setColor(Color3B::BLACK);
+	gameOverLabel->setPosition((origin + visibleSize) * 0.5);
+	gameOverLabel->setVisible(false);
+	this->addChild(gameOverLabel);
+
+	auto closeItem = MenuItemImage::create(
+		"CloseNormal.png",
+		"CloseSelected.png",
+		CC_CALLBACK_1(GameScene::menuCloseCallback, this));
+
+	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2,
+		origin.y + closeItem->getContentSize().height / 2));
+	auto menu = Menu::create(closeItem, NULL);
+	menu->setPosition(Vec2::ZERO);
+	this->addChild(menu, 1);
 
 	scheduleUpdate();
 
@@ -90,12 +95,19 @@ void GameScene::update(float dt) {
 	}
 	if (prevGoals != goals) {
 		goalsLabel->setString(String::createWithFormat("%d", goals)->getCString());
-		if (goals % 5 == 0) {
+		if (goals >= goalLevel) {
 			velocity *= 1.1;
 			generateLayer->setVelocity(velocity);
 			swapLayer->setVelocity(velocity);
-			CCLOG("new velocity: %.3f", velocity);
+			goalLevel *= 1.5;
 		}
+	}
+
+	if (gameOver) {
+		gameOverLabel->setVisible(true);
+		swapLayer->stop();
+		generateLayer->stop();
+		unscheduleUpdate();
 	}
 }
 

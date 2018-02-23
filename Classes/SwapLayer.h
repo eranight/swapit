@@ -37,6 +37,8 @@ public:
 
 	void setVelocity(float velocity);
 
+	void stop();
+
 private:
 	bool touchBegan(cocos2d::Touch * touch, cocos2d::Event * event);
 	void touchEnded(cocos2d::Touch * touch, cocos2d::Event * event);

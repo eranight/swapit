@@ -54,6 +54,13 @@ bool SwapLayer::init()
     return true;
 }
 
+void SwapLayer::stop() {
+	redBall->stopAllActions();
+	blueBall->stopAllActions();
+	this->stopAllActions();
+	_eventDispatcher->removeEventListenersForTarget(this);
+}
+
 bool SwapLayer::touchBegan(Touch * touch, Event * event)
 {
 	if (state == BallState::StandOnOppositeSides)

@@ -25,7 +25,8 @@ private:
 	bool gameOver;
 	int goals;
 	cocos2d::Label * goalsLabel;
-
+	cocos2d::Label * gameOverLabel;
+	int goalLevel;
 	float velocity;
 
 	GenerateLayer * generateLayer;
