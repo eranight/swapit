@@ -3,6 +3,7 @@
 #include "SpriteManager.h"
 #include "SwapLayer.h"
 #include "GenerateLayer.h"
+#include "GameOverLayer.h"
 
 USING_NS_CC;
 
@@ -51,12 +52,6 @@ bool GameScene::init()
 	goalsLabel->setPosition(origin + Vec2(visibleSize.width * 0.5f, visibleSize.height - 26.0f));
 	this->addChild(goalsLabel);
 
-	gameOverLabel = Label::create("Game Over", "fonts/Marker Felt.ttf", 25);
-	gameOverLabel->setColor(Color3B::BLACK);
-	gameOverLabel->setPosition((origin + visibleSize) * 0.5);
-	gameOverLabel->setVisible(false);
-	this->addChild(gameOverLabel);
-
 	auto closeItem = MenuItemImage::create(
 		"CloseNormal.png",
 		"CloseSelected.png",
@@ -104,10 +99,11 @@ void GameScene::update(float dt) {
 	}
 
 	if (gameOver) {
-		gameOverLabel->setVisible(true);
 		swapLayer->stop();
 		generateLayer->stop();
 		unscheduleUpdate();
+		auto gameOverLayer = GameOverLayer::create(goals);
+		this->addChild(gameOverLayer);
 	}
 }
 
