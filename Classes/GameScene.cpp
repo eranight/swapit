@@ -178,10 +178,12 @@ void GameScene::collisionUpdate() {
 	prevGoals = goals;
 	sprite = lineForCollisionDetect->getCenterSprite();
 	if (sprite != nullptr) {
-		if (swapLayer->getState() == SwapLayer::BallState::StandInCenter) {
-			checkCollision(sprite, swapLayer->getVioletBallSprite());
-			if (!gameOver && goals != prevGoals) {
-				lineForCollisionDetect->destroyCenterSprite();
+		if (sprite->getColor() == SPR_MANAGER->getColor(LineInfo::Element::violet)) {
+			if (swapLayer->getState() == SwapLayer::BallState::StandInCenter) {
+				checkCollision(sprite, swapLayer->getVioletBallSprite());
+				if (!gameOver && goals != prevGoals) {
+					lineForCollisionDetect->destroyCenterSprite();
+				}
 			}
 		}
 		else {
