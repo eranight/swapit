@@ -6,8 +6,8 @@
 class GameOverLayer : public cocos2d::LayerColor
 {
 public:
-	static GameOverLayer * create(int goals);
-	bool init(int goals);
+	static GameOverLayer * create(int goals, float fadeInTime);
+	bool init(int goals, float fadeInTime);
 
 private:
 	void replay(cocos2d::Ref *);

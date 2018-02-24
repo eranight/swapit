@@ -53,8 +53,8 @@ bool GameScene::init()
 	this->addChild(goalsLabel);
 
 	auto closeItem = MenuItemImage::create(
-		"CloseNormal.png",
-		"CloseSelected.png",
+		"pauseNormal.png",
+		"pauseSelected.png",
 		CC_CALLBACK_1(GameScene::menuCloseCallback, this));
 
 	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2,
@@ -102,7 +102,7 @@ void GameScene::update(float dt) {
 		swapLayer->stop();
 		generateLayer->stop();
 		unscheduleUpdate();
-		auto gameOverLayer = GameOverLayer::create(goals);
+		auto gameOverLayer = GameOverLayer::create(goals, 2.0f);
 		this->addChild(gameOverLayer);
 	}
 }

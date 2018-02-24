@@ -1,11 +1,12 @@
 #include "GameOverLayer.h"
 #include "GameScene.h"
+#include <algorithm>
 
 USING_NS_CC;
 
-GameOverLayer * GameOverLayer::create(int goals) {
+GameOverLayer * GameOverLayer::create(int goals, float fadeInTime) {
 	auto pRet = new (std::nothrow) GameOverLayer();
-	if (pRet != nullptr && pRet->init(goals)) {
+	if (pRet != nullptr && pRet->init(goals, fadeInTime)) {
 		pRet->autorelease();
 	}
 	else {
@@ -14,7 +15,7 @@ GameOverLayer * GameOverLayer::create(int goals) {
 	return pRet;
 }
 
-bool GameOverLayer::init(int goals) {
+bool GameOverLayer::init(int goals, float fadeInTime) {
 	if (!LayerColor::initWithColor(Color4B(255, 255, 255, 128)))
 	{
 		return false;
@@ -34,13 +35,13 @@ bool GameOverLayer::init(int goals) {
 	this->addChild(goalsLabel);
 
 	auto backItem = MenuItemImage::create(
-		"CloseNormal.png",
-		"CloseSelected.png",
+		"backNormal.png",
+		"backSelected.png",
 		CC_CALLBACK_1(GameOverLayer::back, this));
 
 	backItem->setPosition(Vec2(center.x - (placeForLabel->getContentSize().width * 0.5f - backItem->getContentSize().width * 0.5f),
 		center.y - (placeForLabel->getContentSize().height * 0.5f + backItem->getContentSize().height * 0.5f)));
-	
+
 	auto replayItem = MenuItemImage::create(
 		"replayNormal.png",
 		"replaySelected.png",
@@ -52,6 +53,13 @@ bool GameOverLayer::init(int goals) {
 	auto menu = Menu::create(backItem, replayItem, nullptr);
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu, 1);
+
+	auto children = this->getChildren();
+	auto fadeInAction = FadeIn::create(fadeInTime);
+	std::for_each(children.begin(), children.end(), [&fadeInAction](Node * child) -> void {
+		child->setOpacity(0);
+		child->runAction(fadeInAction->clone());
+	});
 
 	return true;
 }
