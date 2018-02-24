@@ -7,6 +7,10 @@
 
 USING_NS_CC;
 
+static const std::string PAUSE_MENU_ITEM_NAME = "PAUSE";
+static const std::string RESUME_MENU_ITEM_NAME = "RESUME";
+static const std::string BACK_MENU_ITEM_NAME = "BACK";
+
 GameScene::~GameScene()
 {
 	SpriteManager::getInstance()->release();
@@ -52,14 +56,32 @@ bool GameScene::init()
 	goalsLabel->setPosition(origin + Vec2(visibleSize.width * 0.5f, visibleSize.height - 26.0f));
 	this->addChild(goalsLabel);
 
-	auto closeItem = MenuItemImage::create(
+	auto pauseItem = MenuItemImage::create(
 		"pauseNormal.png",
 		"pauseSelected.png",
-		CC_CALLBACK_1(GameScene::menuCloseCallback, this));
+		CC_CALLBACK_1(GameScene::menuPauseCallback, this));
+	pauseItem->setName(PAUSE_MENU_ITEM_NAME);
+	pauseItem->setPosition(Vec2(origin.x + visibleSize.width - pauseItem->getContentSize().width / 2,
+		origin.y + pauseItem->getContentSize().height / 2));
 
-	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2,
-		origin.y + closeItem->getContentSize().height / 2));
-	auto menu = Menu::create(closeItem, NULL);
+	auto resumeItem = MenuItemImage::create(
+		"playNormal.png",
+		"playSelected.png",
+		CC_CALLBACK_1(GameScene::menuResumeCallback, this));
+	resumeItem->setName(RESUME_MENU_ITEM_NAME);
+	resumeItem->setPosition((origin + visibleSize) * 0.5f);
+	resumeItem->setVisible(false);
+
+	auto backItem = MenuItemImage::create(
+		"backNormal.png",
+		"backSelected.png",
+		CC_CALLBACK_1(GameScene::menuCloseCallback, this));
+	backItem->setName(BACK_MENU_ITEM_NAME);
+	backItem->setPosition(Vec2(origin.x + backItem->getContentSize().width / 2,
+		origin.y + backItem->getContentSize().height / 2));
+	backItem->setVisible(false);
+
+	menu = Menu::create(pauseItem, resumeItem, backItem, nullptr);
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu, 1);
 
@@ -104,6 +126,7 @@ void GameScene::update(float dt) {
 		unscheduleUpdate();
 		auto gameOverLayer = GameOverLayer::create(goals, 2.0f);
 		this->addChild(gameOverLayer);
+		switchVisibility(false, false);
 	}
 }
 
@@ -112,7 +135,7 @@ void GameScene::menuCloseCallback(Ref* pSender)
     //Close the cocos2d-x game scene and quit the application
     Director::getInstance()->end();
 
-    #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     exit(0);
 #endif
     
@@ -120,8 +143,26 @@ void GameScene::menuCloseCallback(Ref* pSender)
     
     //EventCustom customEndEvent("game_scene_close_event");
     //_eventDispatcher->dispatchEvent(&customEndEvent);
-    
-    
+}
+
+void GameScene::menuPauseCallback(Ref * pSender) {
+	swapLayer->pause();
+	generateLayer->pause();
+	unscheduleUpdate();
+	switchVisibility(false, true);
+}
+
+void GameScene::menuResumeCallback(cocos2d::Ref * pSender) {
+	swapLayer->resume();
+	generateLayer->resume();
+	scheduleUpdate();
+	switchVisibility(true, false);
+}
+
+void GameScene::switchVisibility(bool isVisiblePause, bool isVisiblePlayAndBack) {
+	menu->getChildByName(PAUSE_MENU_ITEM_NAME)->setVisible(isVisiblePause);
+	menu->getChildByName(RESUME_MENU_ITEM_NAME)->setVisible(isVisiblePlayAndBack);
+	menu->getChildByName(BACK_MENU_ITEM_NAME)->setVisible(isVisiblePlayAndBack);
 }
 
 void GameScene::collisionUpdate() {

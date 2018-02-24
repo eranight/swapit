@@ -19,8 +19,15 @@ public:
     virtual bool init() override;
 	void update(float) override;
     
-    void menuCloseCallback(cocos2d::Ref *);
-	
+private: //menu
+	cocos2d::Menu * menu;
+
+	void menuCloseCallback(cocos2d::Ref *);
+	void menuPauseCallback(cocos2d::Ref *);
+	void menuResumeCallback(cocos2d::Ref *);
+
+	void switchVisibility(bool, bool);
+
 private:
 	bool gameOver;
 	int goals;

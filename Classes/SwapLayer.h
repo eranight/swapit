@@ -38,6 +38,8 @@ public:
 	void setVelocity(float velocity);
 
 	void stop();
+	void pause() override;
+	void resume() override;
 
 private:
 	bool touchBegan(cocos2d::Touch * touch, cocos2d::Event * event);

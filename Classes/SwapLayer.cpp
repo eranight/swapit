@@ -140,3 +140,15 @@ void SwapLayer::changeVisibility(float violetVisibility)
 void SwapLayer::setVelocity(float velocity) {
 	this->velocity = velocity * 1.3f;
 }
+
+void SwapLayer::pause() {
+	Layer::pause();
+	redBall->pause();
+	blueBall->pause();
+}
+
+void SwapLayer::resume() {
+	Layer::resume();
+	redBall->resume();
+	blueBall->resume();
+}

@@ -21,6 +21,7 @@ public:
 	void start(float velocity);
 	void setVelocity(float velocity);
 	void stop();
+
 private:
 	cocos2d::Vec2 startPosition;
 	cocos2d::Vec2 finishPosition;
