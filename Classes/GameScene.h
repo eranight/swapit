@@ -5,6 +5,7 @@
 
 class GenerateLayer;
 class SwapLayer;
+class PauseGameLayer;
 class LineSprites;
 
 class GameScene : public cocos2d::LayerColor
@@ -18,15 +19,8 @@ public:
 	CREATE_FUNC(GameScene);
     virtual bool init() override;
 	void update(float) override;
-    
-private: //menu
-	cocos2d::Menu * menu;
-
-	void menuCloseCallback(cocos2d::Ref *);
-	void menuPauseCallback(cocos2d::Ref *);
-	void menuResumeCallback(cocos2d::Ref *);
-
-	void switchVisibility(bool, bool);
+	void pause() override;
+	void resume() override;
 
 private:
 	bool gameOver;
@@ -37,6 +31,7 @@ private:
 
 	GenerateLayer * generateLayer;
 	SwapLayer * swapLayer;
+	PauseGameLayer * pauseGameLayer;
 
 	LineSprites * lineForCollisionDetect;
 
