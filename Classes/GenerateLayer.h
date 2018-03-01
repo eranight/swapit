@@ -18,9 +18,21 @@ public:
 public:
 	LineSprites * getFrontLine() { return lines.at(0); }
 	LineSprites * getFirstHighLine(float y);
-	void start(float velocity);
+	void start();
 	void setVelocity(float velocity);
 	void stop();
+
+public:
+	const cocos2d::Vec2 & getStartPosition() { return startPosition; }
+	void setStartPosition(const cocos2d::Vec2 & position) { startPosition = position; }
+
+	const cocos2d::Vec2 & getFinishPosition() { return finishPosition; }
+	void setFinishPosition(const cocos2d::Vec2 & position) { finishPosition = position; }
+
+	const cocos2d::Vec2 & getNextGenerationPosition() { return nextGenerationPosition; }
+	void setNextGenerationPosition(const cocos2d::Vec2 & position) { nextGenerationPosition = position; }
+
+	LineBuilder & getLineBuilder() { return lineBuilder; }
 
 private:
 	cocos2d::Vec2 startPosition;

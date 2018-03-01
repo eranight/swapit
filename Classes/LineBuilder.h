@@ -9,6 +9,8 @@ public: //constuctors
 
 public: //interface
 	LineInfo getNextLine();
+	void setProbabilities(int sides, int walls, int swap, int sigle);
+	void setStartConfiguration(const LineInfo & lineInfo);
 
 private: //methods
 	void generateFirstLine(LineInfo &);

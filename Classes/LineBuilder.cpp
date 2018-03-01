@@ -3,7 +3,7 @@
 
 USING_NS_CC;
 
-LineBuilder::LineBuilder() : lineCounter(0), sidesProb(50), wallsProb(50), swapProb(50), singleProb(50) {}
+LineBuilder::LineBuilder() : lineCounter(0), sidesProb(0), wallsProb(0), swapProb(0), singleProb(0) {}
 
 LineInfo LineBuilder::getNextLine() {
 	LineInfo lineInfo;
@@ -12,7 +12,13 @@ LineInfo LineBuilder::getNextLine() {
 		generateFirstLine(lineInfo);
 	}
 	else {
-		generateBalls(lineInfo);
+		if (prevLine.middle == LineInfo::Element::violet) {
+			generateSwap(lineInfo);
+			generateBallCount(lineInfo);
+		}
+		else {
+			generateBalls(lineInfo);
+		}
 		generateWalls(lineInfo);
 	}
 
@@ -25,34 +31,37 @@ LineInfo LineBuilder::getNextLine() {
 	return lineInfo;
 }
 
-void LineBuilder::generateFirstLine(LineInfo & line) {
-	line.left = LineInfo::Element::blue;
-	line.middle = LineInfo::Element::none;
-	line.right = LineInfo::Element::red;
+void LineBuilder::setProbabilities(int sides, int walls, int swap, int single) {
+	this->sidesProb = sides;
+	this->wallsProb = walls;
+	this->swapProb = swap;
+	this->singleProb = single;
+}
+
+void LineBuilder::setStartConfiguration(const LineInfo & line) {
+	prevLine = line;
 	prevSidesLine = line;
 }
 
+void LineBuilder::generateFirstLine(LineInfo & line) {
+	generateBalls(line);
+}
+
 void LineBuilder::generateBalls(LineInfo & line) {
-	if (prevLine.middle == LineInfo::Element::violet) {
-		generateSwap(line);
+	int prob = RandomHelper::random_int(0, 100);
+	if (prob < sidesProb) {
+		prob = RandomHelper::random_int(0, 100);
+		if (prob < swapProb) {
+			generateSwap(line);
+		}
+		else {
+			line.left = prevSidesLine.left;
+			line.right = prevSidesLine.right;
+		}
 		generateBallCount(line);
 	}
 	else {
-		int prob = RandomHelper::random_int(0, 100);
-		if (prob < sidesProb) {
-			prob = RandomHelper::random_int(0, 100);
-			if (prob < swapProb) {
-				generateSwap(line);
-			}
-			else {
-				line.left = prevSidesLine.left;
-				line.right = prevSidesLine.right;
-			}
-			generateBallCount(line);
-		}
-		else {
-			line.middle = LineInfo::Element::violet;
-		}
+		line.middle = LineInfo::Element::violet;
 	}
 }
 
@@ -74,6 +83,8 @@ void LineBuilder::generateSwap(LineInfo & line) {
 }
 
 LineInfo::Element LineBuilder::getOppositeElement(LineInfo::Element element) {
+	if (element == LineInfo::Element::none)
+		return LineInfo::Element::none;
 	return element == LineInfo::Element::red ? LineInfo::Element::blue : LineInfo::Element::red;
 }
 

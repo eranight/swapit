@@ -17,9 +17,9 @@ bool GenerateLayer::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	startPosition = Vec2(origin.x, (origin + visibleSize).y);
+	/*startPosition = Vec2(origin.x, (origin + visibleSize).y);
 	finishPosition = Vec2(origin.x, origin.y - SPR_MANAGER->getSpriteSize());
-	nextGenerationPosition = Vec2(origin.x, origin.y + 4.0f * SPR_MANAGER->getSpriteSize());
+	nextGenerationPosition = Vec2(origin.x, origin.y + 4.0f * SPR_MANAGER->getSpriteSize());*/
 
 	scheduleUpdate();
 
@@ -44,6 +44,7 @@ void GenerateLayer::update(float dt) {
 
 void GenerateLayer::generateNewLine()
 {
+	CCASSERT(velocity > 0, "You must set the velocity field > 0!");
 	LineInfo lineInfo = lineBuilder.getNextLine();
 	LineSprites * line = LineSprites::create(lineInfo);
 	line->setPosition(startPosition);
@@ -61,8 +62,7 @@ LineSprites * GenerateLayer::getFirstHighLine(float y) {
 	return nullptr;
 }
 
-void GenerateLayer::start(float velocity) {
-	setVelocity(velocity);
+void GenerateLayer::start() {
 	generateNewLine();
 }
 

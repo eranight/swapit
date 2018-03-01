@@ -8,6 +8,20 @@ class SwapLayer;
 class PauseGameLayer;
 class LineSprites;
 
+class GameScene;
+class SwapItSctipt {
+public:
+	SwapItSctipt(GameScene * gs) { gameScene = gs; }
+public:
+	virtual void init() = 0;
+	virtual void update(float dt) = 0;
+
+protected:
+	GameScene * gameScene;
+};
+class TutorialScript;
+class GameSctipt;
+
 class GameScene : public cocos2d::LayerColor
 {
 public:
@@ -37,6 +51,39 @@ private:
 
 	void collisionUpdate();
 	void checkCollision(const cocos2d::Sprite *, const cocos2d::Sprite *);
+
+	SwapItSctipt * script;
+
+friend class TutorialScript;
+friend class GameScript;
+};
+
+class TutorialScript : public SwapItSctipt {
+public:
+	TutorialScript(GameScene * gs);
+
+public:
+	void init() override;
+	void update(float dt) override;
+
+private:
+	bool promtIsActive;
+	int promtNumber;
+	float showPromtPosition;
+	const std::vector<std::string> promts;
+	cocos2d::Label * promtLabel;
+	LineSprites * line;
+
+};
+
+class GameScript : public SwapItSctipt {
+public:
+	GameScript(GameScene * gs);
+
+public:
+	void init() override;
+	void update(float dt) override;
+
 };
 
 #endif // __GAME_SCENE_H__
