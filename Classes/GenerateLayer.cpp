@@ -50,7 +50,7 @@ void GenerateLayer::generateNewLine()
 	line->setPosition(startPosition);
 	this->addChild(line);
 	lines.pushBack(line);
-	this->runAction(Sequence::createWithTwoActions(DelayTime::create(timeToNextGeneration), CallFunc::create(CC_CALLBACK_0(GenerateLayer::generateNewLine, this))));
+	//this->runAction(Sequence::createWithTwoActions(DelayTime::create(timeToNextGeneration), CallFunc::create(CC_CALLBACK_0(GenerateLayer::generateNewLine, this))));
 }
 
 LineSprites * GenerateLayer::getFirstHighLine(float y) {

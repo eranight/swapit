@@ -17,35 +17,30 @@ public:
 	~GameScene();
 
 public:
-    static cocos2d::Scene* createScene();
+	static cocos2d::Scene* createScene();
 
 	CREATE_FUNC(GameScene);
-    virtual bool init() override;
+	virtual bool init() override;
 	void update(float) override;
 	void pause() override;
 	void resume() override;
 
-private:
-	bool scoreCountOn;
-	bool gameOver;
-	int goals;
-	cocos2d::Label * goalsLabel;
-	int goalLevel;
-	float velocity;
+public:
+	GenerateLayer * getGenerateLayer() { return generateLayer; }
+	SwapLayer * getSwapLayer() { return swapLayer; }
+	void setScript(AbstractScript * script) { this->script = script; }
+	void invokeGameOver(int score);
 
+private:
 	GenerateLayer * generateLayer;
 	SwapLayer * swapLayer;
 	PauseGameLayer * pauseGameLayer;
-
 	LineSprites * lineForCollisionDetect;
 
 	void collisionUpdate();
-	void checkCollision(const cocos2d::Sprite *, const cocos2d::Sprite *);
+	void checkCollision(const cocos2d::Sprite *, const cocos2d::Sprite *, bool & needToDestroy);
 
 	AbstractScript * script;
-
-friend class TutorialScript;
-friend class GameScript;
 };
 
 

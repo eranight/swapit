@@ -12,6 +12,9 @@ public:
 public:
 	void init() override;
 	void update(float dt) override;
+	bool collide(LineInfo::Element elemA, LineInfo::Element elemB) override;
+	void pause() override;
+	void resume() override;
 
 private:
 	bool promtIsActive;

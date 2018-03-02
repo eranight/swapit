@@ -66,3 +66,12 @@ Sprite * SpriteManager::getSprite(LineInfo::Element spriteType)
 	sprite->setColor(colorsMap[spriteType]);
 	return sprite;
 }
+
+LineInfo::Element SpriteManager::getKeyByColor(const cocos2d::Color3B & color) {
+	for (auto pair : colorsMap) {
+		if (pair.second == color) {
+			return pair.first;
+		}
+	}
+	return LineInfo::Element::none;
+}

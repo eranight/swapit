@@ -33,6 +33,7 @@ public:
 	void setNextGenerationPosition(const cocos2d::Vec2 & position) { nextGenerationPosition = position; }
 
 	LineBuilder & getLineBuilder() { return lineBuilder; }
+	void generateNewLine();
 
 private:
 	cocos2d::Vec2 startPosition;
@@ -44,7 +45,6 @@ private:
 	float timeToNextGeneration;
 
 	LineBuilder lineBuilder;
-	void generateNewLine();
 };
 
 #endif // __PLAYING_LAYER_H__

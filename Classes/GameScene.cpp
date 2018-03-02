@@ -20,10 +20,10 @@ GameScene::~GameScene()
 
 Scene* GameScene::createScene()
 {
-    auto scene = Scene::create();
+	auto scene = Scene::create();
 	auto layer = GameScene::create();
-    scene->addChild(layer);
-    return scene;
+	scene->addChild(layer);
+	return scene;
 }
 
 bool GameScene::init()
@@ -33,16 +33,11 @@ bool GameScene::init()
 		return false;
 	}
 
-	scoreCountOn = false;
-	gameOver = false;
-	goals = 0;
-
 	SpriteManager::getInstance()->retain(); //initialization of the SpriteManager instance
 
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	
-	goalLevel = 5;
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
 	lineForCollisionDetect = nullptr;
 
 	generateLayer = GenerateLayer::create();
@@ -54,22 +49,21 @@ bool GameScene::init()
 	pauseGameLayer = PauseGameLayer::create();
 	this->addChild(pauseGameLayer);
 
-	goalsLabel = Label::create(String::createWithFormat("%d", goals)->getCString(), "fonts/Marker Felt.ttf", 25);
+	/*goalsLabel = Label::create(String::createWithFormat("%d", goals)->getCString(), "fonts/Marker Felt.ttf", 25);
 	goalsLabel->setColor(Color3B::BLACK);
 	goalsLabel->setPosition(origin + Vec2(visibleSize.width * 0.5f, visibleSize.height - 26.0f));
-	this->addChild(goalsLabel);
+	this->addChild(goalsLabel);*/
 
 	script = new TutorialScript(this);
 	script->init();
 
 	scheduleUpdate();
 
-    return true;
+	return true;
 }
 
 void GameScene::update(float dt) {
 
-	int prevGoals = goals;
 	if (lineForCollisionDetect == nullptr) {
 		lineForCollisionDetect = generateLayer->getFirstHighLine(swapLayer->getLinePosition());
 	}
@@ -93,24 +87,15 @@ void GameScene::update(float dt) {
 		script->update(dt);
 	}
 
-	if (scoreCountOn && prevGoals != goals) {
-		goalsLabel->setString(String::createWithFormat("%d", goals)->getCString());
-		if (goals >= goalLevel) {
-			velocity *= 1.1;
-			generateLayer->setVelocity(velocity);
-			swapLayer->setVelocity(velocity);
-			goalLevel *= 1.5;
-		}
+	/*if (scoreCountOn && prevGoals != goals) {
+	goalsLabel->setString(String::createWithFormat("%d", goals)->getCString());
+	if (goals >= goalLevel) {
+	velocity *= 1.1;
+	generateLayer->setVelocity(velocity);
+	swapLayer->setVelocity(velocity);
+	goalLevel *= 1.5;
 	}
-
-	if (gameOver) {
-		swapLayer->stop();
-		generateLayer->stop();
-		pauseGameLayer->setVisible(false);
-		unscheduleUpdate();
-		auto gameOverLayer = GameOverLayer::create(goals, 2.0f);
-		this->addChild(gameOverLayer);
-	}
+	}*/
 }
 
 void GameScene::pause() {
@@ -128,38 +113,46 @@ void GameScene::resume() {
 }
 
 void GameScene::collisionUpdate() {
-	int prevGoals = goals;
+	bool needToDestroy = false;
 	const Sprite * sprite = lineForCollisionDetect->getLeftSprite();
 	if (sprite != nullptr) {
-		checkCollision(sprite, swapLayer->getRedBallSprite());
-		checkCollision(sprite, swapLayer->getBlueBallSprite());
-		if (!gameOver && goals != prevGoals) {
+		checkCollision(sprite, swapLayer->getRedBallSprite(), needToDestroy);
+		if (needToDestroy) {
 			lineForCollisionDetect->destroyLeftSprite();
 		}
+		else {
+			checkCollision(sprite, swapLayer->getBlueBallSprite(), needToDestroy);
+			if (needToDestroy) {
+				lineForCollisionDetect->destroyLeftSprite();
+			}
+		}
 	}
-	prevGoals = goals;
 	sprite = lineForCollisionDetect->getCenterSprite();
 	if (sprite != nullptr) {
 		if (sprite->getColor() == SPR_MANAGER->getColor(LineInfo::Element::violet)) {
 			if (swapLayer->getState() == SwapLayer::BallState::StandInCenter) {
-				checkCollision(sprite, swapLayer->getVioletBallSprite());
-				if (!gameOver && goals != prevGoals) {
+				checkCollision(sprite, swapLayer->getVioletBallSprite(), needToDestroy);
+				if (needToDestroy) {
 					lineForCollisionDetect->destroyCenterSprite();
 				}
 			}
 		}
 		else {
-			checkCollision(sprite, swapLayer->getRedBallSprite());
-			checkCollision(sprite, swapLayer->getBlueBallSprite());
+			checkCollision(sprite, swapLayer->getRedBallSprite(), needToDestroy);
+			checkCollision(sprite, swapLayer->getBlueBallSprite(), needToDestroy);
 		}
 	}
-	prevGoals = goals;
 	sprite = lineForCollisionDetect->getRightSprite();
 	if (sprite != nullptr) {
-		checkCollision(sprite, swapLayer->getRedBallSprite());
-		checkCollision(sprite, swapLayer->getBlueBallSprite());
-		if (!gameOver && goals != prevGoals) {
+		checkCollision(sprite, swapLayer->getRedBallSprite(), needToDestroy);
+		if (needToDestroy) {
 			lineForCollisionDetect->destroyRightSprite();
+		}
+		else {
+			checkCollision(sprite, swapLayer->getBlueBallSprite(), needToDestroy);
+			if (needToDestroy) {
+				lineForCollisionDetect->destroyRightSprite();
+			}
 		}
 	}
 }
@@ -167,7 +160,7 @@ void GameScene::collisionUpdate() {
 static const float PERCENT = 0.8f;
 
 //spriteB is always a ball from SwapLayer, but spriteA is might be a square
-void GameScene::checkCollision(const Sprite * spriteA, const cocos2d::Sprite * spriteB) {
+void GameScene::checkCollision(const Sprite * spriteA, const cocos2d::Sprite * spriteB, bool & needToDestroy) {
 	Rect bbA = spriteA->getBoundingBox();
 	Vec2 centerA = convertToNodeSpace(lineForCollisionDetect->convertToWorldSpace(Vec2(bbA.getMidX(), bbA.getMidY())));
 	Rect bbB = spriteB->getBoundingBox();
@@ -176,18 +169,22 @@ void GameScene::checkCollision(const Sprite * spriteA, const cocos2d::Sprite * s
 	float radius = diameter * 0.5f;
 	if (spriteA->getColor() != SPR_MANAGER->getColor(LineInfo::Element::green)) {
 		if ((centerA - centerB).length() <= diameter) {
-			if (spriteA->getColor() == spriteB->getColor()) {
-				++goals;
-			}
-			else {
-				gameOver = true;
-			}
+			needToDestroy = script->collide(SPR_MANAGER->getKeyByColor(spriteA->getColor()), SPR_MANAGER->getKeyByColor(spriteB->getColor()));
 		}
 	}
 	else {
 		Rect collisionRect = Rect(centerA.x - radius, centerA.y - radius, diameter, diameter);
 		if (collisionRect.intersectsCircle(centerB, radius)) {
-			gameOver = true;
+			needToDestroy = script->collide(SPR_MANAGER->getKeyByColor(spriteA->getColor()), SPR_MANAGER->getKeyByColor(spriteB->getColor()));
 		}
 	}
+}
+
+void GameScene::invokeGameOver(int score) {
+	swapLayer->stop();
+	generateLayer->stop();
+	pauseGameLayer->setVisible(false);
+	unscheduleUpdate();
+	auto gameOverLayer = GameOverLayer::create(score, 2.0f);
+	this->addChild(gameOverLayer);
 }
