@@ -46,16 +46,17 @@ bool GameScene::init()
 	swapLayer = SwapLayer::create();
 	this->addChild(swapLayer);
 
-	pauseGameLayer = PauseGameLayer::create();
-	this->addChild(pauseGameLayer);
-
 	/*goalsLabel = Label::create(String::createWithFormat("%d", goals)->getCString(), "fonts/Marker Felt.ttf", 25);
 	goalsLabel->setColor(Color3B::BLACK);
 	goalsLabel->setPosition(origin + Vec2(visibleSize.width * 0.5f, visibleSize.height - 26.0f));
 	this->addChild(goalsLabel);*/
 
+	prevScript = nullptr;
 	script = new TutorialScript(this);
 	script->init();
+
+	pauseGameLayer = PauseGameLayer::create();
+	this->addChild(pauseGameLayer);
 
 	scheduleUpdate();
 
@@ -81,6 +82,11 @@ void GameScene::update(float dt) {
 				}
 			}
 		}
+	}
+
+	if (prevScript != nullptr) {
+		delete prevScript;
+		prevScript = nullptr;
 	}
 
 	if (script != nullptr) {
@@ -157,6 +163,11 @@ void GameScene::collisionUpdate() {
 			}
 		}
 	}
+}
+
+void GameScene::setScript(AbstractScript * script) {
+	prevScript = this->script;
+	this->script = script;
 }
 
 static const float PERCENT = 0.8f;

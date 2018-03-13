@@ -14,7 +14,12 @@ public:
 	void pause() override;
 	void resume() override;
 
-private:
+private: //score
+	int score;
+	cocos2d::Label * scoreLabel;
+
+private: //game over
+	bool gameOver;
 
 };
 

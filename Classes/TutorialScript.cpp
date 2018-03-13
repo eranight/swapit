@@ -7,9 +7,11 @@
 
 USING_NS_CC;
 
-
 TutorialScript::TutorialScript(GameScene * gameScene) : AbstractScript(gameScene), promts({ "tap to swap", "allow the square", "tap and hold" }) {
+}
 
+TutorialScript::~TutorialScript() {
+	gameScene->removeChild(promtLabel);
 }
 
 void TutorialScript::init() {
@@ -29,12 +31,15 @@ void TutorialScript::init() {
 	generateLayer = gameScene->getGenerateLayer();
 	generateLayer->getLineBuilder().setStartConfiguration(LineInfo(LineInfo::Element::red, LineInfo::Element::none, LineInfo::Element::blue));
 	generateLayer->getLineBuilder().setProbabilities(100, 0, 100, 100);
+
 	float velocity = visibleSize.height / 6.0f;
+
 	generateLayer->setStartPosition(Vec2(origin.x, (origin + visibleSize).y));
 	generateLayer->setFinishPosition(Vec2(origin.x, origin.y - SPR_MANAGER->getSpriteSize()));
 	generateLayer->setVelocity(velocity);
 	generateLayer->start();
 
+	velocity = visibleSize.width / (6.0f * 0.75f);
 	swapLayer = gameScene->getSwapLayer();
 	swapLayer->setVelocity(velocity);
 
@@ -42,7 +47,6 @@ void TutorialScript::init() {
 }
 
 void TutorialScript::update(float dt) {
-	if (promtLabel == nullptr) return;
 	if (line == nullptr) {
 		line = generateLayer->getFirstHighLine(showPromtPosition);
 		swapLayer->pause();
@@ -85,11 +89,9 @@ void TutorialScript::update(float dt) {
 				line = nullptr;
 			}
 			else {
-				gameScene->removeChild(promtLabel);
-				promtLabel = nullptr;
-				//auto script = new GameScript(gameScene);
-				//gameScene->setScript(script);
-				//script->init();
+				auto script = new GameScript(gameScene);
+				gameScene->setScript(script);
+				script->init();
 			}
 		}
 	}

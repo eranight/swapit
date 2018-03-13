@@ -28,7 +28,7 @@ public:
 public:
 	GenerateLayer * getGenerateLayer() { return generateLayer; }
 	SwapLayer * getSwapLayer() { return swapLayer; }
-	void setScript(AbstractScript * script) { this->script = script; }
+	void setScript(AbstractScript * script);
 	void invokeGameOver(int score);
 
 private:
@@ -40,6 +40,7 @@ private:
 	void collisionUpdate();
 	void checkCollision(const cocos2d::Sprite *, const cocos2d::Sprite *, bool & needToDestroy);
 
+	AbstractScript * prevScript;
 	AbstractScript * script;
 };
 

@@ -8,6 +8,7 @@ class LineSprites;
 class TutorialScript : public AbstractScript {
 public:
 	TutorialScript(GameScene * gameScene);
+	~TutorialScript();
 
 public:
 	void init() override;
@@ -15,6 +16,10 @@ public:
 	bool collide(LineInfo::Element elemA, LineInfo::Element elemB) override;
 	void pause() override;
 	void resume() override;
+
+private:
+	GenerateLayer * generateLayer;
+	SwapLayer * swapLayer;
 
 private:
 	bool promtIsActive;

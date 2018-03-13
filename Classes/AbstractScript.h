@@ -10,21 +10,20 @@ class SwapLayer;
 
 class AbstractScript : public cocos2d::Ref {
 public:
-	AbstractScript(GameScene * gameScene) : gameOver(false) { this->gameScene = gameScene; }
+	AbstractScript(GameScene * gameScene) { this->gameScene = gameScene; }
+	virtual ~AbstractScript() {}
 
 public:
 	virtual void init() = 0;
 	virtual void update(float dt) = 0;
+	//elemA always belongs to the LineSprites instance from the GenerateLayer instance
+	//elemB always belongs to the SwapLayer instance
 	virtual bool collide(LineInfo::Element elemA, LineInfo::Element elemB) = 0;
 	virtual void pause() = 0;
 	virtual void resume() = 0;
 
 protected:
 	GameScene * gameScene;
-	GenerateLayer * generateLayer;
-	SwapLayer * swapLayer;
-
-	bool gameOver;
 };
 
 #endif //__ABSTRACT_SCRIPT_H__
