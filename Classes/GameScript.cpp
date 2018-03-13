@@ -10,8 +10,22 @@ GameScript::GameScript(GameScene * gameScene) : AbstractScript(gameScene) {
 }
 
 void GameScript::init() {
+
 }
 
 void GameScript::update(float dt) {
 
+}
+
+void GameScript::pause() {
+
+}
+
+void GameScript::resume() {
+
+}
+
+bool GameScript::collide(LineInfo::Element elemA, LineInfo::Element elemB) {
+
+	return false;
 }

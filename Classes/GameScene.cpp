@@ -103,6 +103,7 @@ void GameScene::pause() {
 	swapLayer->pause();
 	generateLayer->pause();
 	pauseGameLayer->resume();
+	script->pause();
 }
 
 void GameScene::resume() {
@@ -110,6 +111,7 @@ void GameScene::resume() {
 	swapLayer->resume();
 	generateLayer->resume();
 	pauseGameLayer->pause();
+	script->resume();
 }
 
 void GameScene::collisionUpdate() {

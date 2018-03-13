@@ -104,9 +104,13 @@ bool TutorialScript::collide(LineInfo::Element elemA, LineInfo::Element elemB) {
 }
 
 void TutorialScript::pause() {
-
+	if (promtIsActive) {
+		promtLabel->setVisible(false);
+	}
 }
 
 void TutorialScript::resume() {
-
+	if (promtIsActive) {
+		promtLabel->setVisible(true);
+	}
 }
