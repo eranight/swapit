@@ -88,6 +88,7 @@ void GameScene::update(float dt) {
 
 	if ((*currentScriptPointer)->isFinished()) {
 		currentScriptPointer++;
+		(*currentScriptPointer)->init();
 	}
 
 	(*currentScriptPointer)->update(dt);
