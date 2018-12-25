@@ -10,7 +10,7 @@ class SwapLayer;
 
 class AbstractScript : public cocos2d::Ref {
 public:
-	AbstractScript(GameScene * gameScene) { this->gameScene = gameScene; }
+	AbstractScript(GameScene * gameScene) { this->gameScene = gameScene; this->finished = false; }
 	virtual ~AbstractScript() {}
 
 public:
@@ -22,8 +22,15 @@ public:
 	virtual void pause() = 0;
 	virtual void resume() = 0;
 
+	bool isFinished() { return finished; }
+
 protected:
 	GameScene * gameScene;
+	void setFinished() { finished = true; }
+
+private:
+	bool finished;
+
 };
 
 #endif //__ABSTRACT_SCRIPT_H__
