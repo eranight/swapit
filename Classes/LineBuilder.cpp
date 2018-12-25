@@ -48,10 +48,10 @@ void LineBuilder::generateFirstLine(LineInfo & line) {
 }
 
 void LineBuilder::generateBalls(LineInfo & line) {
-	int prob = RandomHelper::random_int(0, 100);
-	if (prob < sidesProb) {
-		prob = RandomHelper::random_int(0, 100);
-		if (prob < swapProb) {
+	int prob = RandomHelper::random_int(1, 100);
+	if (prob <= sidesProb) {
+		prob = RandomHelper::random_int(1, 100);
+		if (prob <= swapProb) {
 			generateSwap(line);
 		}
 		else {
@@ -66,8 +66,8 @@ void LineBuilder::generateBalls(LineInfo & line) {
 }
 
 void LineBuilder::generateWalls(LineInfo & line) {
-	int prob = RandomHelper::random_int(0, 100);
-	LineInfo::Element element = (prob < wallsProb) ? LineInfo::Element::green : LineInfo::Element::none;
+	int prob = RandomHelper::random_int(1, 100);
+	LineInfo::Element element = (prob <= wallsProb) ? LineInfo::Element::green : LineInfo::Element::none;
 	if (line.middle == LineInfo::Element::violet) {
 		line.left = line.right = element;
 	}
@@ -89,9 +89,9 @@ LineInfo::Element LineBuilder::getOppositeElement(LineInfo::Element element) {
 }
 
 void LineBuilder::generateBallCount(LineInfo & line) {
-	int prob = RandomHelper::random_int(0, 100);
-	if (prob < singleProb) {
-		if (RandomHelper::random_int(0, 100) % 2 == 0) {
+	int prob = RandomHelper::random_int(1, 100);
+	if (prob <= singleProb) {
+		if (RandomHelper::random_int(1, 100) % 2 == 0) {
 			line.left = LineInfo::Element::none;
 		}
 		else {
