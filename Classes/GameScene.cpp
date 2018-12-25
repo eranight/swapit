@@ -13,9 +13,10 @@ USING_NS_CC;
 GameScene::~GameScene()
 {
 	SpriteManager::getInstance()->release();
-	if (script != nullptr) {
-		delete script;
+	for (auto script : scripts) {
+		script->release();
 	}
+	scripts.clear();
 }
 
 Scene* GameScene::createScene()
@@ -51,9 +52,10 @@ bool GameScene::init()
 	goalsLabel->setPosition(origin + Vec2(visibleSize.width * 0.5f, visibleSize.height - 26.0f));
 	this->addChild(goalsLabel);*/
 
-	prevScript = nullptr;
-	script = new TutorialScript(this);
-	script->init();
+	scripts.push_back(new TutorialScript(this));
+	scripts.push_back(new GameScript(this));
+	scripts[0]->init();
+	currentScriptPointer = scripts.begin();
 
 	pauseGameLayer = PauseGameLayer::create();
 	this->addChild(pauseGameLayer);
@@ -84,14 +86,11 @@ void GameScene::update(float dt) {
 		}
 	}
 
-	if (prevScript != nullptr) {
-		delete prevScript;
-		prevScript = nullptr;
+	if ((*currentScriptPointer)->isFinished()) {
+		currentScriptPointer++;
 	}
 
-	if (script != nullptr) {
-		script->update(dt);
-	}
+	(*currentScriptPointer)->update(dt);
 
 	/*if (scoreCountOn && prevGoals != goals) {
 	goalsLabel->setString(String::createWithFormat("%d", goals)->getCString());
@@ -109,7 +108,7 @@ void GameScene::pause() {
 	swapLayer->pause();
 	generateLayer->pause();
 	pauseGameLayer->resume();
-	script->pause();
+	(*currentScriptPointer)->pause();
 }
 
 void GameScene::resume() {
@@ -117,7 +116,7 @@ void GameScene::resume() {
 	swapLayer->resume();
 	generateLayer->resume();
 	pauseGameLayer->pause();
-	script->resume();
+	(*currentScriptPointer)->resume();
 }
 
 void GameScene::collisionUpdate() {
@@ -165,11 +164,6 @@ void GameScene::collisionUpdate() {
 	}
 }
 
-void GameScene::setScript(AbstractScript * script) {
-	prevScript = this->script;
-	this->script = script;
-}
-
 static const float PERCENT = 0.8f;
 
 //spriteB is always a ball from SwapLayer, but spriteA is might be a square
@@ -182,13 +176,13 @@ void GameScene::checkCollision(const Sprite * spriteA, const cocos2d::Sprite * s
 	float radius = diameter * 0.5f;
 	if (spriteA->getColor() != SPR_MANAGER->getColor(LineInfo::Element::green)) {
 		if ((centerA - centerB).length() <= diameter) {
-			needToDestroy = script->collide(SPR_MANAGER->getKeyByColor(spriteA->getColor()), SPR_MANAGER->getKeyByColor(spriteB->getColor()));
+			needToDestroy = (*currentScriptPointer)->collide(SPR_MANAGER->getKeyByColor(spriteA->getColor()), SPR_MANAGER->getKeyByColor(spriteB->getColor()));
 		}
 	}
 	else {
 		Rect collisionRect = Rect(centerA.x - radius, centerA.y - radius, diameter, diameter);
 		if (collisionRect.intersectsCircle(centerB, radius)) {
-			needToDestroy = script->collide(SPR_MANAGER->getKeyByColor(spriteA->getColor()), SPR_MANAGER->getKeyByColor(spriteB->getColor()));
+			needToDestroy = (*currentScriptPointer)->collide(SPR_MANAGER->getKeyByColor(spriteA->getColor()), SPR_MANAGER->getKeyByColor(spriteB->getColor()));
 		}
 	}
 }

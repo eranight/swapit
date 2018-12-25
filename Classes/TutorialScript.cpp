@@ -47,17 +47,18 @@ void TutorialScript::init() {
 }
 
 void TutorialScript::update(float dt) {
+	if (isFinished()) return;
 	if (line == nullptr) {
 		line = generateLayer->getFirstHighLine(showPromtPosition);
 		swapLayer->pause();
 	}
-	else if (line != nullptr && gameScene->convertToNodeSpace(generateLayer->convertToWorldSpace(line->getPosition())).y < showPromtPosition) {
+	else if (!promtIsActive && gameScene->convertToNodeSpace(generateLayer->convertToWorldSpace(line->getPosition())).y < showPromtPosition) {
 		promtIsActive = true;
 		promtLabel->setVisible(true);
 		generateLayer->pause();
 		swapLayer->resume();
 	}
-	if (promtLabel->isVisible()) {
+	if (promtIsActive) {
 		bool checkCondition = false;
 		if (promtNumber == 0 || promtNumber == 1) {
 			const Sprite * sprite = line->getLeftSprite() != nullptr ? line->getLeftSprite() : line->getRightSprite();
@@ -72,34 +73,36 @@ void TutorialScript::update(float dt) {
 		else if (promtNumber == 2) {
 			if (swapLayer->getState() == SwapLayer::BallState::StandInCenter) {
 				checkCondition = true;
+				swapLayer->pause();
 			}
 		}
 		if (checkCondition) {
 			promtLabel->setVisible(false);
 			generateLayer->resume();
-			if (++promtNumber < promts.size()) {
-				promtLabel->setString(promts[promtNumber]);
-				if (promtNumber == 1) {
-					generateLayer->getLineBuilder().setProbabilities(100, 100, 100, 100);
-				}
-				else {
-					generateLayer->getLineBuilder().setProbabilities(0, 0, 0, 0);
-				}
-				promtIsActive = false;
-				line = nullptr;
-			}
-			else {
-				auto script = new GameScript(gameScene);
-				gameScene->setScript(script);
-				script->init();
-			}
 		}
 	}
 }
 
 bool TutorialScript::collide(LineInfo::Element elemA, LineInfo::Element elemB) {
 	if (elemA == elemB) {
-		generateLayer->generateNewLine();
+		promtIsActive = false;
+		line = nullptr;
+		if (++promtNumber > 2) {
+			setFinished();
+		}
+		else {
+			promtLabel->setString(promts[promtNumber]);
+			if (promtNumber == 1) {
+				generateLayer->getLineBuilder().setProbabilities(100, 100, 100, 100);
+			}
+			else if (promtNumber == 2) {
+				generateLayer->getLineBuilder().setProbabilities(0, 0, 0, 0);
+			}
+			else {
+				setFinished();
+			}
+			generateLayer->generateNewLine();
+		}
 		return true;
 	}
 	return false;
