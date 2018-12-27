@@ -151,4 +151,7 @@ void SwapLayer::resume() {
 	Layer::resume();
 	redBall->resume();
 	blueBall->resume();
+	if (state == BallState::StandInCenter) {
+		touchEnded(nullptr, nullptr);
+	}
 }

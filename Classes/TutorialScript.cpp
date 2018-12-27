@@ -88,6 +88,7 @@ bool TutorialScript::collide(LineInfo::Element elemA, LineInfo::Element elemB) {
 		promtIsActive = false;
 		line = nullptr;
 		if (++promtNumber > 2) {
+			swapLayer->resume();
 			setFinished();
 		}
 		else {
@@ -97,9 +98,6 @@ bool TutorialScript::collide(LineInfo::Element elemA, LineInfo::Element elemB) {
 			}
 			else if (promtNumber == 2) {
 				generateLayer->getLineBuilder().setProbabilities(0, 0, 0, 0);
-			}
-			else {
-				setFinished();
 			}
 			generateLayer->generateNewLine();
 		}
