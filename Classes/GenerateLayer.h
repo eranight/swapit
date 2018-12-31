@@ -2,10 +2,11 @@
 #define __GENERATE_LAYER_H__
 
 #include "cocos2d.h"
+#include "Blocking.h"
 #include "LineSprites.h"
 #include "LineBuilder.h"
 
-class GenerateLayer : public cocos2d::Layer
+class GenerateLayer : public cocos2d::Layer, public Blocking
 {
 public:
 	~GenerateLayer();

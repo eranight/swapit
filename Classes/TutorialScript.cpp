@@ -50,13 +50,13 @@ void TutorialScript::update(float dt) {
 	if (isFinished()) return;
 	if (line == nullptr) {
 		line = generateLayer->getFirstHighLine(showPromtPosition);
-		swapLayer->pause();
+		swapLayer->block();
 	}
 	else if (!promtIsActive && gameScene->convertToNodeSpace(generateLayer->convertToWorldSpace(line->getPosition())).y < showPromtPosition) {
 		promtIsActive = true;
 		promtLabel->setVisible(true);
-		generateLayer->pause();
-		swapLayer->resume();
+		generateLayer->block();
+		swapLayer->unblock();
 	}
 	if (promtIsActive) {
 		bool checkCondition = false;
@@ -67,18 +67,18 @@ void TutorialScript::update(float dt) {
 			float x2 = gameScene->convertToNodeSpace(swapLayer->convertToWorldSpace(compareSprite->getPosition())).x;
 			if (swapLayer->getState() == SwapLayer::BallState::StandOnOppositeSides && abs(x1 - x2) <= 0.1f) {
 				checkCondition = true;
-				swapLayer->pause();
+				swapLayer->block();
 			}
 		}
 		else if (promtNumber == 2) {
 			if (swapLayer->getState() == SwapLayer::BallState::StandInCenter) {
 				checkCondition = true;
-				swapLayer->pause();
+				swapLayer->block();
 			}
 		}
 		if (checkCondition) {
 			promtLabel->setVisible(false);
-			generateLayer->resume();
+			generateLayer->unblock();
 		}
 	}
 }
@@ -88,7 +88,7 @@ bool TutorialScript::collide(LineInfo::Element elemA, LineInfo::Element elemB) {
 		promtIsActive = false;
 		line = nullptr;
 		if (++promtNumber > 2) {
-			swapLayer->resume();
+			swapLayer->unblock();
 			setFinished();
 		}
 		else {
