@@ -49,6 +49,7 @@ private:
 	bool touchBegan(cocos2d::Touch * touch, cocos2d::Event * event);
 	void touchEnded(cocos2d::Touch * touch, cocos2d::Event * event);
 
+	void finishAction();
 	void setStandInCenterState();
 	void setStandOnOppositeSidesState();
 
@@ -57,6 +58,9 @@ private:
 private:
 	float velocity;
 	BallState state;
+	BallState nextState;
+	int finishedCounter;
+	std::map<BallState, std::function<void()>> stateFunctor;
 	BallOrder ballOrder;
 	cocos2d::Vec2 centerPosition;
 	cocos2d::Vec2 leftPosition;

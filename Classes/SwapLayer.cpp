@@ -27,6 +27,9 @@ bool SwapLayer::init()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	blocked = false;
+	finishedCounter = 0;
+	stateFunctor[BallState::StandInCenter] = CC_CALLBACK_0(SwapLayer::setStandInCenterState, this);
+	stateFunctor[BallState::StandOnOppositeSides] = CC_CALLBACK_0(SwapLayer::setStandOnOppositeSidesState, this);
 	
 	float ballSize = SPR_MANAGER->getSpriteSize();
 
@@ -61,10 +64,10 @@ bool SwapLayer::touchBegan(Touch * touch, Event * event)
 	{
 		state = BallState::MovingToCenter;
 		float timer = (centerPosition - leftPosition).x / velocity;
-		redBall->runAction(MoveTo::create(timer, centerPosition));
-		blueBall->runAction(MoveTo::create(timer, centerPosition));
-		auto sequence = Sequence::createWithTwoActions(DelayTime::create(timer), CallFunc::create(CC_CALLBACK_0(SwapLayer::setStandInCenterState, this)));
-		this->runAction(sequence);
+		auto sequence = Sequence::createWithTwoActions(MoveTo::create(timer, centerPosition), CallFunc::create(CC_CALLBACK_0(SwapLayer::finishAction, this)));
+		redBall->runAction(sequence->clone());
+		blueBall->runAction(sequence->clone());
+		nextState = BallState::StandInCenter;
 	}
 	return true;
 }
@@ -102,10 +105,16 @@ void SwapLayer::touchEnded(Touch * touch, Event * event)
 			blueBallTimer = (rightPosition - blueBall->getPosition()).x / velocity;
 			blueBallTargetPosition = rightPosition;
 		}
-		redBall->runAction(MoveTo::create(redBallTimer, redBallTargetPosition));
-		blueBall->runAction(MoveTo::create(blueBallTimer, blueBallTargetPosition));
-		auto sequence = Sequence::createWithTwoActions(DelayTime::create(MAX(redBallTimer, blueBallTimer)), CallFunc::create(CC_CALLBACK_0(SwapLayer::setStandOnOppositeSidesState, this)));
-		this->runAction(sequence);
+		redBall->runAction(Sequence::createWithTwoActions(MoveTo::create(redBallTimer, redBallTargetPosition), CallFunc::create(CC_CALLBACK_0(SwapLayer::finishAction, this))));
+		blueBall->runAction(Sequence::createWithTwoActions(MoveTo::create(blueBallTimer, blueBallTargetPosition), CallFunc::create(CC_CALLBACK_0(SwapLayer::finishAction, this))));
+		nextState = BallState::StandOnOppositeSides;
+	}
+}
+
+void SwapLayer::finishAction() {
+	if (++finishedCounter == 2) {
+		stateFunctor[nextState]();
+		finishedCounter = 0;
 	}
 }
 
