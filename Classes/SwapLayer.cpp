@@ -76,17 +76,13 @@ void SwapLayer::touchEnded(Touch * touch, Event * event)
 {
 	if (state == BallState::MovingToCenter || state == BallState::StandInCenter)
 	{
-		if (state == BallState::MovingToCenter)
-		{
-			this->stopAllActions();
-		}
-		else
-		{
+		if (state == BallState::StandInCenter) {
 			changeVisibility(false);
 		}
 		state = BallState::MovingToOppositeSides;
 		redBall->stopAllActions();
 		blueBall->stopAllActions();
+		finishedCounter = 0;
 		float redBallTimer = 0.0f;
 		float blueBallTimer = 0.0f;
 		Vec2 redBallTargetPosition;
