@@ -27,6 +27,7 @@ bool GenerateLayer::init()
 }
 
 void GenerateLayer::update(float dt) {
+	if (isBlocking()) return;
 	Vec2 ds = Vec2(0.0f, dt * velocity);
 	for (auto & line = lines.begin(); line != lines.end();) {
 		Vec2 currentPosition = (*line)->getPosition();

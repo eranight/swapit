@@ -26,6 +26,7 @@ bool SwapLayer::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+	blocked = false;
 	
 	float ballSize = SPR_MANAGER->getSpriteSize();
 
@@ -46,19 +47,12 @@ bool SwapLayer::init()
 	violetBall->setVisible(false);
 	this->addChild(violetBall, static_cast<int>(BallZOrder::center));
 
-	auto touchListener = EventListenerTouchOneByOne::create();
+	touchListener = EventListenerTouchOneByOne::create();
 	touchListener->onTouchBegan = CC_CALLBACK_2(SwapLayer::touchBegan, this);
 	touchListener->onTouchEnded = CC_CALLBACK_2(SwapLayer::touchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
 
     return true;
-}
-
-void SwapLayer::stop() {
-	redBall->stopAllActions();
-	blueBall->stopAllActions();
-	this->stopAllActions();
-	_eventDispatcher->removeEventListenersForTarget(this);
 }
 
 bool SwapLayer::touchBegan(Touch * touch, Event * event)
@@ -90,24 +84,27 @@ void SwapLayer::touchEnded(Touch * touch, Event * event)
 		state = BallState::MovingToOppositeSides;
 		redBall->stopAllActions();
 		blueBall->stopAllActions();
-		float timer = 0.0f;
+		float redBallTimer = 0.0f;
+		float blueBallTimer = 0.0f;
+		Vec2 redBallTargetPosition;
+		Vec2 blueBallTargetPosition;
 		if (ballOrder == BallOrder::RedBlue)
 		{
-			float t1 = (rightPosition - redBall->getPosition()).x / velocity;
-			redBall->runAction(MoveTo::create(t1, rightPosition));
-			float t2 = (blueBall->getPosition() - leftPosition).x / velocity;
-			blueBall->runAction(MoveTo::create(t2, leftPosition));
-			timer = MAX(t1, t2);
+			redBallTimer = (rightPosition - redBall->getPosition()).x / velocity;
+			redBallTargetPosition = rightPosition;
+			blueBallTimer = (blueBall->getPosition() - leftPosition).x / velocity;
+			blueBallTargetPosition = leftPosition;
 		}
 		else
 		{
-			float t1 = (redBall->getPosition() - leftPosition).x / velocity;
-			redBall->runAction(MoveTo::create(t1, leftPosition));
-			float t2 = (rightPosition - blueBall->getPosition()).x / velocity;
-			blueBall->runAction(MoveTo::create(t2, rightPosition));
-			timer = MAX(t1, t2);
+			redBallTimer = (redBall->getPosition() - leftPosition).x / velocity;
+			redBallTargetPosition = leftPosition;
+			blueBallTimer = (rightPosition - blueBall->getPosition()).x / velocity;
+			blueBallTargetPosition = rightPosition;
 		}
-		auto sequence = Sequence::createWithTwoActions(DelayTime::create(timer), CallFunc::create(CC_CALLBACK_0(SwapLayer::setStandOnOppositeSidesState, this)));
+		redBall->runAction(MoveTo::create(redBallTimer, redBallTargetPosition));
+		blueBall->runAction(MoveTo::create(blueBallTimer, blueBallTargetPosition));
+		auto sequence = Sequence::createWithTwoActions(DelayTime::create(MAX(redBallTimer, blueBallTimer)), CallFunc::create(CC_CALLBACK_0(SwapLayer::setStandOnOppositeSidesState, this)));
 		this->runAction(sequence);
 	}
 }
@@ -141,6 +138,26 @@ void SwapLayer::setVelocity(float velocity) {
 	this->velocity = velocity * 1.3f;
 }
 
+void SwapLayer::stop() {
+	redBall->stopAllActions();
+	blueBall->stopAllActions();
+	this->stopAllActions();
+	_eventDispatcher->removeEventListenersForTarget(this);
+}
+
+void SwapLayer::block() {
+	Blocking::block();
+	touchListener->setEnabled(false);
+}
+
+void SwapLayer::unblock() {
+	Blocking::unblock();
+	touchListener->setEnabled(true);
+	if (state == BallState::StandInCenter) {
+		touchEnded(nullptr, nullptr);
+	}
+}
+
 void SwapLayer::pause() {
 	Layer::pause();
 	redBall->pause();
@@ -151,7 +168,4 @@ void SwapLayer::resume() {
 	Layer::resume();
 	redBall->resume();
 	blueBall->resume();
-	if (state == BallState::StandInCenter) {
-		touchEnded(nullptr, nullptr);
-	}
 }

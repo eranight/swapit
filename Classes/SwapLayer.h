@@ -2,8 +2,9 @@
 #define __SWAP_LAYER_H__
 
 #include "cocos2d.h"
+#include "Blocking.h"
 
-class SwapLayer : public cocos2d::Layer
+class SwapLayer : public cocos2d::Layer, Blocking
 {
 public:
 	enum class BallState
@@ -41,6 +42,9 @@ public:
 	void pause() override;
 	void resume() override;
 
+	void block() override;
+	void unblock() override;
+
 private:
 	bool touchBegan(cocos2d::Touch * touch, cocos2d::Event * event);
 	void touchEnded(cocos2d::Touch * touch, cocos2d::Event * event);
@@ -61,6 +65,8 @@ private:
 	cocos2d::Sprite * redBall;
 	cocos2d::Sprite * blueBall;
 	cocos2d::Sprite * violetBall;
+
+	cocos2d::EventListenerTouchOneByOne * touchListener;
 };
 
 #endif // __SWAP_LAYER_H__
