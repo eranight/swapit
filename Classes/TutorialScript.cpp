@@ -71,6 +71,7 @@ void TutorialScript::update(float dt) {
 		else if (promtNumber == 2) {
 			if (swapLayer->getState() == SwapLayer::BallState::StandInCenter) {
 				checkCondition = true;
+				swapLayer->block();
 			}
 		}
 		if (checkCondition) {
