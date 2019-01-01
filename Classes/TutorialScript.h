@@ -28,7 +28,7 @@ private:
 	const std::vector<std::string> promts;
 	cocos2d::Label * promtLabel;
 	LineSprites * line;
-
+	SwapLayer::BallOrder prevBallOrder;
 };
 
 #endif //__TUTORIAL_SCRIPT_H__

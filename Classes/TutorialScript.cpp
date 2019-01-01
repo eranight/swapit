@@ -42,6 +42,7 @@ void TutorialScript::init() {
 	velocity = visibleSize.width / (6.0f * 0.75f);
 	swapLayer = gameScene->getSwapLayer();
 	swapLayer->setVelocity(velocity);
+	prevBallOrder = swapLayer->getBallOrder();
 
 	line = nullptr;
 }
@@ -60,20 +61,16 @@ void TutorialScript::update(float dt) {
 	}
 	if (promtIsActive) {
 		bool checkCondition = false;
-		if (promtNumber == 0 || promtNumber == 1) {
-			const Sprite * sprite = line->getLeftSprite() != nullptr ? line->getLeftSprite() : line->getRightSprite();
-			const Sprite * compareSprite = sprite->getColor() == SPR_MANAGER->getColor(LineInfo::Element::red) ? swapLayer->getRedBallSprite() : swapLayer->getBlueBallSprite();
-			float x1 = gameScene->convertToNodeSpace(line->convertToWorldSpace(sprite->getPosition())).x;
-			float x2 = gameScene->convertToNodeSpace(swapLayer->convertToWorldSpace(compareSprite->getPosition())).x;
-			if (swapLayer->getState() == SwapLayer::BallState::StandOnOppositeSides && abs(x1 - x2) <= 0.1f) {
+		if (promtNumber < 2) {
+			if (swapLayer->getState() == SwapLayer::BallState::StandOnOppositeSides && prevBallOrder != swapLayer->getBallOrder()) {
 				checkCondition = true;
 				swapLayer->block();
+				prevBallOrder = swapLayer->getBallOrder();
 			}
 		}
 		else if (promtNumber == 2) {
 			if (swapLayer->getState() == SwapLayer::BallState::StandInCenter) {
 				checkCondition = true;
-				swapLayer->block();
 			}
 		}
 		if (checkCondition) {

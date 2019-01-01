@@ -31,6 +31,7 @@ public:
 	CREATE_FUNC(SwapLayer);
 
 	float getLinePosition() { return centerPosition.y; }
+	BallOrder getBallOrder() { return ballOrder; }
 
 	const cocos2d::Sprite * getRedBallSprite() { return redBall; }
 	const cocos2d::Sprite * getBlueBallSprite() { return blueBall; }
