@@ -83,26 +83,23 @@ void SwapLayer::touchEnded(Touch * touch, Event * event)
 		redBall->stopAllActions();
 		blueBall->stopAllActions();
 		finishedCounter = 0;
-		float redBallTimer = 0.0f;
-		float blueBallTimer = 0.0f;
+		float timer;
 		Vec2 redBallTargetPosition;
 		Vec2 blueBallTargetPosition;
 		if (ballOrder == BallOrder::RedBlue)
 		{
-			redBallTimer = (rightPosition - redBall->getPosition()).x / velocity;
 			redBallTargetPosition = rightPosition;
-			blueBallTimer = (blueBall->getPosition() - leftPosition).x / velocity;
 			blueBallTargetPosition = leftPosition;
+			timer = (rightPosition - redBall->getPosition()).x / velocity;
 		}
 		else
 		{
-			redBallTimer = (redBall->getPosition() - leftPosition).x / velocity;
 			redBallTargetPosition = leftPosition;
-			blueBallTimer = (rightPosition - blueBall->getPosition()).x / velocity;
 			blueBallTargetPosition = rightPosition;
+			timer = (rightPosition - blueBall->getPosition()).x / velocity;
 		}
-		redBall->runAction(Sequence::createWithTwoActions(MoveTo::create(redBallTimer, redBallTargetPosition), CallFunc::create(CC_CALLBACK_0(SwapLayer::finishAction, this))));
-		blueBall->runAction(Sequence::createWithTwoActions(MoveTo::create(blueBallTimer, blueBallTargetPosition), CallFunc::create(CC_CALLBACK_0(SwapLayer::finishAction, this))));
+		redBall->runAction(Sequence::createWithTwoActions(MoveTo::create(timer, redBallTargetPosition), CallFunc::create(CC_CALLBACK_0(SwapLayer::finishAction, this))));
+		blueBall->runAction(Sequence::createWithTwoActions(MoveTo::create(timer, blueBallTargetPosition), CallFunc::create(CC_CALLBACK_0(SwapLayer::finishAction, this))));
 		nextState = BallState::StandOnOppositeSides;
 	}
 }
