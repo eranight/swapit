@@ -139,7 +139,7 @@ void SwapLayer::changeVisibility(float violetVisibility)
 }
 
 void SwapLayer::setVelocity(float velocity) {
-	this->velocity = velocity * 1.3f;
+	this->velocity = velocity;
 }
 
 void SwapLayer::stop() {

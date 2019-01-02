@@ -66,10 +66,7 @@ bool GameScene::init()
 }
 
 void GameScene::update(float dt) {
-
-	if (lineForCollisionDetect == nullptr) {
-		lineForCollisionDetect = generateLayer->getFirstLineAbove(swapLayer->getLinePosition());
-	}
+	lineForCollisionDetect = generateLayer->getFirstLineAbove(swapLayer->getLinePosition());
 	if (lineForCollisionDetect != nullptr) {
 		if (lineForCollisionDetect->getPosition().y < swapLayer->getLinePosition() + SPR_MANAGER->getSpriteSize()) {
 			if (lineForCollisionDetect->getPosition().y < swapLayer->getLinePosition() - SPR_MANAGER->getSpriteSize()) {
