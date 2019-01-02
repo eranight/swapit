@@ -54,7 +54,7 @@ void GenerateLayer::generateNewLine()
 	//this->runAction(Sequence::createWithTwoActions(DelayTime::create(timeToNextGeneration), CallFunc::create(CC_CALLBACK_0(GenerateLayer::generateNewLine, this))));
 }
 
-LineSprites * GenerateLayer::getFirstHighLine(float y) {
+LineSprites * GenerateLayer::getFirstLineAbove(float y) {
 	for (auto & line : lines) {
 		if (line->getPosition().y > y) {
 			return line;

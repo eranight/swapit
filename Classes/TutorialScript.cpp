@@ -50,7 +50,7 @@ void TutorialScript::init() {
 void TutorialScript::update(float dt) {
 	if (isFinished()) return;
 	if (line == nullptr) {
-		line = generateLayer->getFirstHighLine(showPromtPosition);
+		line = generateLayer->getFirstLineAbove(showPromtPosition);
 		swapLayer->block();
 	}
 	else if (!promtIsActive && gameScene->convertToNodeSpace(generateLayer->convertToWorldSpace(line->getPosition())).y < showPromtPosition) {

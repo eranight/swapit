@@ -18,7 +18,7 @@ public:
 
 public:
 	LineSprites * getFrontLine() { return lines.at(0); }
-	LineSprites * getFirstHighLine(float y);
+	LineSprites * getFirstLineAbove(float y);
 	void start();
 	void setVelocity(float velocity);
 	void stop();
