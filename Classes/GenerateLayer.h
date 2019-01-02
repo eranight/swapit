@@ -55,7 +55,6 @@ private:
 
 	float velocity;
 	float timer;
-	float timeToNextGeneration;
 
 	LineBuilder lineBuilder;
 };

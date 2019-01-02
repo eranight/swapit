@@ -17,10 +17,6 @@ bool GenerateLayer::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	/*startPosition = Vec2(origin.x, (origin + visibleSize).y);
-	finishPosition = Vec2(origin.x, origin.y - SPR_MANAGER->getSpriteSize());
-	nextGenerationPosition = Vec2(origin.x, origin.y + 4.0f * SPR_MANAGER->getSpriteSize());*/
-
 	scheduleUpdate();
 
 	return true;
@@ -28,19 +24,6 @@ bool GenerateLayer::init()
 
 void GenerateLayer::update(float dt) {
 	if (isBlocking()) return;
-	/*Vec2 ds = Vec2(0.0f, dt * velocity);
-	for (auto & line = lines.begin(); line != lines.end();) {
-		Vec2 currentPosition = (*line)->getPosition();
-		Vec2 nextPosition = currentPosition - ds;
-		(*line)->setPosition(nextPosition);
-		if (nextPosition.y <= finishPosition.y) {
-			this->removeChild(*line);
-			line = lines.erase(line);
-		}
-		else {
-			++line;
-		}
-	}*/
 }
 
 void GenerateLayer::block() {
@@ -97,7 +80,6 @@ void GenerateLayer::resume() {
 
 void GenerateLayer::setVelocity(float velocity) {
 	this->velocity = velocity;
-	timeToNextGeneration = (startPosition - nextGenerationPosition).length() / velocity;
 	recalculateTime();
 	for (auto line : lines) {
 		line->stopAllActions();
