@@ -18,16 +18,19 @@ public:
 	void resume() override;
 
 private:
+	void showPromt();
+
+private:
 	GenerateLayer * generateLayer;
 	SwapLayer * swapLayer;
 
 private:
-	bool promtIsActive;
-	int promtNumber;
-	float showPromtPosition;
-	const std::vector<std::string> promts;
-	cocos2d::Label * promtLabel;
-	LineSprites * line;
+	bool promptIsActive;
+	int promptNumber;
+	float showPromptPosition;
+	const std::vector<std::string> prompts;
+	cocos2d::Label * promptLabel;
+	cocos2d::Action * showPromptAction;
 	SwapLayer::BallOrder prevBallOrder;
 };
 
