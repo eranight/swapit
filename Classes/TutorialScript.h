@@ -2,6 +2,8 @@
 #define __TUTORIAL_SCRIPT_H__
 
 #include "AbstractScript.h"
+#include "SwapLayer.h"
+#include "GenerateLayer.h"
 
 class LineSprites;
 
@@ -19,10 +21,6 @@ public:
 
 private:
 	void showPromt();
-
-private:
-	GenerateLayer * generateLayer;
-	SwapLayer * swapLayer;
 
 private:
 	bool promptIsActive;

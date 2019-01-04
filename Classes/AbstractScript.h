@@ -3,10 +3,10 @@
 
 #include "cocos2d.h"
 #include "LineInfo.h"
-#include "SwapLayer.h"
 
 class GameScene;
 class GenerateLayer;
+class SwapLayer;
 
 class AbstractScript : public cocos2d::Ref {
 public:
@@ -26,6 +26,8 @@ public:
 
 protected:
 	GameScene * gameScene;
+	GenerateLayer * generateLayer;
+	SwapLayer * swapLayer;
 	void setFinished() { finished = true; }
 
 private:
