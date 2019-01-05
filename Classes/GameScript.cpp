@@ -18,7 +18,7 @@ void GameScript::init() {
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	startGeneratedLinePosition = Vec2(origin.x, (origin + visibleSize).y);
 	finishGeneratedLinePosition = Vec2(origin.x, origin.y - SPR_MANAGER->getSpriteSize());
-	nextGeneratedLinePosition = Vec2(origin.x, origin.y + SPR_MANAGER->getSpriteSize());
+	nextGeneratedLinePosition = Vec2(origin.x, origin.y + 2 * SPR_MANAGER->getSpriteSize());
 
 	scoreLabel = Label::create(String::createWithFormat("%d", score)->getCString(), "fonts/Marker Felt.ttf", 25);
 	scoreLabel->setColor(Color3B::BLACK);
@@ -31,12 +31,13 @@ void GameScript::init() {
 	generateLayer->setStartPosition(startGeneratedLinePosition);
 	generateLayer->setFinishPosition(finishGeneratedLinePosition);
 	lineBuilder = &generateLayer->getLineBuilder();
-	lineBuilder->setProbabilities(100, 0, 50, 70);
+	lineBuilder->setProbabilities(100, 0, 100, 70);
 
 	swapLayer = gameScene->getSwapLayer();
-	swapLayer->setVelocity(visibleSize.width / (START_TIME * START_TIME_HORIZONTAL_FACTOR));
+	swapLayer->setVelocity(2.0f * visibleSize.width / START_TIME);
 
 	recalculateNextLineAction();
+	generateLayer->generateNewLine();
 }
 
 void GameScript::update(float dt) {
@@ -68,10 +69,7 @@ bool GameScript::collide(LineInfo::Element elemA, LineInfo::Element elemB) {
 }
 
 void GameScript::recalculateNextLineAction() {
-	gameScene->stopAction(generateNextLineAction);
-	auto line = generateLayer->getFirstLineAbove(nextGeneratedLinePosition.y);
-	float startY = line != nullptr ? line->getPosition().y : startGeneratedLinePosition.y;
-	float nextLineTimer = abs(startY - nextGeneratedLinePosition.y) / velocity;
+	float nextLineTimer = abs(startGeneratedLinePosition.y - nextGeneratedLinePosition.y) / velocity;
 	generateNextLineAction = Sequence::create(DelayTime::create(nextLineTimer), CallFunc::create(CC_CALLBACK_0(GenerateLayer::generateNewLine, generateLayer)),
 		CallFunc::create(CC_CALLBACK_0(GameScript::recalculateNextLineAction, this)), nullptr);
 	gameScene->runAction(generateNextLineAction);
