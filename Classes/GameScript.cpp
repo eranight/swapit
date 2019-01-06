@@ -71,6 +71,9 @@ bool GameScript::collide(LineInfo::Element elemA, LineInfo::Element elemB) {
 	if (elemA == elemB) {
 		++score;
 		scoreLabel->setString(String::createWithFormat("%d", score)->getCString());
+		if (score % 10 == 0) {
+			setVelocity(generateLayerVelocity * VELOCITY_FACTOR, swapLayerVelocity * VELOCITY_FACTOR);
+		}
 		return true;
 	}
 	else {
@@ -94,7 +97,9 @@ void GameScript::generateNextLine() {
 		float timer = timerAction->getDuration();
 		timerAction->release();
 		timerAction = DelayTime::create(timer * TIME_FACTOR);
+		timerAction->retain();
 		needUpdateVelocity = false;
+		CCLOG("%.3f %.3f", generateLayerVelocity, swapLayerVelocity);
 	}
 	generateLayer->generateNewLine();
 	generateNextLineAction = Sequence::createWithTwoActions(timerAction->clone(), callRecalculateAction->clone());
