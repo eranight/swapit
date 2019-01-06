@@ -7,6 +7,7 @@
 class GameScript : public AbstractScript {
 public:
 	GameScript(GameScene * gameScene);
+	~GameScript();
 
 public:
 	void init() override;
@@ -16,10 +17,13 @@ public:
 	void resume() override;
 
 private:
-	void recalculateNextLineAction();
+	void setVelocity(float generateLayerVelocity, float swapLayerVelocity);
+	void generateNextLine();
 
 private:
 	cocos2d::Action * generateNextLineAction;
+	cocos2d::FiniteTimeAction * timerAction;
+	cocos2d::FiniteTimeAction * callRecalculateAction;
 	cocos2d::Vec2 startGeneratedLinePosition;
 	cocos2d::Vec2 finishGeneratedLinePosition;
 	cocos2d::Vec2 nextGeneratedLinePosition;
@@ -27,8 +31,13 @@ private:
 private: //score
 	int score;
 	cocos2d::Label * scoreLabel;
-	float velocity;
 	LineBuilder * lineBuilder;
+
+private:
+	cocos2d::Size visibleSize;
+	float generateLayerVelocity;
+	float swapLayerVelocity;
+	bool needUpdateVelocity;
 
 private: //game over
 	bool gameOver;
