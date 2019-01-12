@@ -10,10 +10,11 @@ class LineSprites;
 class TutorialScript : public AbstractScript {
 public:
 	TutorialScript(GameScene * gameScene);
-	~TutorialScript();
+	~TutorialScript() {}
 
 public:
 	void init() override;
+	void release() override;
 	void update(float dt) override;
 	bool collide(LineInfo::Element elemA, LineInfo::Element elemB) override;
 	void pause() override;

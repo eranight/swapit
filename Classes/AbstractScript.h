@@ -8,13 +8,15 @@ class GameScene;
 class GenerateLayer;
 class SwapLayer;
 
-class AbstractScript : public cocos2d::Ref {
+class AbstractScript {
 public:
-	AbstractScript(GameScene * gameScene) { this->gameScene = gameScene; this->finished = false; }
+	AbstractScript(GameScene * gameScene) : gameScene(gameScene), finished(false), initialized(false) { }
 	virtual ~AbstractScript() {}
 
 public:
-	virtual void init() = 0;
+	virtual void init() { initialized = true; }
+	virtual void release() = 0;
+	bool isInit() { return initialized; }
 	virtual void update(float dt) = 0;
 	//elemA always belongs to the LineSprites instance from the GenerateLayer instance
 	//elemB always belongs to the SwapLayer instance
@@ -29,6 +31,7 @@ protected:
 	GenerateLayer * generateLayer;
 	SwapLayer * swapLayer;
 	void setFinished() { finished = true; }
+	bool initialized;
 
 private:
 	bool finished;

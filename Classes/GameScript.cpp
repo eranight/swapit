@@ -14,12 +14,8 @@ GameScript::GameScript(GameScene * gameScene) : AbstractScript(gameScene), score
 
 }
 
-GameScript::~GameScript() {
-	timerAction->release();
-	callRecalculateAction->release();
-}
-
 void GameScript::init() {
+	AbstractScript::init();
 	visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	startGeneratedLinePosition = Vec2(origin.x, (origin + visibleSize).y);
@@ -51,6 +47,11 @@ void GameScript::init() {
 	swapLayer->setVelocity(swapLayerVelocity);
 
 	generateNextLine();
+}
+
+void GameScript::release() {
+	timerAction->release();
+	callRecalculateAction->release();
 }
 
 void GameScript::update(float dt) {

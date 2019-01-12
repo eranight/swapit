@@ -14,7 +14,10 @@ GameScene::~GameScene()
 {
 	SpriteManager::getInstance()->release();
 	for (auto script : scripts) {
-		script->release();
+		if (script->isInit()) {
+			script->release();
+		}
+		delete script;
 	}
 	scripts.clear();
 }
@@ -60,6 +63,8 @@ bool GameScene::init()
 	pauseGameLayer = PauseGameLayer::create();
 	this->addChild(pauseGameLayer);
 
+	getEventDispatcher()->addCustomEventListener("skip", CC_CALLBACK_1(GameScene::skipScriptEvent, this));
+
 	scheduleUpdate();
 
 	return true;
@@ -84,7 +89,8 @@ void GameScene::update(float dt) {
 	}
 
 	if ((*currentScriptPointer)->isFinished()) {
-		currentScriptPointer++;
+		(*currentScriptPointer)->release();
+		currentScriptPointer = scripts.erase(currentScriptPointer);
 		(*currentScriptPointer)->init();
 	}
 
@@ -183,6 +189,10 @@ void GameScene::checkCollision(const Sprite * spriteA, const cocos2d::Sprite * s
 			needToDestroy = (*currentScriptPointer)->collide(SPR_MANAGER->getKeyByColor(spriteA->getColor()), SPR_MANAGER->getKeyByColor(spriteB->getColor()));
 		}
 	}
+}
+
+void GameScene::skipScriptEvent(EventCustom * event) {
+	CCLOG("skip event");
 }
 
 void GameScene::invokeGameOver(int score) {

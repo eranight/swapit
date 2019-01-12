@@ -10,12 +10,8 @@ USING_NS_CC;
 TutorialScript::TutorialScript(GameScene * gameScene) : AbstractScript(gameScene), prompts({ "tap to swap", "allow the square", "tap and hold" }) {
 }
 
-TutorialScript::~TutorialScript() {
-	gameScene->removeChild(promptLabel);
-	showPromptAction->release();
-}
-
 void TutorialScript::init() {
+	AbstractScript::init();
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
@@ -52,6 +48,11 @@ void TutorialScript::init() {
 	prevBallOrder = swapLayer->getBallOrder();
 	
 	gameScene->runAction(showPromptAction->clone());
+}
+
+void TutorialScript::release() {
+	gameScene->removeChild(promptLabel);
+	showPromptAction->release();
 }
 
 void TutorialScript::update(float dt) {

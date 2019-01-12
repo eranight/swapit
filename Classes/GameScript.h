@@ -7,10 +7,11 @@
 class GameScript : public AbstractScript {
 public:
 	GameScript(GameScene * gameScene);
-	~GameScript();
+	~GameScript() {}
 
 public:
 	void init() override;
+	void release() override;
 	void update(float dt);
 	bool collide(LineInfo::Element elemA, LineInfo::Element elemB) override;
 	void pause() override;
