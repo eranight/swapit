@@ -89,9 +89,7 @@ void GameScene::update(float dt) {
 	}
 
 	if ((*currentScriptPointer)->isFinished()) {
-		(*currentScriptPointer)->release();
-		currentScriptPointer = scripts.erase(currentScriptPointer);
-		(*currentScriptPointer)->init();
+		toNextScript();
 	}
 
 	(*currentScriptPointer)->update(dt);
@@ -191,8 +189,16 @@ void GameScene::checkCollision(const Sprite * spriteA, const cocos2d::Sprite * s
 	}
 }
 
+void GameScene::toNextScript() {
+	(*currentScriptPointer)->release();
+	currentScriptPointer = scripts.erase(currentScriptPointer);
+	(*currentScriptPointer)->init();
+}
+
 void GameScene::skipScriptEvent(EventCustom * event) {
 	CCLOG("skip event");
+	toNextScript();
+	pauseGameLayer->killSkipMenuItem();
 }
 
 void GameScene::invokeGameOver(int score) {

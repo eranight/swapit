@@ -40,6 +40,7 @@ private:
 	void checkCollision(const cocos2d::Sprite *, const cocos2d::Sprite *, bool & needToDestroy);
 
 	void skipScriptEvent(cocos2d::EventCustom *);
+	void toNextScript();
 	std::vector<AbstractScript *> scripts;
 	std::vector<AbstractScript *>::iterator currentScriptPointer;
 };
