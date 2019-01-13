@@ -5,7 +5,7 @@
 
 class GenerateLayer;
 class SwapLayer;
-class PauseGameLayer;
+class UserInterfaceGameLayer;
 class LineSprites;
 class AbstractScript;
 class TutorialScript;
@@ -33,7 +33,7 @@ public:
 private:
 	GenerateLayer * generateLayer;
 	SwapLayer * swapLayer;
-	PauseGameLayer * pauseGameLayer;
+	UserInterfaceGameLayer * userInterfaceGameLayer;
 	LineSprites * lineForCollisionDetect;
 
 	void collisionUpdate();

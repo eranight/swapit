@@ -4,7 +4,7 @@
 #include "SwapLayer.h"
 #include "GenerateLayer.h"
 #include "GameOverLayer.h"
-#include "PauseGameLayer.h"
+#include "UserInterfaceGameLayer.h"
 #include "GameScript.h"
 #include "TutorialScript.h"
 
@@ -60,8 +60,8 @@ bool GameScene::init()
 	scripts[0]->init();
 	currentScriptPointer = scripts.begin();
 
-	pauseGameLayer = PauseGameLayer::create();
-	this->addChild(pauseGameLayer);
+	userInterfaceGameLayer = UserInterfaceGameLayer::create();
+	this->addChild(userInterfaceGameLayer);
 
 	getEventDispatcher()->addCustomEventListener("skip", CC_CALLBACK_1(GameScene::skipScriptEvent, this));
 
@@ -109,7 +109,7 @@ void GameScene::pause() {
 	Layer::pause();
 	swapLayer->pause();
 	generateLayer->pause();
-	pauseGameLayer->resume();
+	userInterfaceGameLayer->resume();
 	(*currentScriptPointer)->pause();
 }
 
@@ -117,7 +117,7 @@ void GameScene::resume() {
 	Layer::resume();
 	swapLayer->resume();
 	generateLayer->resume();
-	pauseGameLayer->pause();
+	userInterfaceGameLayer->pause();
 	(*currentScriptPointer)->resume();
 }
 
@@ -198,13 +198,13 @@ void GameScene::toNextScript() {
 void GameScene::skipScriptEvent(EventCustom * event) {
 	CCLOG("skip event");
 	toNextScript();
-	pauseGameLayer->killSkipMenuItem();
+	userInterfaceGameLayer->killSkipMenuItem();
 }
 
 void GameScene::invokeGameOver(int score) {
 	swapLayer->stop();
 	generateLayer->stop();
-	pauseGameLayer->setVisible(false);
+	userInterfaceGameLayer->setVisible(false);
 	unscheduleUpdate();
 	auto gameOverLayer = GameOverLayer::create(score, 2.0f);
 	this->addChild(gameOverLayer);

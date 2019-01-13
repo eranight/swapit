@@ -10,9 +10,9 @@ enum class UiButtonName {
 	SKIP_TAG
 };
 
-class PauseGameLayer : public cocos2d::LayerColor {
+class UserInterfaceGameLayer : public cocos2d::LayerColor {
 public:
-	CREATE_FUNC(PauseGameLayer);
+	CREATE_FUNC(UserInterfaceGameLayer);
 	bool init() override;
 	void pause() override;
 	void resume() override;
