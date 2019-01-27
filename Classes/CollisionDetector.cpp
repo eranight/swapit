@@ -34,5 +34,26 @@ bool CollisionDetector::init(SwapLayer * swapLayer, GenerateLayer * generateLaye
 }
 
 void CollisionDetector::update(float deltaTime) {
+	float swapLinePos = swapLayer->getLinePosition() - SpriteManager::getInstance()->getSpriteSize() * 0.5f;
+	auto line = generateLayer->getFirstLineAbove(swapLinePos);
+	if (line != nullptr) {
+		
+	}
+}
 
+//first is always a ball from SwapLayer, but second is might be a square
+bool CollisionDetector::checkCollision(LineSprites * line, Node * first, Node * second) {
+	Rect bbA = first->getBoundingBox();
+	Vec2 centerA = line->convertToWorldSpace(Vec2(bbA.getMidX(), bbA.getMidY()));
+	Rect bbB = second->getBoundingBox();
+	Vec2 centerB = swapLayer->convertToWorldSpace(Vec2(bbB.getMidX(), bbB.getMidY()));
+	float diameter = SPR_MANAGER->getSpriteSize() * 0.8f;
+	float radius = diameter * 0.5f;
+	if (second->getColor() != SPR_MANAGER->getColor(LineInfo::Element::green)) {
+		return (centerA - centerB).length() <= diameter;
+	}
+	else {
+		Rect collisionRect = Rect(centerA.x - radius, centerA.y - radius, diameter, diameter);
+		return collisionRect.intersectsCircle(centerB, radius);
+	}
 }

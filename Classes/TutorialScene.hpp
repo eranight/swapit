@@ -3,6 +3,7 @@
 #include "cocos2d.h"
 #include "SwapLayer.h"
 #include "GenerateLayer.h"
+#include "CollisionDetector.hpp"
 
 class TutorialScene : public cocos2d::LayerColor {
 public:
@@ -17,9 +18,19 @@ private:
 private:
 	SwapLayer * swapLayer;
 	GenerateLayer * generateLayer;
+	CollisionDetector * collisionDetector;
+	bool collide(const LineInfo::Element &, const LineInfo::Element &);
 private:
 	cocos2d::Menu * menu; //skip button
 private:
-	const std::vector<std::string> prompts;
+	void showPrompt();
+	void hidePrompt();
 	cocos2d::Label * promptLabel;
+	class Prompt {
+	public:
+		Prompt(const std::string &, const std::string &);
+		std::string text;
+		std::string awaitedEvent;
+	};
+	std::queue<Prompt> prompts;
 };

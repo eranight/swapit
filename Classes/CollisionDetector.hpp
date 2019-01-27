@@ -7,6 +7,7 @@
 
 class SwapLayer;
 class GenerateLayer;
+class LineSprites;
 
 using CollideCallback = std::function<bool(const LineInfo::Element &, const LineInfo::Element &)>;
 
@@ -22,4 +23,5 @@ private:
 	SwapLayer * swapLayer;
 	GenerateLayer * generateLayer;
 	CollideCallback collideCallback;
+	bool checkCollision(LineSprites * line, cocos2d::Node *, cocos2d::Node *);
 };
