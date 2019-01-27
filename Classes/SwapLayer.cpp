@@ -4,6 +4,11 @@
 
 USING_NS_CC;
 
+const std::string SwapLayer::MOVE_TO_CENTER = "move to center";
+const std::string SwapLayer::MOVE_TO_SIDES = "move to sides";
+const std::string SwapLayer::ARRIVED_TO_CENTER = "arrived to center";
+const std::string SwapLayer::ARRIVED_TO_SIDES = "arrived to sides";
+
 static const enum class BallZOrder
 {
 	right = 0,
@@ -68,6 +73,7 @@ bool SwapLayer::touchBegan(Touch * touch, Event * event)
 		redBall->runAction(sequence->clone());
 		blueBall->runAction(sequence->clone());
 		nextState = BallState::StandInCenter;
+		getEventDispatcher()->dispatchCustomEvent(MOVE_TO_CENTER);
 	}
 	return true;
 }
@@ -103,6 +109,7 @@ void SwapLayer::touchEnded(Touch * touch, Event * event)
 		}
 		redBall->runAction(Sequence::createWithTwoActions(MoveTo::create(timer, redBallTargetPosition), CallFunc::create(CC_CALLBACK_0(SwapLayer::finishAction, this))));
 		blueBall->runAction(Sequence::createWithTwoActions(MoveTo::create(timer, blueBallTargetPosition), CallFunc::create(CC_CALLBACK_0(SwapLayer::finishAction, this))));
+		getEventDispatcher()->dispatchCustomEvent(MOVE_TO_SIDES);
 	}
 }
 
@@ -117,6 +124,7 @@ void SwapLayer::setStandInCenterState()
 {
 	state = BallState::StandInCenter;
 	changeVisibility(true);
+	getEventDispatcher()->dispatchCustomEvent(ARRIVED_TO_CENTER);
 }
 
 void SwapLayer::setStandOnOppositeSidesState()
@@ -129,6 +137,7 @@ void SwapLayer::setStandOnOppositeSidesState()
 		(redBall->setZOrder(static_cast<int>(BallZOrder::left)),
 		blueBall->setZOrder(static_cast<int>(BallZOrder::right)),
 		BallOrder::RedBlue);
+	getEventDispatcher()->dispatchCustomEvent(ARRIVED_TO_SIDES);
 }
 
 void SwapLayer::changeVisibility(float violetVisibility)

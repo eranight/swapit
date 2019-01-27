@@ -21,6 +21,11 @@ public:
 		BlueRed
 	};
 
+	static const std::string MOVE_TO_CENTER;
+	static const std::string MOVE_TO_SIDES;
+	static const std::string ARRIVED_TO_CENTER;
+	static const std::string ARRIVED_TO_SIDES;
+
 public:
 	virtual ~SwapLayer();
 
