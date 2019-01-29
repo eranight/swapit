@@ -88,3 +88,8 @@ void TutorialScene::hidePrompt() {
 	getEventDispatcher()->removeCustomEventListeners(prompts.front().awaitedEvent);
 	prompts.pop();
 }
+
+LineSprites * TutorialLineSupplier::getNextLine() {
+	auto lineInfo = lineQueue.front();
+	return nullptr;
+}

@@ -4,6 +4,7 @@
 #include "SwapLayer.h"
 #include "GenerateLayer.h"
 #include "CollisionDetector.hpp"
+#include "LineSupplier.hpp"
 
 class TutorialScene : public cocos2d::LayerColor {
 public:
@@ -33,4 +34,12 @@ private:
 		std::string awaitedEvent;
 	};
 	std::queue<Prompt> prompts;
+};
+
+class TutorialLineSupplier : public LineSupplier {
+public:
+	TutorialLineSupplier(std::queue<LineInfo> lineQueue) : lineQueue(lineQueue) {}
+	LineSprites * getNextLine() override;
+private:
+	std::queue<LineInfo> lineQueue;
 };
