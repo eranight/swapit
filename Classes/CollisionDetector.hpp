@@ -11,7 +11,7 @@ class LineSprites;
 
 using CollideCallback = std::function<bool(const LineInfo::Element &, const LineInfo::Element &)>;
 
-class CollisionDetector : public cocos2d::Ref {
+class CollisionDetector : public cocos2d::Node {
 public:
 	static CollisionDetector * create(SwapLayer *, GenerateLayer *, CollideCallback);
 	CollisionDetector() {}

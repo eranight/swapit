@@ -29,6 +29,7 @@ bool TutorialScene::init() {
 
 	swapLayer = SwapLayer::create();
 	swapLayer->pause();
+	swapLayer->setVelocity(visibleSize.width * 0.25);
 	this->addChild(swapLayer);
 
 	generateLayer = GenerateLayer::create();
