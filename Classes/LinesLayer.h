@@ -1,18 +1,18 @@
-#ifndef __GENERATE_LAYER_H__
-#define __GENERATE_LAYER_H__
+#ifndef __LINES_LAYER_H__
+#define __LINES_LAYER_H__
 
 #include "cocos2d.h"
 #include "Blocking.h"
 #include "LineSprites.h"
 #include "LineBuilder.h"
 
-class GenerateLayer : public cocos2d::Layer, public Blocking
+class LinesLayer : public cocos2d::Layer, public Blocking
 {
 public:
-	~GenerateLayer();
+	~LinesLayer();
 
 public:
-	CREATE_FUNC(GenerateLayer);
+	CREATE_FUNC(LinesLayer);
 	bool init() override;
 	void update(float) override;
 	void pause() override;
@@ -59,4 +59,4 @@ private:
 	LineBuilder lineBuilder;
 };
 
-#endif // __PLAYING_LAYER_H__
+#endif // __LINES_LAYER_H__

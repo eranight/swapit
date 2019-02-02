@@ -2,7 +2,7 @@
 #include "SimpleAudioEngine.h"
 #include "SpriteManager.h"
 #include "SwapLayer.h"
-#include "GenerateLayer.h"
+#include "LinesLayer.h"
 #include "GameOverLayer.h"
 #include "UserInterfaceGameLayer.h"
 #include "GameScript.h"
@@ -44,7 +44,7 @@ bool GameScene::init()
 
 	lineForCollisionDetect = nullptr;
 
-	generateLayer = GenerateLayer::create();
+	generateLayer = LinesLayer::create();
 	this->addChild(generateLayer);
 
 	swapLayer = SwapLayer::create();

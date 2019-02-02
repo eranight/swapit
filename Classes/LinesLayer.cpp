@@ -1,13 +1,13 @@
-#include "GenerateLayer.h"
+#include "LinesLayer.h"
 #include "SimpleAudioEngine.h"
 #include "SpriteManager.h"
 #include "LineSprites.h"
 
 USING_NS_CC;
 
-GenerateLayer::~GenerateLayer() {}
+LinesLayer::~LinesLayer() {}
 
-bool GenerateLayer::init()
+bool LinesLayer::init()
 {
 	if (!Layer::init())
 	{
@@ -22,33 +22,33 @@ bool GenerateLayer::init()
 	return true;
 }
 
-void GenerateLayer::update(float dt) {
+void LinesLayer::update(float dt) {
 	if (isBlocking()) return;
 }
 
-void GenerateLayer::block() {
+void LinesLayer::block() {
 	Blocking::block();
 	for (auto line : lines) {
 		line->stopAllActions();
 	}
 }
 
-void GenerateLayer::unblock() {
+void LinesLayer::unblock() {
 	Blocking::unblock();
 	recreateLineActions();
 }
 
-void GenerateLayer::generateNewLine()
+void LinesLayer::generateNewLine()
 {
 	LineInfo lineInfo = lineBuilder.getNextLine();
 	LineSprites * line = LineSprites::create(lineInfo);
 	line->setPosition(startPosition);
 	this->addChild(line);
 	lines.pushBack(line);
-	line->runAction(Sequence::create(MoveTo::create(timer, finishPosition), CallFuncN::create(CC_CALLBACK_1(GenerateLayer::removeLine, this)), RemoveSelf::create(), nullptr));
+	line->runAction(Sequence::create(MoveTo::create(timer, finishPosition), CallFuncN::create(CC_CALLBACK_1(LinesLayer::removeLine, this)), RemoveSelf::create(), nullptr));
 }
 
-LineSprites * GenerateLayer::getFirstLineAbove(float y) {
+LineSprites * LinesLayer::getFirstLineAbove(float y) {
 	for (auto & line : lines) {
 		if (line->getPosition().y > y) {
 			return line;
@@ -57,28 +57,28 @@ LineSprites * GenerateLayer::getFirstLineAbove(float y) {
 	return nullptr;
 }
 
-void GenerateLayer::start() {
+void LinesLayer::start() {
 	generateNewLine();
 }
 
-void GenerateLayer::stop() {
+void LinesLayer::stop() {
 	this->stopAllActions();
 	unscheduleUpdate();
 }
 
-void GenerateLayer::pause() {
+void LinesLayer::pause() {
 	for (auto line : lines) {
 		line->pause();
 	}
 }
 
-void GenerateLayer::resume() {
+void LinesLayer::resume() {
 	for (auto line : lines) {
 		line->resume();
 	}
 }
 
-void GenerateLayer::setVelocity(float velocity) {
+void LinesLayer::setVelocity(float velocity) {
 	this->velocity = velocity;
 	recalculateTime();
 	for (auto line : lines) {
@@ -87,17 +87,17 @@ void GenerateLayer::setVelocity(float velocity) {
 	recreateLineActions();
 }
 
-void GenerateLayer::recalculateTime() {
+void LinesLayer::recalculateTime() {
 	timer = (startPosition - finishPosition).length() / velocity;
 }
 
-void GenerateLayer::removeLine(Node * line) {
+void LinesLayer::removeLine(Node * line) {
 	lines.eraseObject(dynamic_cast<LineSprites *>(line));
 }
 
-void GenerateLayer::recreateLineActions() {
+void LinesLayer::recreateLineActions() {
 	for (auto line : lines) {
 		float moveTime = (line->getPosition() - finishPosition).length() / velocity;
-		line->runAction(Sequence::create(MoveTo::create(moveTime, finishPosition), CallFuncN::create(CC_CALLBACK_1(GenerateLayer::removeLine, this)), RemoveSelf::create(), nullptr));
+		line->runAction(Sequence::create(MoveTo::create(moveTime, finishPosition), CallFuncN::create(CC_CALLBACK_1(LinesLayer::removeLine, this)), RemoveSelf::create(), nullptr));
 	}
 }

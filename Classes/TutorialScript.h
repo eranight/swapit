@@ -3,7 +3,7 @@
 
 #include "AbstractScript.h"
 #include "SwapLayer.h"
-#include "GenerateLayer.h"
+#include "LinesLayer.h"
 
 class LineSprites;
 

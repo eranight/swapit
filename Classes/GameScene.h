@@ -3,7 +3,7 @@
 
 #include "cocos2d.h"
 
-class GenerateLayer;
+class LinesLayer;
 class SwapLayer;
 class UserInterfaceGameLayer;
 class LineSprites;
@@ -26,12 +26,12 @@ public:
 	void resume() override;
 
 public:
-	GenerateLayer * getGenerateLayer() { return generateLayer; }
+	LinesLayer * getGenerateLayer() { return generateLayer; }
 	SwapLayer * getSwapLayer() { return swapLayer; }
 	void invokeGameOver(int score);
 
 private:
-	GenerateLayer * generateLayer;
+	LinesLayer * generateLayer;
 	SwapLayer * swapLayer;
 	UserInterfaceGameLayer * userInterfaceGameLayer;
 	LineSprites * lineForCollisionDetect;

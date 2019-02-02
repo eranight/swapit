@@ -5,7 +5,7 @@
 #include "LineInfo.h"
 
 class GameScene;
-class GenerateLayer;
+class LinesLayer;
 class SwapLayer;
 
 class AbstractScript {
@@ -18,7 +18,7 @@ public:
 	virtual void release() = 0;
 	bool isInit() { return initialized; }
 	virtual void update(float dt) = 0;
-	//elemA always belongs to the LineSprites instance from the GenerateLayer instance
+	//elemA always belongs to the LineSprites instance from the LinesLayer instance
 	//elemB always belongs to the SwapLayer instance
 	virtual bool collide(LineInfo::Element elemA, LineInfo::Element elemB) = 0;
 	virtual void pause() = 0;
@@ -28,7 +28,7 @@ public:
 
 protected:
 	GameScene * gameScene;
-	GenerateLayer * generateLayer;
+	LinesLayer * generateLayer;
 	SwapLayer * swapLayer;
 	void setFinished() { finished = true; }
 	bool initialized;

@@ -2,7 +2,7 @@
 
 #include "cocos2d.h"
 #include "SwapLayer.h"
-#include "GenerateLayer.h"
+#include "LinesLayer.h"
 #include "CollisionDetector.hpp"
 #include "LineSupplier.hpp"
 
@@ -18,7 +18,7 @@ private:
 	void menuSkipCallback(cocos2d::Ref *);
 private:
 	SwapLayer * swapLayer;
-	GenerateLayer * generateLayer;
+	LinesLayer * generateLayer;
 	CollisionDetector * collisionDetector;
 	bool collide(const LineInfo::Element &, const LineInfo::Element &);
 private:

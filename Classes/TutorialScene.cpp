@@ -32,7 +32,7 @@ bool TutorialScene::init() {
 	swapLayer->setVelocity(visibleSize.width * 0.25);
 	this->addChild(swapLayer);
 
-	generateLayer = GenerateLayer::create();
+	generateLayer = LinesLayer::create();
 	this->addChild(generateLayer);
 
 	collisionDetector =  CollisionDetector::create(swapLayer, generateLayer, nullptr);

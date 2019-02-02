@@ -2,7 +2,7 @@
 #include "GameScene.h"
 #include "LineInfo.h"
 #include "SwapLayer.h"
-#include "GenerateLayer.h"
+#include "LinesLayer.h"
 #include "GameScript.h"
 
 USING_NS_CC;

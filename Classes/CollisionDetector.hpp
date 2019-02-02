@@ -6,22 +6,22 @@
 #include "LineInfo.h"
 
 class SwapLayer;
-class GenerateLayer;
+class LinesLayer;
 class LineSprites;
 
 using CollideCallback = std::function<bool(const LineInfo::Element &, const LineInfo::Element &)>;
 
 class CollisionDetector : public cocos2d::Node {
 public:
-	static CollisionDetector * create(SwapLayer *, GenerateLayer *, CollideCallback);
+	static CollisionDetector * create(SwapLayer *, LinesLayer *, CollideCallback);
 	CollisionDetector() {}
 	~CollisionDetector();
 public:
-	bool init(SwapLayer *, GenerateLayer *, CollideCallback);
+	bool init(SwapLayer *, LinesLayer *, CollideCallback);
 	void update(float);
 private:
 	SwapLayer * swapLayer;
-	GenerateLayer * generateLayer;
+	LinesLayer * generateLayer;
 	CollideCallback collideCallback;
 	bool checkCollision(LineSprites * line, cocos2d::Node *, cocos2d::Node *);
 };
