@@ -26,8 +26,8 @@ void TutorialScript::init() {
 	gameScene->addChild(promptLabel);
 
 	generateLayer = gameScene->getGenerateLayer();
-	generateLayer->getLineBuilder().setStartConfiguration(LineInfo(LineInfo::Element::red, LineInfo::Element::none, LineInfo::Element::blue));
-	generateLayer->getLineBuilder().setProbabilities(100, 0, 100, 100);
+	//generateLayer->getLineBuilder().setStartConfiguration(LineInfo(LineInfo::Element::red, LineInfo::Element::none, LineInfo::Element::blue));
+	//generateLayer->getLineBuilder().setProbabilities(100, 0, 100, 100);
 
 	float velocity = visibleSize.height / 6.0f;
 
@@ -92,7 +92,7 @@ bool TutorialScript::collide(LineInfo::Element elemA, LineInfo::Element elemB) {
 		if (promptNumber <= 2) {
 			promptLabel->setString(prompts[promptNumber]);
 			int prob = promptNumber == 1 ? 100 : 0;
-			generateLayer->getLineBuilder().setProbabilities(prob, prob, prob, prob);
+			//generateLayer->getLineBuilder().setProbabilities(prob, prob, prob, prob);
 			generateLayer->generateNewLine();
 			gameScene->runAction(showPromptAction->clone());
 		}

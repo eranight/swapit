@@ -5,9 +5,22 @@
 
 USING_NS_CC;
 
+LinesLayer * LinesLayer::create(LineSupplier * lineSupplier) {
+	auto pRef = new (std::nothrow) LinesLayer();
+	if (pRef != nullptr && pRef->init(lineSupplier)) {
+		pRef->autorelease();
+		return pRef;
+	}
+	else {
+		delete pRef;
+		pRef = nullptr;
+		return nullptr;
+	}
+}
+
 LinesLayer::~LinesLayer() {}
 
-bool LinesLayer::init()
+bool LinesLayer::init(LineSupplier * lineSupplier)
 {
 	if (!Layer::init())
 	{
@@ -16,6 +29,8 @@ bool LinesLayer::init()
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	this->lineSupplier = lineSupplier;
 
 	scheduleUpdate();
 
@@ -40,7 +55,7 @@ void LinesLayer::unblock() {
 
 void LinesLayer::generateNewLine()
 {
-	LineInfo lineInfo = lineBuilder.getNextLine();
+	LineInfo lineInfo = lineSupplier->getNextLine();
 	LineSprites * line = LineSprites::create(lineInfo);
 	line->setPosition(startPosition);
 	this->addChild(line);

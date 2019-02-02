@@ -17,8 +17,9 @@ public:
 private:
 	void menuSkipCallback(cocos2d::Ref *);
 private:
+	LineSupplier * lineSupplier;
 	SwapLayer * swapLayer;
-	LinesLayer * generateLayer;
+	LinesLayer * linesLayer;
 	CollisionDetector * collisionDetector;
 	bool collide(const LineInfo::Element &, const LineInfo::Element &);
 private:
@@ -38,8 +39,8 @@ private:
 
 class TutorialLineSupplier : public LineSupplier {
 public:
-	TutorialLineSupplier(std::queue<LineInfo> lineQueue) : lineQueue(lineQueue) {}
-	LineSprites * getNextLine() override;
+	TutorialLineSupplier(const std::initializer_list<LineInfo> & lines);
+	LineInfo getNextLine() override;
 private:
 	std::queue<LineInfo> lineQueue;
 };

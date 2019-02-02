@@ -7,7 +7,7 @@ TutorialScene::Prompt::Prompt(const std::string & text, const std::string & awai
 
 }
 
-TutorialScene::TutorialScene() {
+TutorialScene::TutorialScene() : lineSupplier(nullptr) {
 	prompts.push(Prompt("tap to swap", SwapLayer::ARRIVED_TO_SIDES));
 	prompts.push(Prompt("allow the square", SwapLayer::ARRIVED_TO_SIDES));
 	prompts.push(Prompt("tap and hold", SwapLayer::ARRIVED_TO_CENTER));
@@ -16,6 +16,9 @@ TutorialScene::TutorialScene() {
 TutorialScene::~TutorialScene() {
 	if (collisionDetector != nullptr) {
 		collisionDetector->release();
+	}
+	if (lineSupplier != nullptr) {
+		delete lineSupplier;
 	}
 }
 
@@ -27,15 +30,21 @@ bool TutorialScene::init() {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+	lineSupplier = new TutorialLineSupplier({
+		LineInfo(LineInfo::Element::red, LineInfo::Element::none, LineInfo::Element::blue),
+		LineInfo(LineInfo::Element::blue, LineInfo::Element::green, LineInfo::Element::red),
+		LineInfo(LineInfo::Element::none, LineInfo::Element::violet, LineInfo::Element::none) });
+
 	swapLayer = SwapLayer::create();
 	swapLayer->pause();
 	swapLayer->setVelocity(visibleSize.width * 0.25);
 	this->addChild(swapLayer);
 
-	generateLayer = LinesLayer::create();
-	this->addChild(generateLayer);
+	linesLayer = LinesLayer::create(lineSupplier);
+	linesLayer->generateNewLine();
+	this->addChild(linesLayer);
 
-	collisionDetector =  CollisionDetector::create(swapLayer, generateLayer, nullptr);
+	collisionDetector =  CollisionDetector::create(swapLayer, linesLayer, nullptr);
 	if (collisionDetector != nullptr) {
 		collisionDetector->retain();
 	}
@@ -74,7 +83,7 @@ bool TutorialScene::collide(const LineInfo::Element & elemA, const LineInfo::Ele
 }
 
 void TutorialScene::showPrompt() {
-	generateLayer->pause();
+	linesLayer->pause();
 	swapLayer->resume();
 	promptLabel->setString(prompts.front().text);
 	promptLabel->setVisible(true);
@@ -82,14 +91,21 @@ void TutorialScene::showPrompt() {
 }
 
 void TutorialScene::hidePrompt() {
-	generateLayer->resume();
+	linesLayer->resume();
 	swapLayer->pause();
 	promptLabel->setVisible(false);
 	getEventDispatcher()->removeCustomEventListeners(prompts.front().awaitedEvent);
 	prompts.pop();
 }
 
-LineSprites * TutorialLineSupplier::getNextLine() {
+TutorialLineSupplier::TutorialLineSupplier(const std::initializer_list<LineInfo> & lines) {
+	for (auto line : lines) {
+		lineQueue.push(line);
+	}
+}
+
+LineInfo TutorialLineSupplier::getNextLine() {
 	auto lineInfo = lineQueue.front();
-	return nullptr;
+	lineQueue.pop();
+	return lineInfo;
 }

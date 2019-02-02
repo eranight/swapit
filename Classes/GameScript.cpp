@@ -39,7 +39,7 @@ void GameScript::init() {
 	generateLayer->setVelocity(generateLayerVelocity);
 	generateLayer->setStartPosition(startGeneratedLinePosition);
 	generateLayer->setFinishPosition(finishGeneratedLinePosition);
-	lineBuilder = &generateLayer->getLineBuilder();
+	//lineBuilder = &generateLayer->getLineBuilder();
 	lineBuilder->setProbabilities(100, 0, 100, 70);
 
 	swapLayerVelocity = SWAP_LAYER_FACTOR * visibleSize.width / START_TIME;

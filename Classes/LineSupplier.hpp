@@ -1,8 +1,9 @@
 #pragma once
 
-class LineSprites;
+#include "LineInfo.h"
 
 class LineSupplier {
 public:
-	virtual LineSprites * getNextLine() = 0;
+	virtual ~LineSupplier() {}
+	virtual LineInfo getNextLine() = 0;
 };

@@ -44,8 +44,8 @@ bool GameScene::init()
 
 	lineForCollisionDetect = nullptr;
 
-	generateLayer = LinesLayer::create();
-	this->addChild(generateLayer);
+	//generateLayer = LinesLayer::create();
+	//this->addChild(generateLayer);
 
 	swapLayer = SwapLayer::create();
 	this->addChild(swapLayer);

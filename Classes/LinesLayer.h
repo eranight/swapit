@@ -3,17 +3,17 @@
 
 #include "cocos2d.h"
 #include "Blocking.h"
+#include "LineSupplier.hpp"
 #include "LineSprites.h"
-#include "LineBuilder.h"
 
 class LinesLayer : public cocos2d::Layer, public Blocking
 {
 public:
+	static LinesLayer * create(LineSupplier * lineSupplier);
 	~LinesLayer();
 
 public:
-	CREATE_FUNC(LinesLayer);
-	bool init() override;
+	bool init(LineSupplier * lineSupplier);
 	void update(float) override;
 	void pause() override;
 	void resume() override;
@@ -39,7 +39,6 @@ public:
 	const cocos2d::Vec2 & getNextGenerationPosition() { return nextGenerationPosition; }
 	void setNextGenerationPosition(const cocos2d::Vec2 & position) { nextGenerationPosition = position; }
 
-	LineBuilder & getLineBuilder() { return lineBuilder; }
 	void generateNewLine();
 
 private:
@@ -56,7 +55,7 @@ private:
 	float velocity;
 	float timer;
 
-	LineBuilder lineBuilder;
+	LineSupplier * lineSupplier;
 };
 
 #endif // __LINES_LAYER_H__
