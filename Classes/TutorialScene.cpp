@@ -31,17 +31,21 @@ bool TutorialScene::init() {
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	lineSupplier = new TutorialLineSupplier({
-		LineInfo(LineInfo::Element::red, LineInfo::Element::none, LineInfo::Element::blue),
-		LineInfo(LineInfo::Element::blue, LineInfo::Element::green, LineInfo::Element::red),
+		LineInfo(LineInfo::Element::blue, LineInfo::Element::none, LineInfo::Element::red),
+		LineInfo(LineInfo::Element::red, LineInfo::Element::green, LineInfo::Element::blue),
 		LineInfo(LineInfo::Element::none, LineInfo::Element::violet, LineInfo::Element::none) });
 
 	swapLayer = SwapLayer::create();
 	swapLayer->pause();
-	swapLayer->setVelocity(visibleSize.width * 0.25);
+	swapLayer->setVelocity(visibleSize.width * 0.3f);
 	this->addChild(swapLayer);
 
+	Vec2 startPosition = Vec2(origin.x, (origin + visibleSize).y);
 	linesLayer = LinesLayer::create(lineSupplier);
-	linesLayer->generateNewLine();
+	linesLayer->setVelocity(visibleSize.height * 0.25f);
+	linesLayer->setStartPosition(startPosition);
+	linesLayer->setFinishPosition(Vec2(origin.x, origin.y - SPR_MANAGER->getSpriteSize()));
+	linesLayer->start();
 	this->addChild(linesLayer);
 
 	collisionDetector =  CollisionDetector::create(swapLayer, linesLayer, nullptr);
