@@ -25,15 +25,19 @@ private:
 private:
 	void showPrompt();
 	void hidePrompt();
+	void emitCollision();
 	cocos2d::Label * promptLabel;
 	float velocity;
 	float promptPosition;
 	cocos2d::Sequence * showNextPromptAction;
+	cocos2d::Sequence * collisionHappenedAction;
 	class Prompt {
 	public:
-		Prompt(const std::string &, const std::string &);
+		Prompt(const std::string &, const std::string &, const std::function<void(LinesLayer *)> &);
 		std::string text;
 		std::string awaitedEvent;
+		std::function<void(LinesLayer *)> destroyLinesObjectAction;
+
 	};
 	std::queue<Prompt> prompts;
 };

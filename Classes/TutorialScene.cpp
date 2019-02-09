@@ -3,14 +3,18 @@
 
 USING_NS_CC;
 
-TutorialScene::Prompt::Prompt(const std::string & text, const std::string & awaitedEvent) : text(text), awaitedEvent(awaitedEvent) {
-
-}
+TutorialScene::Prompt::Prompt(const std::string & text, const std::string & awaitedEvent, const std::function<void(LinesLayer *)> & func)
+	: text(text), awaitedEvent(awaitedEvent), destroyLinesObjectAction(func) {}
 
 TutorialScene::TutorialScene() : lineSupplier(nullptr) {
-	prompts.push(Prompt("tap to swap", SwapLayer::ARRIVED_TO_SIDES));
-	prompts.push(Prompt("allow the square", SwapLayer::ARRIVED_TO_SIDES));
-	prompts.push(Prompt("tap and hold", SwapLayer::ARRIVED_TO_CENTER));
+	auto destroyLeftObject = [](LinesLayer * linesLayer) {
+		linesLayer->getFrontLine()->destroyLeftSprite();
+	};
+	prompts.push(Prompt("tap to swap", SwapLayer::ARRIVED_TO_SIDES, destroyLeftObject));
+	prompts.push(Prompt("allow the square", SwapLayer::ARRIVED_TO_SIDES, destroyLeftObject));
+	prompts.push(Prompt("tap and hold", SwapLayer::ARRIVED_TO_CENTER, [](LinesLayer * linesLayer) {
+		linesLayer->getFrontLine()->destroyCenterSprite();
+	}));
 }
 
 TutorialScene::~TutorialScene() {
@@ -18,6 +22,7 @@ TutorialScene::~TutorialScene() {
 		delete lineSupplier;
 	}
 	showNextPromptAction->release();
+	collisionHappenedAction->release();
 }
 
 bool TutorialScene::init() {
@@ -40,11 +45,12 @@ bool TutorialScene::init() {
 
 	velocity = visibleSize.height * 0.25f;
 	Vec2 startPosition = Vec2(origin.x, (origin + visibleSize).y + SPR_MANAGER->getSpriteSize());
+	Vec2 finishPosition = Vec2(origin.x, origin.y - SPR_MANAGER->getSpriteSize());
 	promptPosition = origin.y + visibleSize.height * 0.75f;
 	linesLayer = LinesLayer::create(lineSupplier);
 	linesLayer->setVelocity(velocity);
 	linesLayer->setStartPosition(startPosition);
-	linesLayer->setFinishPosition(Vec2(origin.x, origin.y - SPR_MANAGER->getSpriteSize()));
+	linesLayer->setFinishPosition(finishPosition);
 	linesLayer->start();
 	this->addChild(linesLayer);
 
@@ -68,6 +74,12 @@ bool TutorialScene::init() {
 		CallFunc::create(CC_CALLBACK_0(TutorialScene::showPrompt, this)));
 	showNextPromptAction->retain();
 	runAction(showNextPromptAction->clone());
+
+	time = (promptPosition - swapLayer->getRedBallSprite()->getPosition().x - SPR_MANAGER->getSpriteSize() * 0.9f) / velocity;
+	collisionHappenedAction = Sequence::createWithTwoActions(
+		DelayTime::create(time),
+		CallFunc::create(CC_CALLBACK_0(TutorialScene::emitCollision, this)));
+	collisionHappenedAction->retain();
 
 	return true;
 }
@@ -93,8 +105,22 @@ void TutorialScene::hidePrompt() {
 	swapLayer->block();
 	promptLabel->setVisible(false);
 	getEventDispatcher()->removeCustomEventListeners(prompts.front().awaitedEvent);
-	prompts.pop();
+	this->runAction(collisionHappenedAction->clone());
 }
+
+void TutorialScene::emitCollision() {
+	prompts.front().destroyLinesObjectAction(linesLayer);
+	prompts.pop();
+	if (!prompts.empty()) {
+		linesLayer->generateNewLine();
+		runAction(showNextPromptAction->clone());
+	}
+	else {
+		swapLayer->unblock();
+		getEventDispatcher()->addCustomEventListener(SwapLayer::ARRIVED_TO_SIDES, CC_CALLBACK_1(TutorialScene::menuSkipCallback, this));
+	}
+}
+
 
 TutorialLineSupplier::TutorialLineSupplier(const std::initializer_list<LineInfo> & lines) {
 	for (auto line : lines) {
