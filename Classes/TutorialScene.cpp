@@ -14,12 +14,10 @@ TutorialScene::TutorialScene() : lineSupplier(nullptr) {
 }
 
 TutorialScene::~TutorialScene() {
-	if (collisionDetector != nullptr) {
-		collisionDetector->release();
-	}
 	if (lineSupplier != nullptr) {
 		delete lineSupplier;
 	}
+	showNextPromptAction->release();
 }
 
 bool TutorialScene::init() {
@@ -31,30 +29,24 @@ bool TutorialScene::init() {
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	lineSupplier = new TutorialLineSupplier({
-		LineInfo(LineInfo::Element::blue, LineInfo::Element::none, LineInfo::Element::red),
-		LineInfo(LineInfo::Element::red, LineInfo::Element::green, LineInfo::Element::blue),
+		LineInfo(LineInfo::Element::blue, LineInfo::Element::none, LineInfo::Element::none),
+		LineInfo(LineInfo::Element::red, LineInfo::Element::green, LineInfo::Element::none),
 		LineInfo(LineInfo::Element::none, LineInfo::Element::violet, LineInfo::Element::none) });
 
 	swapLayer = SwapLayer::create();
-	swapLayer->pause();
 	swapLayer->setVelocity(visibleSize.width * 0.3f);
+	swapLayer->block();
 	this->addChild(swapLayer);
 
-	Vec2 startPosition = Vec2(origin.x, (origin + visibleSize).y);
+	velocity = visibleSize.height * 0.25f;
+	Vec2 startPosition = Vec2(origin.x, (origin + visibleSize).y + SPR_MANAGER->getSpriteSize());
+	promptPosition = origin.y + visibleSize.height * 0.75f;
 	linesLayer = LinesLayer::create(lineSupplier);
-	linesLayer->setVelocity(visibleSize.height * 0.25f);
+	linesLayer->setVelocity(velocity);
 	linesLayer->setStartPosition(startPosition);
 	linesLayer->setFinishPosition(Vec2(origin.x, origin.y - SPR_MANAGER->getSpriteSize()));
 	linesLayer->start();
 	this->addChild(linesLayer);
-
-	collisionDetector =  CollisionDetector::create(swapLayer, linesLayer, nullptr);
-	if (collisionDetector != nullptr) {
-		collisionDetector->retain();
-	}
-	else {
-		return false;
-	}
 
 	promptLabel = Label::create("", "fonts/Marker Felt.ttf", 25);
 	promptLabel->setColor(Color3B::BLACK);
@@ -70,6 +62,13 @@ bool TutorialScene::init() {
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu);
 
+	float time = (startPosition.y - promptPosition) / velocity;
+	showNextPromptAction = Sequence::createWithTwoActions(
+		DelayTime::create(time),
+		CallFunc::create(CC_CALLBACK_0(TutorialScene::showPrompt, this)));
+	showNextPromptAction->retain();
+	runAction(showNextPromptAction->clone());
+
 	return true;
 }
 
@@ -81,14 +80,9 @@ void TutorialScene::menuSkipCallback(Ref * sender) {
 	Director::getInstance()->replaceScene(SceneFactory::createGameScene());
 }
 
-bool TutorialScene::collide(const LineInfo::Element & elemA, const LineInfo::Element & elemB) {
-
-	return true;
-}
-
 void TutorialScene::showPrompt() {
 	linesLayer->pause();
-	swapLayer->resume();
+	swapLayer->unblock();
 	promptLabel->setString(prompts.front().text);
 	promptLabel->setVisible(true);
 	getEventDispatcher()->addCustomEventListener(prompts.front().awaitedEvent, CC_CALLBACK_0(TutorialScene::hidePrompt, this));
@@ -96,7 +90,7 @@ void TutorialScene::showPrompt() {
 
 void TutorialScene::hidePrompt() {
 	linesLayer->resume();
-	swapLayer->pause();
+	swapLayer->block();
 	promptLabel->setVisible(false);
 	getEventDispatcher()->removeCustomEventListeners(prompts.front().awaitedEvent);
 	prompts.pop();

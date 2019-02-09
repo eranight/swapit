@@ -20,14 +20,15 @@ private:
 	LineSupplier * lineSupplier;
 	SwapLayer * swapLayer;
 	LinesLayer * linesLayer;
-	CollisionDetector * collisionDetector;
-	bool collide(const LineInfo::Element &, const LineInfo::Element &);
 private:
 	cocos2d::Menu * menu; //skip button
 private:
 	void showPrompt();
 	void hidePrompt();
 	cocos2d::Label * promptLabel;
+	float velocity;
+	float promptPosition;
+	cocos2d::Sequence * showNextPromptAction;
 	class Prompt {
 	public:
 		Prompt(const std::string &, const std::string &);

@@ -58,7 +58,7 @@ bool SwapLayer::init()
 	touchListener = EventListenerTouchOneByOne::create();
 	touchListener->onTouchBegan = CC_CALLBACK_2(SwapLayer::touchBegan, this);
 	touchListener->onTouchEnded = CC_CALLBACK_2(SwapLayer::touchEnded, this);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+	getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, this);
 
     return true;
 }
