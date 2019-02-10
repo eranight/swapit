@@ -18,6 +18,7 @@ TutorialScene::TutorialScene() : lineSupplier(nullptr) {
 }
 
 TutorialScene::~TutorialScene() {
+	SPR_MANAGER->release();
 	if (lineSupplier != nullptr) {
 		delete lineSupplier;
 	}
@@ -29,6 +30,8 @@ bool TutorialScene::init() {
 	if (!LayerColor::initWithColor(Color4B::WHITE)) {
 		return false;
 	}
+
+	SPR_MANAGER->retain();
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();

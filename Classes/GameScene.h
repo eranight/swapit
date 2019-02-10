@@ -3,14 +3,6 @@
 
 #include "cocos2d.h"
 
-class LinesLayer;
-class SwapLayer;
-class UserInterfaceGameLayer;
-class LineSprites;
-class AbstractScript;
-class TutorialScript;
-class GameSctipt;
-
 class GameScene : public cocos2d::LayerColor
 {
 public:
@@ -24,25 +16,6 @@ public:
 	void update(float) override;
 	void pause() override;
 	void resume() override;
-
-public:
-	LinesLayer * getGenerateLayer() { return generateLayer; }
-	SwapLayer * getSwapLayer() { return swapLayer; }
-	void invokeGameOver(int score);
-
-private:
-	LinesLayer * generateLayer;
-	SwapLayer * swapLayer;
-	UserInterfaceGameLayer * userInterfaceGameLayer;
-	LineSprites * lineForCollisionDetect;
-
-	void collisionUpdate();
-	void checkCollision(const cocos2d::Sprite *, const cocos2d::Sprite *, bool & needToDestroy);
-
-	void skipScriptEvent(cocos2d::EventCustom *);
-	void toNextScript();
-	std::vector<AbstractScript *> scripts;
-	std::vector<AbstractScript *>::iterator currentScriptPointer;
 };
 
 
