@@ -27,7 +27,7 @@ SpriteManager * SpriteManager::getInstance()
 
 bool SpriteManager::init()
 {
-	ballTexture = Director::getInstance()->getTextureCache()->addImage("ball.png");
+	ballTexture = Director::getInstance()->getTextureCache()->addImage("circle.png");
 	squareTexture = Director::getInstance()->getTextureCache()->addImage("square.png");
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -48,7 +48,7 @@ bool SpriteManager::init()
 
 float SpriteManager::getSpriteSize()
 {
-	return ballTexture->getContentSize().height * Director::getInstance()->getContentScaleFactor();
+	return ballTexture->getContentSize().height;
 }
 
 float SpriteManager::getColumn(SpriteManager::SpriteColumn spriteColumn)

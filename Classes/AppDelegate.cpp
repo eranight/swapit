@@ -1,3 +1,6 @@
+#include "json/document.h"
+#include "json/filereadstream.h"
+
 #include "AppDelegate.h"
 #include "SceneFactory.hpp"
 #include "GameScene.h"
@@ -35,7 +38,7 @@ static int register_all_packages()
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
-    // initialize director
+	// initialize director
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
@@ -51,26 +54,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
     
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-	director->setContentScaleFactor(1.0f);
-#else
-	auto frameSize = glview->getFrameSize();
-	if (frameSize.height > mediumResolutionSize.height)
-	{
-		director->setContentScaleFactor(MIN(largeResolutionSize.height / designResolutionSize.height, largeResolutionSize.width / designResolutionSize.width));
-	}
-	// if the frame's height is larger than the height of small size.
-	else if (frameSize.height > smallResolutionSize.height)
-	{
-		director->setContentScaleFactor(MIN(mediumResolutionSize.height / designResolutionSize.height, mediumResolutionSize.width / designResolutionSize.width));
-	}
-	// if the frame's height is smaller than the height of medium size.
-	else
-	{
-		director->setContentScaleFactor(MIN(smallResolutionSize.height / designResolutionSize.height, smallResolutionSize.width / designResolutionSize.width));
-	}
-#endif
+	initConfiguration(director->getWinSize().width, director->getWinSize().height);
+	int column = Configuration::getInstance()->getValue("column").asInt();
+	int row = Configuration::getInstance()->getValue("row").asInt();
+	double coefficient = Configuration::getInstance()->getValue("coefficient").asDouble();
+	float scaleFactor = MIN(director->getWinSize().width / column, director->getWinSize().height / row);
+	director->setContentScaleFactor(coefficient / scaleFactor);
 
     register_all_packages();
 
@@ -97,4 +86,27 @@ void AppDelegate::applicationWillEnterForeground() {
 
     // if you use SimpleAudioEngine, it must resume here
     // SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+}
+
+
+void AppDelegate::initConfiguration(int width, int height) {
+	char buffer[128];
+	FILE * configFilePointer = fopen("config.json", "r");
+	rapidjson::FileReadStream configFileStream(configFilePointer, buffer, sizeof(buffer));
+	rapidjson::Document configDoc;
+	configDoc.ParseStream(configFileStream);
+	if (configDoc.HasParseError()) {
+		CCLOG("error occured while parsing config file %d", configDoc.GetParseError());
+	}
+	else {
+		Configuration * config = Configuration::getInstance();
+		config->setValue("column", Value((*configDoc.FindMember("column")).value.GetInt()));
+		config->setValue("row", Value((*configDoc.FindMember("row")).value.GetInt()));
+		config->setValue("coefficient", Value((*configDoc.FindMember("coefficient")).value.GetDouble()));
+		float fontSize = height / (*configDoc.FindMember("fontScaleFactor")).value.GetDouble();
+		config->setValue("fontSize", Value(fontSize));
+		config->setValue("font", Value((*configDoc.FindMember("font")).value.GetString()));
+	}
+
+	fclose(configFilePointer);
 }

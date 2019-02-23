@@ -57,13 +57,13 @@ bool TutorialScene::init() {
 	linesLayer->start();
 	this->addChild(linesLayer);
 
-	promptLabel = Label::create("", "fonts/Marker Felt.ttf", 25);
+	promptLabel = Label::create("", Configuration::getInstance()->getValue("font").asString(), Configuration::getInstance()->getValue("fontSize").asFloat());
 	promptLabel->setColor(Color3B::BLACK);
 	promptLabel->setPosition((origin + visibleSize) * 0.5f);
 	promptLabel->setVisible(false);
 	this->addChild(promptLabel);
 
-	auto skipLabel = Label::create("skip tutorial", "fonts/Marker Felt.ttf", 25);
+	auto skipLabel = Label::create("skip tutorial", Configuration::getInstance()->getValue("font").asString(), Configuration::getInstance()->getValue("fontSize").asFloat());
 	auto skipItem = MenuItemLabel::create(skipLabel, CC_CALLBACK_1(TutorialScene::menuSkipCallback, this));
 	skipItem->setColor(Color3B::BLACK);
 	skipItem->setPosition(Vec2(origin.x + visibleSize.width * 0.5f, origin.y + skipItem->getContentSize().height * 0.5f));
@@ -78,7 +78,7 @@ bool TutorialScene::init() {
 	showNextPromptAction->retain();
 	runAction(showNextPromptAction->clone());
 
-	time = (promptPosition - swapLayer->getRedBallSprite()->getPosition().x - SPR_MANAGER->getSpriteSize() * 0.9f) / velocity;
+	time = (promptPosition - swapLayer->getRedBallSprite()->getPosition().x - SPR_MANAGER->getSpriteSize()) / velocity;
 	collisionHappenedAction = Sequence::createWithTwoActions(
 		DelayTime::create(time),
 		CallFunc::create(CC_CALLBACK_0(TutorialScene::emitCollision, this)));

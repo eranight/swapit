@@ -29,7 +29,7 @@ bool GameOverLayer::init(int goals, float fadeInTime) {
 	placeForLabel->setPosition(center);
 	this->addChild(placeForLabel);
 
-	auto goalsLabel = Label::create(String::createWithFormat("%d", goals)->getCString(), "fonts/Marker Felt.ttf", 25);
+	auto goalsLabel = Label::create(String::createWithFormat("%d", goals)->getCString(), Configuration::getInstance()->getValue("font").asString(), Configuration::getInstance()->getValue("fontSize").asFloat());
 	goalsLabel->setColor(Color3B::BLACK);
 	goalsLabel->setPosition(center);
 	this->addChild(goalsLabel);

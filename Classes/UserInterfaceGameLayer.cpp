@@ -36,7 +36,7 @@ bool UserInterfaceGameLayer::init() {
 
 	
 	auto skipItem = MenuItemLabel::create(
-		Label::create("skip tutorial", "fonts/Marker Felt.ttf", 25),
+		Label::create("skip tutorial", Configuration::getInstance()->getValue("font").asString(), Configuration::getInstance()->getValue("fontSize").asFloat()),
 		CC_CALLBACK_1(UserInterfaceGameLayer::menuSkipCallback, this));
 	skipItem->setColor(Color3B::BLACK);
 	skipItem->setTag(static_cast<int>(UiButtonName::SKIP_TAG));
