@@ -87,10 +87,6 @@ bool TutorialScene::init() {
 	return true;
 }
 
-void TutorialScene::update(float deltaTime) {
-
-}
-
 void TutorialScene::menuSkipCallback(Ref * sender) {
 	Director::getInstance()->replaceScene(SceneFactory::createGameScene());
 }

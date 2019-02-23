@@ -1,10 +1,11 @@
 #include "SceneFactory.hpp"
+#include "MainMenuScene.hpp"
 #include "TutorialScene.hpp"
 
 USING_NS_CC;
 
 Scene * SceneFactory::createMenuScene() {
-	auto scene = Scene::create();
+	auto scene = MainMenuScene::create();
 	return scene;
 }
 

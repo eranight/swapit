@@ -38,6 +38,7 @@ static int register_all_packages()
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
+	
 	// initialize director
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
@@ -64,7 +65,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
-	auto scene = SceneFactory::createTutorialScene();//GameScene::createScene();
+	auto scene = SceneFactory::createMenuScene();//GameScene::createScene();
 
     // run
     director->runWithScene(scene);

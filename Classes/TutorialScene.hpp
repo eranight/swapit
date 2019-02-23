@@ -3,7 +3,6 @@
 #include "cocos2d.h"
 #include "SwapLayer.h"
 #include "LinesLayer.h"
-#include "CollisionDetector.hpp"
 #include "LineSupplier.hpp"
 
 class TutorialScene : public cocos2d::LayerColor {
@@ -13,7 +12,6 @@ public:
 	~TutorialScene();
 public:
 	virtual bool init() override;
-	void update(float) override;
 private:
 	void menuSkipCallback(cocos2d::Ref *);
 private:
