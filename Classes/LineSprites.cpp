@@ -19,7 +19,6 @@ bool LineSprites::init(LineInfo & line) {
 	}
 
 	this->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
-	float ballSize = SPR_MANAGER->getSpriteSize();
 
 	leftSprite = initSpriteLike(line.getLeft(), Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::left), 0));
 	centerSprite = initSpriteLike(line.getMiddle(), Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::center), 0));

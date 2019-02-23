@@ -78,7 +78,7 @@ bool TutorialScene::init() {
 	showNextPromptAction->retain();
 	runAction(showNextPromptAction->clone());
 
-	time = (promptPosition - swapLayer->getRedBallSprite()->getPosition().x - SPR_MANAGER->getSpriteSize()) / velocity;
+	time = (promptPosition - swapLayer->getLinePosition().y - SPR_MANAGER->getSpriteSize()) / velocity;
 	collisionHappenedAction = Sequence::createWithTwoActions(
 		DelayTime::create(time),
 		CallFunc::create(CC_CALLBACK_0(TutorialScene::emitCollision, this)));

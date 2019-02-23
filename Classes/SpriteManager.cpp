@@ -48,7 +48,7 @@ bool SpriteManager::init()
 
 float SpriteManager::getSpriteSize()
 {
-	return ballTexture->getContentSize().height;
+	return ballTexture->getContentSize().height * 0.8f;
 }
 
 float SpriteManager::getColumn(SpriteManager::SpriteColumn spriteColumn)

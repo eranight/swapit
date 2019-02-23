@@ -34,7 +34,7 @@ bool CollisionDetector::init(SwapLayer * swapLayer, LinesLayer * generateLayer, 
 }
 
 void CollisionDetector::update(float deltaTime) {
-	float swapLinePos = swapLayer->getLinePosition() - SpriteManager::getInstance()->getSpriteSize() * 0.5f;
+	float swapLinePos = swapLayer->getLinePosition().y - SpriteManager::getInstance()->getSpriteSize() * 0.5f;
 	auto line = generateLayer->getFirstLineAbove(swapLinePos);
 	if (line != nullptr) {
 		
@@ -47,7 +47,7 @@ bool CollisionDetector::checkCollision(LineSprites * line, Node * first, Node * 
 	Vec2 centerA = line->convertToWorldSpace(Vec2(bbA.getMidX(), bbA.getMidY()));
 	Rect bbB = second->getBoundingBox();
 	Vec2 centerB = swapLayer->convertToWorldSpace(Vec2(bbB.getMidX(), bbB.getMidY()));
-	float diameter = SPR_MANAGER->getSpriteSize() * 0.8f;
+	float diameter = SPR_MANAGER->getSpriteSize();
 	float radius = diameter * 0.5f;
 	if (second->getColor() != SPR_MANAGER->getColor(LineInfo::Element::green)) {
 		return (centerA - centerB).length() <= diameter;

@@ -35,7 +35,7 @@ public:
 	bool init() override;
 	CREATE_FUNC(SwapLayer);
 
-	float getLinePosition() { return centerPosition.y; }
+	cocos2d::Vec2 getLinePosition() { return centerPosition; }
 	BallOrder getBallOrder() { return ballOrder; }
 
 	const cocos2d::Sprite * getRedBallSprite() { return redBall; }
