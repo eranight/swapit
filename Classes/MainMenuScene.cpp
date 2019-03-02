@@ -19,10 +19,17 @@ bool MainMenuScene::init() {
 	auto config = Configuration::getInstance();
 	auto label = Label::create(config->getValue("author").asString(), config->getValue("font").asString(), config->getValue("fontSize").asFloat());
 	label->setColor(Color3B::BLACK);
-	auto authorLayer = BackableLayer::create(label);
-	layers.insert(LayerType::AUTHORS, authorLayer);
-	authorLayer->setVisible(false);
-	this->addChild(authorLayer);
+	auto backableLayer = BackableLayer::create(label);
+	layers.insert(LayerType::AUTHORS, backableLayer);
+	backableLayer->setVisible(false);
+	this->addChild(backableLayer);
+
+	label = Label::create("best score", config->getValue("font").asString(), config->getValue("fontSize").asFloat());
+	label->setColor(Color3B::BLACK);
+	backableLayer = BackableLayer::create(label);
+	layers.insert(LayerType::RECORD, backableLayer);
+	backableLayer->setVisible(false);
+	this->addChild(backableLayer);
 
 	switchLayer(LayerType::MENU);
 	return true;
