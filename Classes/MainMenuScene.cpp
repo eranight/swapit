@@ -1,4 +1,5 @@
 #include "MainMenuScene.hpp"
+#include "LinesLayer.h"
 #include "MainMenuLayer.hpp"
 #include "BackableLayer.hpp"
 
@@ -10,6 +11,12 @@ bool MainMenuScene::init() {
 	}
 
 	layerType = LayerType::MENU;
+
+	auto background = LayerColor::create(Color4B::WHITE);
+	this->addChild(background);
+
+	auto linesLayer = LinesLayer::create(nullptr);
+	this->addChild(linesLayer);
 
 	auto menuLayer = MainMenuLayer::create();
 	layers.insert(LayerType::MENU, menuLayer);

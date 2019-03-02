@@ -14,7 +14,7 @@ Layer * BackableLayer::create(Node * centerNode) {
 }
 
 bool BackableLayer::init(Node * centerNode) {
-	if (!SwitchableLayer::initWithColor(Color4B::WHITE)) {
+	if (!SwitchableLayer::init()) {
 		return false;
 	}
 

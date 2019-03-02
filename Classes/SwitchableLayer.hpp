@@ -5,5 +5,6 @@
 
 class SwitchableLayer : public cocos2d::LayerColor {
 public:
+	bool init() override;
 	void switchLayer(const LayerType &);
 };

@@ -6,7 +6,7 @@
 USING_NS_CC;
 
 bool MainMenuLayer::init() {
-	if (!LayerColor::initWithColor(Color4B::WHITE)) {
+	if (!SwitchableLayer::init()) {
 		return false;
 	}
 
