@@ -25,7 +25,12 @@ bool MainMenuLayer::init() {
 	auto authorItem = MenuItemImage::create("authorsNormal.png", "authorsSelected.png", [this](Ref * ref) -> void { this->switchLayer(LayerType::AUTHORS); });
 	authorItem->setPosition(Vec2(center.x + SPR_MANAGER->getSpriteSize(), center.y));
 
-	auto closeItem = MenuItemImage::create("closeNormal.png", "closeSelected.png", [this](Ref * ref) -> void { this->switchLayer(LayerType::AUTHORS); });
+	auto closeItem = MenuItemImage::create("closeNormal.png", "closeSelected.png", [this](Ref * ref) -> void { 
+		Director::getInstance()->end();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+		exit(0);
+#endif
+	});
 	closeItem->setPosition(Vec2(center.x, center.y - SPR_MANAGER->getSpriteSize()));
 
 	menu = Menu::create(playItem, recordItem, authorItem, closeItem, nullptr);
@@ -33,8 +38,4 @@ bool MainMenuLayer::init() {
 	this->addChild(menu);
 
 	return true;
-}
-
-void MainMenuLayer::switchLayer(const LayerType & layerType) {
-	dynamic_cast<MainMenuScene *>(Director::getInstance()->getRunningScene())->switchLayer(layerType);
 }

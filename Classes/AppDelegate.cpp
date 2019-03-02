@@ -107,6 +107,7 @@ void AppDelegate::initConfiguration(int width, int height) {
 		float fontSize = height / (*configDoc.FindMember("fontScaleFactor")).value.GetDouble();
 		config->setValue("fontSize", Value(fontSize));
 		config->setValue("font", Value((*configDoc.FindMember("font")).value.GetString()));
+		config->setValue("author", Value((*configDoc.FindMember("author")).value.GetString()));
 	}
 
 	fclose(configFilePointer);

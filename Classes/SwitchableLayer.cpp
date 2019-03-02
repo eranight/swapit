@@ -1,0 +1,8 @@
+#include "SwitchableLayer.hpp"
+#include "MainMenuScene.hpp"
+
+USING_NS_CC;
+
+void SwitchableLayer::switchLayer(const LayerType & layerType) {
+	dynamic_cast<MainMenuScene *>(Director::getInstance()->getRunningScene())->switchLayer(layerType);
+}
