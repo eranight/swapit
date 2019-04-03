@@ -5,17 +5,28 @@
 
 USING_NS_CC;
 
+MainMenuScene::~MainMenuScene() {
+	if (lineSupplier != nullptr) {
+		delete lineSupplier;
+		lineSupplier = nullptr;
+	}
+}
+
 bool MainMenuScene::init() {
 	if (!Scene::init()) {
 		return false;
 	}
 
 	layerType = LayerType::MENU;
+	lineSupplier = new RepeatedLineSupplier({
+		LineInfo(LineInfo::Element::blue, LineInfo::Element::none, LineInfo::Element::none),
+		LineInfo(LineInfo::Element::red, LineInfo::Element::green, LineInfo::Element::none),
+		LineInfo(LineInfo::Element::none, LineInfo::Element::violet, LineInfo::Element::none) });
 
 	auto background = LayerColor::create(Color4B::WHITE);
 	this->addChild(background);
 
-	auto linesLayer = LinesLayer::create(nullptr);
+	auto linesLayer = LinesLayer::create(lineSupplier);
 	this->addChild(linesLayer);
 
 	auto menuLayer = MainMenuLayer::create();
@@ -46,4 +57,17 @@ void MainMenuScene::switchLayer(const LayerType & layerType) {
 	layers.at(this->layerType)->setVisible(false);
 	this->layerType = layerType;
 	layers.at(this->layerType)->setVisible(true);
+}
+
+RepeatedLineSupplier::RepeatedLineSupplier(const std::initializer_list<LineInfo> & lines) {
+	for (auto line : lines) {
+		lineQueue.push(line);
+	}
+}
+
+LineInfo RepeatedLineSupplier::getNextLine() {
+	auto lineInfo = lineQueue.front();
+	lineQueue.pop();
+	lineQueue.push(lineInfo);
+	return lineInfo;
 }
