@@ -2,6 +2,7 @@
 
 #include "cocos2d.h"
 #include "LayerType.hpp"
+#include "LinesLayer.h"
 #include "LineSupplier.hpp"
 
 class MainMenuScene : public cocos2d::Scene {
@@ -13,10 +14,13 @@ public:
 	virtual bool init() override;
 public:
 	void switchLayer(const LayerType &);
+	void genetateNextLine();
 private:
 	LayerType layerType;
 	cocos2d::Map<LayerType, cocos2d::Layer *> layers;
+	LinesLayer * linesLayer;
 	LineSupplier * lineSupplier;
+	cocos2d::Sequence * nextLineTimer;
 };
 
 class RepeatedLineSupplier : public LineSupplier {
