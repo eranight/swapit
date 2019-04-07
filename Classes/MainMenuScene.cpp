@@ -71,14 +71,13 @@ bool MainMenuScene::init() {
 	backableLayer->setVisible(false);
 	this->addChild(backableLayer);
 
-	switchLayer(LayerType::MENU);
-
 	return true;
 }
 
 void MainMenuScene::onEnter() {
 	Scene::onEnter();
 	genetateNextLine();
+	switchLayer(LayerType::MENU);
 }
 
 void MainMenuScene::switchLayer(const LayerType & layerType) {
