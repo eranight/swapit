@@ -40,23 +40,26 @@ bool LinesLayer::init(const LinesLayerConfiguration & configuration, LineSupplie
 	this->lineSupplier = lineSupplier;
 
 	scheduleUpdate();
-	
-	generateNextLineListener = EventListenerCustom::create(GENERATE_NEW_LINE_EVENT, CC_CALLBACK_0(LinesLayer::generateNewLine, this));
-	setVelocityListener = EventListenerCustom::create(SET_VELOCITY_EVENT, CC_CALLBACK_1(LinesLayer::setVelocity, this));
-
-	getEventDispatcher()->addEventListenerWithFixedPriority(generateNextLineListener, 1);
-	getEventDispatcher()->addEventListenerWithFixedPriority(setVelocityListener, 1);
 
 	return true;
 }
 
-void LinesLayer::update(float dt) {
-	if (isBlocking()) return;
+void LinesLayer::onEnter() {
+	CCLOG("creates listeners");
+	Layer::onEnter();
+	getEventDispatcher()->addCustomEventListener(GENERATE_NEW_LINE_EVENT, CC_CALLBACK_0(LinesLayer::generateNewLine, this));
+	getEventDispatcher()->addCustomEventListener(SET_VELOCITY_EVENT, CC_CALLBACK_1(LinesLayer::setVelocity, this));
 }
 
-void LinesLayer::cleanup() {
-	getEventDispatcher()->removeEventListener(generateNextLineListener);
-	getEventDispatcher()->removeEventListener(setVelocityListener);
+void LinesLayer::onExit() {
+	CCLOG("removes listeners");
+	Layer::onExit();
+	getEventDispatcher()->removeCustomEventListeners(GENERATE_NEW_LINE_EVENT);
+	getEventDispatcher()->removeCustomEventListeners(SET_VELOCITY_EVENT);
+}
+
+void LinesLayer::update(float dt) {
+	if (isBlocking()) return;
 }
 
 void LinesLayer::block() {

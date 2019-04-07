@@ -30,10 +30,11 @@ public:
 
 public:
 	bool init(const LinesLayerConfiguration & configuration, LineSupplier * lineSupplier);
+	void onEnter() override;
+	void onExit() override;
 	void update(float) override;
 	void pause() override;
 	void resume() override;
-	void cleanup() override;
 public:
 	void block() override;
 	void unblock() override;
@@ -58,9 +59,6 @@ private:
 	cocos2d::Vec2 startPosition;
 	cocos2d::Vec2 finishPosition;
 	cocos2d::Vector<LineSprites *> lines;
-
-	cocos2d::EventListener * generateNextLineListener;
-	cocos2d::EventListener * setVelocityListener;
 
 	float velocity;
 	float timer;
