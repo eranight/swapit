@@ -5,7 +5,7 @@
 #include "LinesLayer.h"
 #include "LineSupplier.hpp"
 
-class TutorialScene : public cocos2d::LayerColor {
+class TutorialScene : public cocos2d::Scene {
 public:
 	CREATE_FUNC(TutorialScene);
 	TutorialScene();

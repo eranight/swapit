@@ -10,9 +10,7 @@ Scene * SceneFactory::createMenuScene() {
 }
 
 Scene * SceneFactory::createTutorialScene() {
-	auto scene = Scene::create();
-	auto layer = TutorialScene::create();
-	scene->addChild(layer);
+	auto scene = TutorialScene::create();
 	return scene;
 }
 

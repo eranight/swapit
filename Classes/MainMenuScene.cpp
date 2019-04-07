@@ -6,6 +6,7 @@
 USING_NS_CC;
 
 MainMenuScene::~MainMenuScene() {
+	SPR_MANAGER->release();
 	if (lineSupplier != nullptr) {
 		delete lineSupplier;
 		lineSupplier = nullptr;
@@ -17,6 +18,8 @@ bool MainMenuScene::init() {
 	if (!Scene::init()) {
 		return false;
 	}
+
+	SPR_MANAGER->retain();
 
 	layerType = LayerType::MENU;
 	lineSupplier = new RepeatedLineSupplier({

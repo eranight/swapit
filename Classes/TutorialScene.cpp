@@ -27,11 +27,14 @@ TutorialScene::~TutorialScene() {
 }
 
 bool TutorialScene::init() {
-	if (!LayerColor::initWithColor(Color4B::WHITE)) {
+	if (!Scene::init()) {
 		return false;
 	}
 
 	SPR_MANAGER->retain();
+
+	auto background = LayerColor::create(Color4B::WHITE);
+	this->addChild(background);
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
