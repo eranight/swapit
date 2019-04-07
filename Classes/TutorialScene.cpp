@@ -53,11 +53,7 @@ bool TutorialScene::init() {
 	Vec2 startPosition = Vec2(origin.x, (origin + visibleSize).y + SPR_MANAGER->getSpriteSize());
 	Vec2 finishPosition = Vec2(origin.x, origin.y - SPR_MANAGER->getSpriteSize());
 	promptPosition = origin.y + visibleSize.height * 0.75f;
-	linesLayer = LinesLayer::create(lineSupplier);
-	linesLayer->setVelocity(velocity);
-	linesLayer->setStartPosition(startPosition);
-	linesLayer->setFinishPosition(finishPosition);
-	linesLayer->start();
+	linesLayer = LinesLayer::create({ startPosition, finishPosition, velocity }, lineSupplier);
 	this->addChild(linesLayer);
 
 	promptLabel = Label::create("", Configuration::getInstance()->getValue("font").asString(), Configuration::getInstance()->getValue("fontSize").asFloat());
@@ -79,7 +75,6 @@ bool TutorialScene::init() {
 		DelayTime::create(time),
 		CallFunc::create(CC_CALLBACK_0(TutorialScene::showPrompt, this)));
 	showNextPromptAction->retain();
-	runAction(showNextPromptAction->clone());
 
 	time = (promptPosition - swapLayer->getLinePosition().y - SPR_MANAGER->getSpriteSize()) / velocity;
 	collisionHappenedAction = Sequence::createWithTwoActions(
@@ -87,7 +82,14 @@ bool TutorialScene::init() {
 		CallFunc::create(CC_CALLBACK_0(TutorialScene::emitCollision, this)));
 	collisionHappenedAction->retain();
 
+	//genetateNextLine();
+
 	return true;
+}
+
+void TutorialScene::onEnter() {
+	Scene::onEnter();
+	genetateNextLine();
 }
 
 void TutorialScene::menuSkipCallback(Ref * sender) {
@@ -114,8 +116,7 @@ void TutorialScene::emitCollision() {
 	prompts.front().destroyLinesObjectAction(linesLayer);
 	prompts.pop();
 	if (!prompts.empty()) {
-		linesLayer->generateNewLine();
-		runAction(showNextPromptAction->clone());
+		genetateNextLine();
 	}
 	else {
 		swapLayer->unblock();
@@ -123,6 +124,10 @@ void TutorialScene::emitCollision() {
 	}
 }
 
+void TutorialScene::genetateNextLine() {
+	getEventDispatcher()->dispatchCustomEvent(LinesLayer::GENERATE_NEW_LINE_EVENT);
+	runAction(showNextPromptAction->clone());
+}
 
 TutorialLineSupplier::TutorialLineSupplier(const std::initializer_list<LineInfo> & lines) {
 	for (auto line : lines) {

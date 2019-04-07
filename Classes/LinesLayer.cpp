@@ -5,9 +5,12 @@
 
 USING_NS_CC;
 
-LinesLayer * LinesLayer::create(LineSupplier * lineSupplier) {
+const std::string LinesLayer::GENERATE_NEW_LINE_EVENT = "generate new line event";
+const std::string LinesLayer::SET_VELOCITY_EVENT = "set velocity event";
+
+LinesLayer * LinesLayer::create(const LinesLayerConfiguration & configuration, LineSupplier * lineSupplier) {
 	auto pRef = new (std::nothrow) LinesLayer();
-	if (pRef != nullptr && pRef->init(lineSupplier)) {
+	if (pRef != nullptr && pRef->init(configuration, lineSupplier)) {
 		pRef->autorelease();
 		return pRef;
 	}
@@ -20,7 +23,7 @@ LinesLayer * LinesLayer::create(LineSupplier * lineSupplier) {
 
 LinesLayer::~LinesLayer() {}
 
-bool LinesLayer::init(LineSupplier * lineSupplier)
+bool LinesLayer::init(const LinesLayerConfiguration & configuration, LineSupplier * lineSupplier)
 {
 	if (!Layer::init())
 	{
@@ -30,15 +33,30 @@ bool LinesLayer::init(LineSupplier * lineSupplier)
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+	this->startPosition = configuration.getStartPosition();
+	this->finishPosition = configuration.getFinishPosition();
+	this->velocity = configuration.getVelocity();
+	recalculateTime();
 	this->lineSupplier = lineSupplier;
 
 	scheduleUpdate();
+	
+	generateNextLineListener = EventListenerCustom::create(GENERATE_NEW_LINE_EVENT, CC_CALLBACK_0(LinesLayer::generateNewLine, this));
+	setVelocityListener = EventListenerCustom::create(SET_VELOCITY_EVENT, CC_CALLBACK_1(LinesLayer::setVelocity, this));
+
+	getEventDispatcher()->addEventListenerWithFixedPriority(generateNextLineListener, 1);
+	getEventDispatcher()->addEventListenerWithFixedPriority(setVelocityListener, 1);
 
 	return true;
 }
 
 void LinesLayer::update(float dt) {
 	if (isBlocking()) return;
+}
+
+void LinesLayer::cleanup() {
+	getEventDispatcher()->removeEventListener(generateNextLineListener);
+	getEventDispatcher()->removeEventListener(setVelocityListener);
 }
 
 void LinesLayer::block() {
@@ -61,6 +79,16 @@ void LinesLayer::generateNewLine()
 	this->addChild(line);
 	lines.pushBack(line);
 	line->runAction(Sequence::create(MoveTo::create(timer, finishPosition), CallFuncN::create(CC_CALLBACK_1(LinesLayer::removeLine, this)), RemoveSelf::create(), nullptr));
+	CCLOG("generate new line");
+}
+
+void LinesLayer::setVelocity(cocos2d::EventCustom * event) {
+	this->velocity = *(reinterpret_cast<float *>(event->getUserData()));
+	recalculateTime();
+	for (auto line : lines) {
+		line->stopAllActions();
+	}
+	recreateLineActions();
 }
 
 LineSprites * LinesLayer::getFirstLineAbove(float y) {
@@ -70,15 +98,6 @@ LineSprites * LinesLayer::getFirstLineAbove(float y) {
 		}
 	}
 	return nullptr;
-}
-
-void LinesLayer::start() {
-	generateNewLine();
-}
-
-void LinesLayer::stop() {
-	this->stopAllActions();
-	unscheduleUpdate();
 }
 
 void LinesLayer::pause() {
@@ -93,21 +112,13 @@ void LinesLayer::resume() {
 	}
 }
 
-void LinesLayer::setVelocity(float velocity) {
-	this->velocity = velocity;
-	recalculateTime();
-	for (auto line : lines) {
-		line->stopAllActions();
-	}
-	recreateLineActions();
-}
-
 void LinesLayer::recalculateTime() {
 	timer = (startPosition - finishPosition).length() / velocity;
 }
 
 void LinesLayer::removeLine(Node * line) {
 	lines.eraseObject(dynamic_cast<LineSprites *>(line));
+	CCLOG("delete line");
 }
 
 void LinesLayer::recreateLineActions() {

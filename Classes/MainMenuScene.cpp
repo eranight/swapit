@@ -44,11 +44,7 @@ bool MainMenuScene::init() {
 	
 	auto velocity = visibleSize.height * 0.25f;
 	float time = (visibleSize.height - SPR_MANAGER->getSpriteSize()) / velocity;
-	linesLayer = LinesLayer::create(lineSupplier);
-	linesLayer->setStartPosition(startPosition);
-	linesLayer->setFinishPosition(finishPosition);
-	linesLayer->setVelocity(velocity);
-	linesLayer->start();
+	auto linesLayer = LinesLayer::create({ startPosition, finishPosition, velocity}, lineSupplier);
 	this->addChild(linesLayer);
 	nextLineTimer = Sequence::createWithTwoActions(
 		DelayTime::create(time),
@@ -76,8 +72,13 @@ bool MainMenuScene::init() {
 	this->addChild(backableLayer);
 
 	switchLayer(LayerType::MENU);
-	this->runAction(nextLineTimer->clone());
+
 	return true;
+}
+
+void MainMenuScene::onEnter() {
+	Scene::onEnter();
+	genetateNextLine();
 }
 
 void MainMenuScene::switchLayer(const LayerType & layerType) {
@@ -87,7 +88,7 @@ void MainMenuScene::switchLayer(const LayerType & layerType) {
 }
 
 void MainMenuScene::genetateNextLine() {
-	linesLayer->generateNewLine();
+	getEventDispatcher()->dispatchCustomEvent(LinesLayer::GENERATE_NEW_LINE_EVENT);
 	this->runAction(nextLineTimer->clone());
 }
 

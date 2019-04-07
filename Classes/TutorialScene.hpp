@@ -12,6 +12,7 @@ public:
 	~TutorialScene();
 public:
 	virtual bool init() override;
+	virtual void onEnter() override;
 private:
 	void menuSkipCallback(cocos2d::Ref *);
 private:
@@ -24,6 +25,7 @@ private:
 	void showPrompt();
 	void hidePrompt();
 	void emitCollision();
+	void genetateNextLine();
 	cocos2d::Label * promptLabel;
 	float velocity;
 	float promptPosition;
