@@ -96,19 +96,23 @@ void AppDelegate::initConfiguration(int width, int height) {
 	rapidjson::FileReadStream configFileStream(configFilePointer, buffer, sizeof(buffer));
 	rapidjson::Document configDoc;
 	configDoc.ParseStream(configFileStream);
-	if (configDoc.HasParseError()) {
-		CCLOG("error occured while parsing config file %d", configDoc.GetParseError());
+	CCASSERT(!configDoc.HasParseError(), "error occured while parsing config file");
+	Configuration * config = Configuration::getInstance();
+	config->setValue("column", Value(configDoc.FindMember("column")->value.GetInt()));
+	config->setValue("row", Value(configDoc.FindMember("row")->value.GetInt()));
+	config->setValue("coefficient", Value(configDoc.FindMember("coefficient")->value.GetDouble()));
+	float fontSize = height / configDoc.FindMember("fontScaleFactor")->value.GetDouble();
+	config->setValue("fontSize", Value(fontSize));
+	config->setValue("font", Value(configDoc.FindMember("font")->value.GetString()));
+	config->setValue("author", Value(configDoc.FindMember("author")->value.GetString()));
+	auto mainMenuLines = ValueVector();
+	auto mainMenuLinesMember = configDoc.FindMember("mainMenuLines");
+	for (auto iter = mainMenuLinesMember->value.Begin(); iter != mainMenuLinesMember->value.End(); ++iter) {
+		auto leftValue = Value(iter->FindMember("l")->value.GetString());
+		auto middleValue = Value(iter->FindMember("m")->value.GetString());
+		auto rightValue = Value(iter->FindMember("r")->value.GetString());
+		mainMenuLines.push_back(Value(ValueVector({ leftValue, middleValue, rightValue })));
 	}
-	else {
-		Configuration * config = Configuration::getInstance();
-		config->setValue("column", Value((*configDoc.FindMember("column")).value.GetInt()));
-		config->setValue("row", Value((*configDoc.FindMember("row")).value.GetInt()));
-		config->setValue("coefficient", Value((*configDoc.FindMember("coefficient")).value.GetDouble()));
-		float fontSize = height / (*configDoc.FindMember("fontScaleFactor")).value.GetDouble();
-		config->setValue("fontSize", Value(fontSize));
-		config->setValue("font", Value((*configDoc.FindMember("font")).value.GetString()));
-		config->setValue("author", Value((*configDoc.FindMember("author")).value.GetString()));
-	}
-
+	config->setValue("mainMenuLines", Value(mainMenuLines));
 	fclose(configFilePointer);
 }

@@ -1,8 +1,20 @@
 {
-  "column": 7,
-  "row": 11,
-  "coefficient": 256.0,
-  "fontScaleFactor": 28.16,
-  "font": "fonts/Marker Felt.ttf",
-  "author": "Created by Alex Melnikov"
+	"column": 7,
+	"row": 11,
+	"coefficient": 256.0,
+	"fontScaleFactor": 28.16,
+	"font": "fonts/Marker Felt.ttf",
+	"author": "Created by Alex Melnikov",
+	"mainMenuLines": [
+    { "l": "blue", "m": "none", "r": "none" },
+    { "l": "none", "m": "none", "r": "red" },
+    { "l": "none", "m": "violet", "r": "none" },
+    { "l": "red", "m": "none", "r": "blue" },
+    { "l": "blue", "m": "none", "r": "red" },
+    { "l": "blue", "m": "green", "r": "none" },
+    { "l": "green", "m": "violet", "r": "green" },
+    { "l": "none", "m": "green", "r": "red" },
+    { "l": "red", "m": "green", "r": "blue" },
+    { "l": "blue", "m": "green", "r": "red" }
+	]
 }

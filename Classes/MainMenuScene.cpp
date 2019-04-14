@@ -22,7 +22,13 @@ bool MainMenuScene::init() {
 	SPR_MANAGER->retain();
 
 	layerType = LayerType::MENU;
-	lineSupplier = new RepeatedLineSupplier({
+	Configuration * config = Configuration::getInstance();
+	auto valueVector = config->getValue("mainMenuLines").asValueVector();
+	std::vector<LineInfo> values = std::vector<LineInfo>();
+	for (auto iter : valueVector) {
+		values.push_back(LineInfo(iter));
+	}
+	lineSupplier = new RepeatedLineSupplier(values);/*{
 		LineInfo(LineInfo::Element::blue, LineInfo::Element::none, LineInfo::Element::none),
 		LineInfo(LineInfo::Element::none, LineInfo::Element::none, LineInfo::Element::red),
 		LineInfo(LineInfo::Element::none, LineInfo::Element::violet, LineInfo::Element::none),
@@ -32,7 +38,7 @@ bool MainMenuScene::init() {
 		LineInfo(LineInfo::Element::none, LineInfo::Element::green, LineInfo::Element::red),
 		LineInfo(LineInfo::Element::red, LineInfo::Element::green, LineInfo::Element::blue),
 		LineInfo(LineInfo::Element::green, LineInfo::Element::violet, LineInfo::Element::green)
-	});
+	});*/
 
 	auto background = LayerColor::create(Color4B::WHITE);
 	this->addChild(background);
@@ -56,7 +62,6 @@ bool MainMenuScene::init() {
 	menuLayer->setVisible(false);
 	this->addChild(menuLayer);
 
-	auto config = Configuration::getInstance();
 	auto label = Label::create(config->getValue("author").asString(), config->getValue("font").asString(), config->getValue("fontSize").asFloat());
 	label->setColor(Color3B::BLACK);
 	auto backableLayer = BackableLayer::create(label);
@@ -91,7 +96,7 @@ void MainMenuScene::genetateNextLine() {
 	this->runAction(nextLineTimer->clone());
 }
 
-RepeatedLineSupplier::RepeatedLineSupplier(const std::initializer_list<LineInfo> & lines) {
+RepeatedLineSupplier::RepeatedLineSupplier(const std::vector<LineInfo> & lines) {
 	for (auto line : lines) {
 		lineQueue.push(line);
 	}

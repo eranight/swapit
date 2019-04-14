@@ -25,7 +25,7 @@ private:
 
 class RepeatedLineSupplier : public LineSupplier {
 public:
-	RepeatedLineSupplier(const std::initializer_list<LineInfo> & lines);
+	RepeatedLineSupplier(const std::vector<LineInfo> & lines);
 	LineInfo getNextLine() override;
 private:
 	std::queue<LineInfo> lineQueue;
