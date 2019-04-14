@@ -28,17 +28,7 @@ bool MainMenuScene::init() {
 	for (auto iter : valueVector) {
 		values.push_back(LineInfo(iter));
 	}
-	lineSupplier = new RepeatedLineSupplier(values);/*{
-		LineInfo(LineInfo::Element::blue, LineInfo::Element::none, LineInfo::Element::none),
-		LineInfo(LineInfo::Element::none, LineInfo::Element::none, LineInfo::Element::red),
-		LineInfo(LineInfo::Element::none, LineInfo::Element::violet, LineInfo::Element::none),
-		LineInfo(LineInfo::Element::red, LineInfo::Element::none, LineInfo::Element::blue),
-		LineInfo(LineInfo::Element::blue, LineInfo::Element::green, LineInfo::Element::none),
-		LineInfo(LineInfo::Element::green, LineInfo::Element::violet, LineInfo::Element::green),
-		LineInfo(LineInfo::Element::none, LineInfo::Element::green, LineInfo::Element::red),
-		LineInfo(LineInfo::Element::red, LineInfo::Element::green, LineInfo::Element::blue),
-		LineInfo(LineInfo::Element::green, LineInfo::Element::violet, LineInfo::Element::green)
-	});*/
+	lineSupplier = new RepeatedLineSupplier(values);
 
 	auto background = LayerColor::create(Color4B::WHITE);
 	this->addChild(background);
