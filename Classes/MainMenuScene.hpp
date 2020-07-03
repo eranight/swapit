@@ -14,11 +14,8 @@ public:
 	virtual bool init() override;
 	virtual void onEnter() override;
 public:
-	void switchLayer(const LayerType &);
 	void genetateNextLine();
 private:
-	LayerType layerType;
-	cocos2d::Map<LayerType, cocos2d::Layer *> layers;
 	LineSupplier * lineSupplier;
 	cocos2d::Sequence * nextLineTimer;
 };

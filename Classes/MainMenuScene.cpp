@@ -1,7 +1,6 @@
 #include "MainMenuScene.hpp"
 #include "LinesLayer.h"
-#include "MainMenuLayer.hpp"
-#include "BackableLayer.hpp"
+#include "SceneFactory.hpp"
 
 USING_NS_CC;
 
@@ -21,7 +20,6 @@ bool MainMenuScene::init() {
 
 	SPR_MANAGER->retain();
 
-	layerType = LayerType::MENU;
 	Configuration * config = Configuration::getInstance();
 	auto valueVector = config->getValue("mainMenuLines").asValueVector();
 	std::vector<LineInfo> values = std::vector<LineInfo>();
@@ -35,6 +33,7 @@ bool MainMenuScene::init() {
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	Vec2 center = (origin + visibleSize) * 0.5f;
 	Vec2 startPosition = Vec2(origin.x, (origin + visibleSize).y + SPR_MANAGER->getSpriteSize());
 	Vec2 finishPosition = Vec2(origin.x, origin.y - SPR_MANAGER->getSpriteSize());
 	
@@ -47,24 +46,74 @@ bool MainMenuScene::init() {
 		CallFunc::create(CC_CALLBACK_0(MainMenuScene::genetateNextLine, this)));
 	nextLineTimer->retain();
 
-	auto menuLayer = MainMenuLayer::create();
-	layers.insert(LayerType::MENU, menuLayer);
-	menuLayer->setVisible(false);
-	this->addChild(menuLayer);
+	auto mainMenuLayer = LayerColor::create(Color4B(Color3B::WHITE, 50));
+	auto authorsLayer = LayerColor::create(Color4B(Color3B::WHITE, 50));
+	auto recordLayer = LayerColor::create(Color4B(Color3B::WHITE, 50));
 
+	// main menu layer
+	auto playItem = MenuItemImage::create("playNormal.png", "playSelected.png", [this](Ref * ref) -> void {
+		Director::getInstance()->replaceScene(SceneFactory::createTutorialScene());
+	});
+	playItem->setPosition(Vec2(center.x, center.y + SPR_MANAGER->getSpriteSize() * 1.5f));
+
+	auto recordItem = MenuItemImage::create("recordNormal.png", "recordSelected.png", [mainMenuLayer, recordLayer](Ref * ref) -> void {
+		mainMenuLayer->setVisible(false);
+		recordLayer->setVisible(true);
+	});
+	recordItem->setPosition(Vec2(center.x - SPR_MANAGER->getSpriteSize(), center.y));
+
+	auto authorItem = MenuItemImage::create("authorsNormal.png", "authorsSelected.png", [mainMenuLayer, authorsLayer](Ref * ref) -> void {
+		mainMenuLayer->setVisible(false);
+		authorsLayer->setVisible(true);
+	});
+	authorItem->setPosition(Vec2(center.x + SPR_MANAGER->getSpriteSize(), center.y));
+
+	auto closeItem = MenuItemImage::create("closeNormal.png", "closeSelected.png", [this](Ref * ref) -> void {
+		Director::getInstance()->end();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+		exit(0);
+#endif
+	});
+	closeItem->setPosition(Vec2(center.x, center.y - SPR_MANAGER->getSpriteSize()));
+	auto menu = Menu::create(playItem, recordItem, authorItem, closeItem, nullptr);
+	menu->setPosition(origin);
+	mainMenuLayer->addChild(menu);
+	mainMenuLayer->setVisible(true);
+	this->addChild(mainMenuLayer);
+
+	// record layer
 	auto label = Label::create(config->getValue("author").asString(), config->getValue("font").asString(), config->getValue("fontSize").asFloat());
 	label->setColor(Color3B::BLACK);
-	auto backableLayer = BackableLayer::create(label);
-	layers.insert(LayerType::AUTHORS, backableLayer);
-	backableLayer->setVisible(false);
-	this->addChild(backableLayer);
+	label->setPosition(center);
+	authorsLayer->addChild(label);
+	auto backItem = MenuItemImage::create("backNormal.png", "backSelected.png", [mainMenuLayer, authorsLayer](Ref * ref) -> void {
+		mainMenuLayer->setVisible(true);
+		authorsLayer->setVisible(false);
+	});
+	backItem->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+	backItem->setPosition(origin);
+	menu = Menu::create(backItem, nullptr);
+	menu->setPosition(origin);
+	authorsLayer->addChild(menu);
+	authorsLayer->setVisible(false);
+	this->addChild(authorsLayer);
 
+	// authors layer
 	label = Label::create("best score", config->getValue("font").asString(), config->getValue("fontSize").asFloat());
 	label->setColor(Color3B::BLACK);
-	backableLayer = BackableLayer::create(label);
-	layers.insert(LayerType::RECORD, backableLayer);
-	backableLayer->setVisible(false);
-	this->addChild(backableLayer);
+	label->setPosition(center);
+	recordLayer->addChild(label);
+	backItem = MenuItemImage::create("backNormal.png", "backSelected.png", [mainMenuLayer, recordLayer](Ref * ref) -> void {
+		mainMenuLayer->setVisible(true);
+		recordLayer->setVisible(false);
+	});
+	backItem->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+	backItem->setPosition(origin);
+	menu = Menu::create(backItem, nullptr);
+	menu->setPosition(origin);
+	recordLayer->addChild(menu);
+	recordLayer->setVisible(false);
+	this->addChild(recordLayer);
 
 	return true;
 }
@@ -72,13 +121,6 @@ bool MainMenuScene::init() {
 void MainMenuScene::onEnter() {
 	Scene::onEnter();
 	genetateNextLine();
-	switchLayer(LayerType::MENU);
-}
-
-void MainMenuScene::switchLayer(const LayerType & layerType) {
-	layers.at(this->layerType)->setVisible(false);
-	this->layerType = layerType;
-	layers.at(this->layerType)->setVisible(true);
 }
 
 void MainMenuScene::genetateNextLine() {
