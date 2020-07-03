@@ -2,7 +2,7 @@
 #define __LINES_LAYER_H__
 
 #include "cocos2d.h"
-#include "Blocking.h"
+#include "Blockable.h"
 #include "LineSupplier.hpp"
 #include "LineSprites.h"
 
@@ -19,7 +19,7 @@ private:
 	const float velocity;
 };
 
-class LinesLayer : public cocos2d::Layer, public Blocking
+class LinesLayer : public cocos2d::Layer, public Blockable
 {
 public:
 	static const std::string GENERATE_NEW_LINE_EVENT;
@@ -64,6 +64,8 @@ private:
 	float timer;
 
 	LineSupplier * lineSupplier;
+
+	bool isBlocked;
 };
 
 #endif // __LINES_LAYER_H__

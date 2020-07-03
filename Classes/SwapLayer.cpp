@@ -31,7 +31,6 @@ bool SwapLayer::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	blocked = false;
 	finishedCounter = 0;
 	stateFunctor[BallState::StandInCenter] = CC_CALLBACK_0(SwapLayer::setStandInCenterState, this);
 	stateFunctor[BallState::StandOnOppositeSides] = CC_CALLBACK_0(SwapLayer::setStandOnOppositeSidesState, this);
@@ -159,12 +158,10 @@ void SwapLayer::stop() {
 }
 
 void SwapLayer::block() {
-	Blocking::block();
 	touchListener->setEnabled(false);
 }
 
 void SwapLayer::unblock() {
-	Blocking::unblock();
 	touchListener->setEnabled(true);
 	if (state == BallState::StandInCenter) {
 		touchEnded(nullptr, nullptr);

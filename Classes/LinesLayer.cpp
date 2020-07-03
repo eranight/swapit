@@ -47,6 +47,7 @@ bool LinesLayer::init(const LinesLayerConfiguration & configuration, LineSupplie
 void LinesLayer::onEnter() {
 	CCLOG("creates listeners");
 	Layer::onEnter();
+	isBlocked = false;
 	getEventDispatcher()->addCustomEventListener(GENERATE_NEW_LINE_EVENT, CC_CALLBACK_0(LinesLayer::generateNewLine, this));
 	getEventDispatcher()->addCustomEventListener(SET_VELOCITY_EVENT, CC_CALLBACK_1(LinesLayer::setVelocity, this));
 }
@@ -59,18 +60,18 @@ void LinesLayer::onExit() {
 }
 
 void LinesLayer::update(float dt) {
-	if (isBlocking()) return;
+	if (isBlocked) return;
 }
 
 void LinesLayer::block() {
-	Blocking::block();
+	isBlocked = true;
 	for (auto line : lines) {
 		line->stopAllActions();
 	}
 }
 
 void LinesLayer::unblock() {
-	Blocking::unblock();
+	isBlocked = false;
 	recreateLineActions();
 }
 

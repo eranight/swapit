@@ -2,9 +2,9 @@
 #define __SWAP_LAYER_H__
 
 #include "cocos2d.h"
-#include "Blocking.h"
+#include "Blockable.h"
 
-class SwapLayer : public cocos2d::Layer, Blocking
+class SwapLayer : public cocos2d::Layer, Blockable
 {
 public:
 	enum class BallState
