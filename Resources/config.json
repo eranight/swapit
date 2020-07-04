@@ -2,9 +2,10 @@
 	"column": 7,
 	"row": 11,
 	"coefficient": 256.0,
-	"fontScaleFactor": 28.16,
+	"fontScaleFactor": 23.466667,
 	"font": "fonts/Marker Felt.ttf",
 	"author": "Created by Alex Melnikov",
+  "collisionCoefficient": 0.8,
 	"mainMenuLines": [
     { "l": "blue", "m": "none", "r": "none" },
     { "l": "none", "m": "none", "r": "red" },

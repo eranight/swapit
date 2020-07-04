@@ -1,6 +1,7 @@
 #include "SceneFactory.hpp"
 #include "MainMenuScene.hpp"
 #include "TutorialScene.hpp"
+#include "GameScene.hpp"
 
 USING_NS_CC;
 
@@ -15,6 +16,6 @@ Scene * SceneFactory::createTutorialScene() {
 }
 
 Scene * SceneFactory::createGameScene() {
-	auto scene = Scene::create();
+	auto scene = GameScene::create();
 	return scene;
 }

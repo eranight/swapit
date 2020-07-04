@@ -29,6 +29,8 @@ public: //interface
 	LineInfo::Element getKeyByColor(const cocos2d::Color3B & color);
 
 private:
+	float realSpriteSize;
+	float collisionSpriteSize;
 	float leftColumn, centerColumn, rightColumn;
 	cocos2d::Texture2D * ballTexture;
 	cocos2d::Texture2D * squareTexture;

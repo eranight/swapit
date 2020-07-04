@@ -1,43 +1,44 @@
-#include "GameScene.h"
-#include "SimpleAudioEngine.h"
+#include "GameScene.hpp"
+#include "SceneFactory.hpp"
 #include "SpriteManager.h"
-#include "GameScene.h"
 
 USING_NS_CC;
 
+GameScene::GameScene() {
+
+}
+
 GameScene::~GameScene() {
+	SPR_MANAGER->release();
 }
 
-Scene* GameScene::createScene()
-{
-	auto scene = Scene::create();
-	auto layer = GameScene::create();
-	scene->addChild(layer);
-	return scene;
-}
-
-bool GameScene::init()
-{
-	if (!LayerColor::initWithColor(Color4B::WHITE)) {
+bool GameScene::init() {
+	if (!Scene::init()) {
 		return false;
 	}
 
-	SpriteManager::getInstance()->retain(); //initialization of the SpriteManager instance
+	SPR_MANAGER->retain();
+
+	auto background = LayerColor::create(Color4B::WHITE);
+	this->addChild(background);
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+	swapLayer = SwapLayer::create();
+	swapLayer->setVelocity(visibleSize.width * 0.3f);
+	this->addChild(swapLayer);
+
+	linesLayer = LinesLayer::create({ Vec2::ZERO, Vec2::ZERO, 0.0f }, nullptr);
+	this->addChild(linesLayer);
+
+	auto keyListener = EventListenerKeyboard::create();
+	keyListener->onKeyPressed = [this](EventKeyboard::KeyCode keyCode, Event * event) {
+		if (keyCode == EventKeyboard::KeyCode::KEY_BACK) {
+			Director::getInstance()->replaceScene(SceneFactory::createMenuScene());
+		}
+	};
+	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyListener, this);
+
 	return true;
-}
-
-void GameScene::update(float dt) {
-	
-}
-
-void GameScene::pause() {
-	Layer::pause();
-}
-
-void GameScene::resume() {
-	Layer::resume();
 }

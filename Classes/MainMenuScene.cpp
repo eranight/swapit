@@ -115,6 +115,17 @@ bool MainMenuScene::init() {
 	recordLayer->setVisible(false);
 	this->addChild(recordLayer);
 
+	auto keyListener = EventListenerKeyboard::create();
+	keyListener->onKeyPressed = [this](EventKeyboard::KeyCode keyCode, Event * event) {
+		if (keyCode == EventKeyboard::KeyCode::KEY_BACK) {
+			Director::getInstance()->end();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+			exit(0);
+#endif
+		}
+	};
+	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyListener, this);
+
 	return true;
 }
 

@@ -3,7 +3,6 @@
 
 #include "AppDelegate.h"
 #include "SceneFactory.hpp"
-#include "GameScene.h"
 
 USING_NS_CC;
 
@@ -105,6 +104,7 @@ void AppDelegate::initConfiguration(int width, int height) {
 	config->setValue("fontSize", Value(fontSize));
 	config->setValue("font", Value(configDoc.FindMember("font")->value.GetString()));
 	config->setValue("author", Value(configDoc.FindMember("author")->value.GetString()));
+	config->setValue("collisionCoefficient", Value(configDoc.FindMember("collisionCoefficient")->value.GetDouble()));
 	auto mainMenuLines = ValueVector();
 	auto mainMenuLinesMember = configDoc.FindMember("mainMenuLines");
 	for (auto iter = mainMenuLinesMember->value.Begin(); iter != mainMenuLinesMember->value.End(); ++iter) {

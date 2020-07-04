@@ -1,5 +1,5 @@
 #include "GameOverLayer.h"
-#include "GameScene.h"
+#include "GameScene.hpp"
 #include <algorithm>
 
 USING_NS_CC;
@@ -65,7 +65,7 @@ bool GameOverLayer::init(int goals, float fadeInTime) {
 }
 
 void GameOverLayer::replay(Ref * sender) {
-	Director::getInstance()->replaceScene(GameScene::createScene());
+	//Director::getInstance()->replaceScene(GameScene::createScene());
 }
 
 void GameOverLayer::back(Ref * sender) {

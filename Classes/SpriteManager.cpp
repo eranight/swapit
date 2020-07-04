@@ -33,7 +33,9 @@ bool SpriteManager::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	float halfSize = ballTexture->getContentSize().height * 0.5f;
+	realSpriteSize = ballTexture->getContentSize().height;
+	collisionSpriteSize = realSpriteSize * Configuration::getInstance()->getValue("collisionCoefficient").asFloat();
+	float halfSize = realSpriteSize * 0.5f;
 	leftColumn = (origin + visibleSize).x * 0.2f - halfSize;
 	centerColumn = (origin + visibleSize).x * 0.5f - halfSize;
 	rightColumn = (origin + visibleSize).x * 0.8f - halfSize;
@@ -48,7 +50,7 @@ bool SpriteManager::init()
 
 float SpriteManager::getSpriteSize()
 {
-	return ballTexture->getContentSize().height * 0.8f;
+	return collisionSpriteSize;
 }
 
 float SpriteManager::getColumn(SpriteManager::SpriteColumn spriteColumn)
