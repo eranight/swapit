@@ -45,7 +45,6 @@ bool LinesLayer::init(const LinesLayerConfiguration & configuration, LineSupplie
 }
 
 void LinesLayer::onEnter() {
-	CCLOG("creates listeners");
 	Layer::onEnter();
 	isBlocked = false;
 	getEventDispatcher()->addCustomEventListener(GENERATE_NEW_LINE_EVENT, CC_CALLBACK_0(LinesLayer::generateNewLine, this));
@@ -53,7 +52,6 @@ void LinesLayer::onEnter() {
 }
 
 void LinesLayer::onExit() {
-	CCLOG("removes listeners");
 	Layer::onExit();
 	getEventDispatcher()->removeCustomEventListeners(GENERATE_NEW_LINE_EVENT);
 	getEventDispatcher()->removeCustomEventListeners(SET_VELOCITY_EVENT);

@@ -11,8 +11,15 @@ public:
 	GameScene();
 	~GameScene();
 public:
-	virtual bool init() override;
+	bool init() override;
+	void onEnter() override;
+private:
+	void gameOver();
 private:
 	SwapLayer * swapLayer;
 	LinesLayer * linesLayer;
+
+	cocos2d::Layer * gameOverLayer;
+	cocos2d::Label * scoreLabel;
+	cocos2d::Menu * menu;
 };

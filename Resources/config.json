@@ -6,6 +6,7 @@
 	"font": "fonts/Marker Felt.ttf",
 	"author": "Created by Alex Melnikov",
   "collisionCoefficient": 0.8,
+  "fadeInTime": 2.0,
 	"mainMenuLines": [
     { "l": "blue", "m": "none", "r": "none" },
     { "l": "none", "m": "none", "r": "red" },

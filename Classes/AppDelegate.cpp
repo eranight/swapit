@@ -105,6 +105,7 @@ void AppDelegate::initConfiguration(int width, int height) {
 	config->setValue("font", Value(configDoc.FindMember("font")->value.GetString()));
 	config->setValue("author", Value(configDoc.FindMember("author")->value.GetString()));
 	config->setValue("collisionCoefficient", Value(configDoc.FindMember("collisionCoefficient")->value.GetDouble()));
+	config->setValue("fadeInTime", Value(configDoc.FindMember("fadeInTime")->value.GetDouble()));
 	auto mainMenuLines = ValueVector();
 	auto mainMenuLinesMember = configDoc.FindMember("mainMenuLines");
 	for (auto iter = mainMenuLinesMember->value.Begin(); iter != mainMenuLinesMember->value.End(); ++iter) {
