@@ -99,7 +99,9 @@ bool MainMenuScene::init() {
 	this->addChild(authorsLayer);
 
 	// authors layer
-	label = Label::create("best score", config->getValue("font").asString(), config->getValue("fontSize").asFloat());
+	int bestScore = UserDefault::getInstance()->getIntegerForKey("score", 0);
+	label = Label::create(String::createWithFormat("best score\n%d", bestScore)->getCString(), config->getValue("font").asString(), config->getValue("fontSize").asFloat(),
+		Size::ZERO, TextHAlignment::CENTER);
 	label->setColor(Color3B::BLACK);
 	label->setPosition(center);
 	recordLayer->addChild(label);
