@@ -29,9 +29,9 @@ public: //constructors
 		right(getElementByString(value.asValueVector()[2].asString())) {}
 
 public: //interface
-	LineInfo::Element getLeft() { return left; }
-	LineInfo::Element getMiddle() { return middle; }
-	LineInfo::Element getRight() { return right; }
+	LineInfo::Element getLeft() const { return left; }
+	LineInfo::Element getMiddle() const { return middle; }
+	LineInfo::Element getRight() const { return right; }
 
 private: //fields
 	LineInfo::Element left;

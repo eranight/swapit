@@ -1,6 +1,7 @@
 #include "GameScene.hpp"
 #include "SceneFactory.hpp"
 #include "SpriteManager.h"
+#include "GameLineSupplier.hpp"
 
 USING_NS_CC;
 
@@ -10,6 +11,10 @@ GameScene::GameScene() {
 
 GameScene::~GameScene() {
 	SPR_MANAGER->release();
+	if (lineSupplier != nullptr) {
+		delete lineSupplier;
+		lineSupplier = nullptr;
+	}
 }
 
 bool GameScene::init() {
@@ -30,7 +35,11 @@ bool GameScene::init() {
 	swapLayer->setVelocity(visibleSize.width * 0.3f);
 	this->addChild(swapLayer);
 
-	linesLayer = LinesLayer::create({ Vec2::ZERO, Vec2::ZERO, 0.0f }, nullptr);
+	lineSupplier = new GameLineSupplier(LineInfo(LineInfo::Element::red, LineInfo::Element::none, LineInfo::Element::blue),
+	{ LevelProbabilities({ { 35, 35, 30 }, { 50, 50 }, 17, true, false, false, false }) });
+	Vec2 startPosition = Vec2(origin.x, (origin + visibleSize).y + SPR_MANAGER->getSpriteSize());
+	Vec2 finishPosition = Vec2(origin.x, origin.y - SPR_MANAGER->getSpriteSize());
+	linesLayer = LinesLayer::create({ startPosition, finishPosition, visibleSize.height * 0.25f }, lineSupplier);
 	this->addChild(linesLayer);
 
 	gameOverLayer = LayerColor::create(Color4B(Color3B::WHITE, 50));
@@ -69,6 +78,12 @@ void GameScene::onEnter() {
 	gameOverLayer->setVisible(false);
 	auto children = gameOverLayer->getChildren();
 	std::for_each(children.begin(), children.end(), [](Node * child) { child->setOpacity(0); });
+	run();
+}
+
+void GameScene::run() {
+	getEventDispatcher()->dispatchCustomEvent(LinesLayer::GENERATE_NEW_LINE_EVENT);
+	this->runAction(Sequence::createWithTwoActions(DelayTime::create(2.0f), CallFunc::create(CC_CALLBACK_0(GameScene::run, this))));
 }
 
 void GameScene::gameOver() {

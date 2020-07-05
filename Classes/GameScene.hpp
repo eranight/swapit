@@ -14,6 +14,7 @@ public:
 	bool init() override;
 	void onEnter() override;
 private:
+	void run();
 	void gameOver();
 private:
 	SwapLayer * swapLayer;
@@ -22,4 +23,6 @@ private:
 	cocos2d::Layer * gameOverLayer;
 	cocos2d::Label * scoreLabel;
 	cocos2d::Menu * menu;
+
+	LineSupplier * lineSupplier;
 };
