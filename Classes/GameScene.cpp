@@ -3,6 +3,8 @@
 #include "SpriteManager.h"
 #include "GameLineSupplier.hpp"
 
+#include <algorithm>
+
 USING_NS_CC;
 
 GameScene::GameScene() {
@@ -35,8 +37,8 @@ bool GameScene::init() {
 	swapLayer->setVelocity(visibleSize.width * 0.3f);
 	this->addChild(swapLayer);
 
-	lineSupplier = new GameLineSupplier(LineInfo(LineInfo::Element::red, LineInfo::Element::none, LineInfo::Element::blue),
-	{ LevelProbabilities({ { 35, 35, 30 }, { 50, 50 }, 17, true, false, false, false }) });
+	auto levels = convert();
+	lineSupplier = new GameLineSupplier(LineInfo(LineInfo::Element::red, LineInfo::Element::none, LineInfo::Element::blue), levels);
 	Vec2 startPosition = Vec2(origin.x, (origin + visibleSize).y + SPR_MANAGER->getSpriteSize());
 	Vec2 finishPosition = Vec2(origin.x, origin.y - SPR_MANAGER->getSpriteSize());
 	linesLayer = LinesLayer::create({ startPosition, finishPosition, visibleSize.height * 0.25f }, lineSupplier);
@@ -83,7 +85,7 @@ void GameScene::onEnter() {
 
 void GameScene::run() {
 	getEventDispatcher()->dispatchCustomEvent(LinesLayer::GENERATE_NEW_LINE_EVENT);
-	this->runAction(Sequence::createWithTwoActions(DelayTime::create(2.0f), CallFunc::create(CC_CALLBACK_0(GameScene::run, this))));
+	this->runAction(Sequence::createWithTwoActions(DelayTime::create(3.0f), CallFunc::create(CC_CALLBACK_0(GameScene::run, this))));
 }
 
 void GameScene::gameOver() {
@@ -94,4 +96,24 @@ void GameScene::gameOver() {
 	auto children = gameOverLayer->getChildren();
 	std::for_each(children.begin(), children.end(), [fadeInAction](Node * child) { child->runAction(fadeInAction->clone()); });
 	this->runAction(Sequence::createWithTwoActions(fadeInAction, CallFunc::create([this]() { menu->setEnabled(true); })));
+}
+
+std::vector<LevelProbabilities> GameScene::convert() {
+	std::vector<LevelProbabilities> levelVector;
+	auto levels = Configuration::getInstance()->getValue("levels").asValueVector();
+	for (auto & iter : levels) {
+		auto map = iter.asValueMap();
+
+		std::vector<const int> action;
+		auto vec = map["action"].asValueVector();
+		std::for_each(vec.begin(), vec.end(), [&action](Value & val) { action.push_back(val.asInt()); });
+
+		std::vector<const int> amount;
+		vec = map["amount"].asValueVector();
+		std::for_each(vec.begin(), vec.end(), [&amount](Value & val) { amount.push_back(val.asInt()); });
+
+		levelVector.push_back(LevelProbabilities({ action, amount, map["wall"].asInt(), map["forceSwap"].asBool(), map["forceMiddle"].asBool(), map["forceDouble"].asBool(),
+			map["forceWall"].asBool() }));
+	}
+	return levelVector;
 }

@@ -4,6 +4,7 @@
 #include "SwapLayer.h"
 #include "LinesLayer.h"
 #include "LineSupplier.hpp"
+#include "LevelProbabilities.hpp"
 
 class GameScene : public cocos2d::Scene {
 public:
@@ -16,6 +17,7 @@ public:
 private:
 	void run();
 	void gameOver();
+	std::vector<LevelProbabilities> convert();
 private:
 	SwapLayer * swapLayer;
 	LinesLayer * linesLayer;

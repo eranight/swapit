@@ -115,5 +115,33 @@ void AppDelegate::initConfiguration(int width, int height) {
 		mainMenuLines.push_back(Value(ValueVector({ leftValue, middleValue, rightValue })));
 	}
 	config->setValue("mainMenuLines", Value(mainMenuLines));
+	auto levels = ValueVector();
+	auto levelsMember = configDoc.FindMember("levels");
+	for (auto iter = levelsMember->value.Begin(); iter != levelsMember->value.End(); ++iter) {
+		auto map = ValueMap();
+
+		auto & value = iter->FindMember("action")->value;
+		auto action = ValueVector();
+		for (auto item = value.Begin(); item != value.End(); ++item) {
+			action.push_back(Value(item->GetInt()));
+		}
+		map["action"] = action;
+
+		value = iter->FindMember("amount")->value;
+		auto amount = ValueVector();
+		for (auto item = value.Begin(); item != value.End(); ++item) {
+			amount.push_back(Value(item->GetInt()));
+		}
+		map["amount"] = amount;
+
+		map["wall"] = Value(iter->FindMember("wall")->value.GetInt());
+		map["forceSwap"] = Value(iter->FindMember("forceSwap")->value.GetBool());
+		map["forceMiddle"] = Value(iter->FindMember("forceMiddle")->value.GetBool());
+		map["forceDouble"] = Value(iter->FindMember("forceDouble")->value.GetBool());
+		map["forceWall"] = Value(iter->FindMember("forceWall")->value.GetBool());
+
+		levels.push_back(Value(map));
+	}
+	config->setValue("levels", Value(levels));
 	fclose(configFilePointer);
 }

@@ -18,5 +18,17 @@
     { "l": "none", "m": "green", "r": "red" },
     { "l": "red", "m": "green", "r": "blue" },
     { "l": "blue", "m": "green", "r": "red" }
-	]
+	],
+  "levels": [
+    { "action": [20, 80, 0], "amount": [100,  0], "wall": 0, "forceSwap": true, "forceMiddle": false, "forceDouble": false, "forceWall": false },
+    { "action": [15, 75, 10], "amount": [100,  0], "wall": 0, "forceSwap": false, "forceMiddle": true, "forceDouble": false, "forceWall": false },
+    { "action": [15, 70, 15], "amount": [100,  0], "wall": 0, "forceSwap": false, "forceMiddle": false, "forceDouble": false, "forceWall": false },
+    { "action": [15, 60, 25], "amount": [80, 20], "wall": 0, "forceSwap": false, "forceMiddle": false, "forceDouble": true, "forceWall": false },
+    { "action": [15, 60, 25], "amount": [70, 30], "wall": 0, "forceSwap": false, "forceMiddle": false, "forceDouble": false, "forceWall": false },
+    { "action": [15, 60, 25], "amount": [70, 30], "wall": 10, "forceSwap": false, "forceMiddle": false, "forceDouble": false, "forceWall": true },
+    { "action": [15, 60, 25], "amount": [70, 30], "wall": 20, "forceSwap": false, "forceMiddle": false, "forceDouble": false, "forceWall": false },
+    { "action": [15, 60, 25], "amount": [70, 30], "wall": 30, "forceSwap": false, "forceMiddle": false, "forceDouble": false, "forceWall": false },
+    { "action": [15, 60, 25], "amount": [70, 30], "wall": 40, "forceSwap": false, "forceMiddle": false, "forceDouble": false, "forceWall": false },
+    { "action": [15, 60, 25], "amount": [70, 30], "wall": 50, "forceSwap": false, "forceMiddle": false, "forceDouble": false, "forceWall": false }
+  ]
 }
