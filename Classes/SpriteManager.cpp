@@ -48,11 +48,6 @@ bool SpriteManager::init()
 	return true;
 }
 
-float SpriteManager::getSpriteSize()
-{
-	return collisionSpriteSize;
-}
-
 float SpriteManager::getColumn(SpriteManager::SpriteColumn spriteColumn)
 {
 	return spriteColumn == SpriteManager::SpriteColumn::left ? leftColumn : 

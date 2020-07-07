@@ -22,7 +22,8 @@ public:
 	static SpriteManager * getInstance();
 
 public: //interface
-	float getSpriteSize();
+	float getSpriteSize() { return realSpriteSize; }
+	float getCollisionSpriteSize() { return collisionSpriteSize; }
 	float getColumn(SpriteManager::SpriteColumn);
 	cocos2d::Sprite * getSprite(LineInfo::Element);
 	cocos2d::Color3B getColor(LineInfo::Element el) { return colorsMap[el]; }
