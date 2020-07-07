@@ -5,6 +5,7 @@
 #include "LinesLayer.h"
 #include "LineSupplier.hpp"
 #include "LevelProbabilities.hpp"
+#include "CollisionDetector.hpp"
 
 class GameScene : public cocos2d::Scene {
 public:
@@ -18,6 +19,7 @@ private:
 	void run();
 	void gameOver();
 	std::vector<LevelProbabilities> convert();
+	bool collide(const LineInfo::Element & first, const LineInfo::Element & second);
 private:
 	SwapLayer * swapLayer;
 	LinesLayer * linesLayer;
@@ -27,4 +29,5 @@ private:
 	cocos2d::Menu * menu;
 
 	LineSupplier * lineSupplier;
+	CollisionDetector * detector;
 };

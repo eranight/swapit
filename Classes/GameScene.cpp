@@ -71,6 +71,9 @@ bool GameScene::init() {
 	menu->setPosition(Vec2::ZERO);
 	gameOverLayer->addChild(menu, 1);
 
+	detector = CollisionDetector::create(swapLayer, linesLayer, CC_CALLBACK_2(GameScene::collide, this));
+	this->addChild(detector);
+
 	return true;
 }
 
@@ -116,4 +119,8 @@ std::vector<LevelProbabilities> GameScene::convert() {
 			map["forceWall"].asBool() }));
 	}
 	return levelVector;
+}
+
+bool GameScene::collide(const LineInfo::Element & first, const LineInfo::Element & second) {
+	return first == second;
 }
