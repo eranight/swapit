@@ -76,7 +76,7 @@ bool TutorialScene::init() {
 		CallFunc::create(CC_CALLBACK_0(TutorialScene::showPrompt, this)));
 	showNextPromptAction->retain();
 
-	time = (promptPosition - swapLayer->getLinePosition().y - SPR_MANAGER->getSpriteSize()) / velocity;
+	time = (promptPosition - swapLayer->getLinePosition().y - SPR_MANAGER->getCollisionSpriteSize()) / velocity;
 	collisionHappenedAction = Sequence::createWithTwoActions(
 		DelayTime::create(time),
 		CallFunc::create(CC_CALLBACK_0(TutorialScene::emitCollision, this)));
@@ -90,6 +90,14 @@ bool TutorialScene::init() {
 void TutorialScene::onEnter() {
 	Scene::onEnter();
 	genetateNextLine();
+}
+
+void TutorialScene::onExit() {
+	Scene::onExit();
+	getEventDispatcher()->removeEventListenersForTarget(this, true);
+	if (!prompts.empty()) {
+		getEventDispatcher()->removeCustomEventListeners(prompts.front().awaitedEvent);
+	}
 }
 
 void TutorialScene::menuSkipCallback(Ref * sender) {
