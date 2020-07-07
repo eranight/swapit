@@ -41,7 +41,7 @@ public:
 
 public:
 	LineSprites * getFrontLine() { return lines.at(0); }
-	LineSprites * getFirstLineAbove(float y);
+	LineSprites * getLineBetween(float lowY, float highY);
 
 public:
 	const cocos2d::Vec2 & getStartPosition() { return startPosition; }

@@ -1,6 +1,5 @@
 #include "LinesLayer.h"
 #include "SimpleAudioEngine.h"
-#include "SpriteManager.h"
 #include "LineSprites.h"
 
 USING_NS_CC;
@@ -93,9 +92,10 @@ void LinesLayer::setVelocity(cocos2d::EventCustom * event) {
 	recreateLineActions();
 }
 
-LineSprites * LinesLayer::getFirstLineAbove(float y) {
+LineSprites * LinesLayer::getLineBetween(float lowY, float highY) {
 	for (auto & line : lines) {
-		if (line->getPosition().y > y) {
+		float y = this->convertToWorldSpace(line->getPosition()).y;
+		if (lowY <= y && y <= highY) {
 			return line;
 		}
 	}
