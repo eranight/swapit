@@ -35,7 +35,7 @@ public:
 	bool init() override;
 	CREATE_FUNC(SwapLayer);
 
-	cocos2d::Vec2 getLinePosition() { return centerPosition; }
+	cocos2d::Vec2 getLinePosition();
 	BallOrder getBallOrder() { return ballOrder; }
 
 	const cocos2d::Sprite * getRedBallSprite() { return redBall; }
@@ -68,6 +68,8 @@ private:
 	int finishedCounter;
 	std::map<BallState, std::function<void()>> stateFunctor;
 	BallOrder ballOrder;
+
+	cocos2d::Vec2 swapLinePosition;
 	cocos2d::Vec2 centerPosition;
 	cocos2d::Vec2 leftPosition;
 	cocos2d::Vec2 rightPosition;

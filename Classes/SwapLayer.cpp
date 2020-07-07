@@ -37,6 +37,7 @@ bool SwapLayer::init()
 	
 	float ballSize = SPR_MANAGER->getSpriteSize();
 
+	swapLinePosition = Vec2(0, ballSize);
 	centerPosition = Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::center), ballSize);
 	leftPosition = Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::left), ballSize);
 	rightPosition = Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::right), ballSize);
@@ -110,6 +111,10 @@ void SwapLayer::touchEnded(Touch * touch, Event * event)
 		blueBall->runAction(Sequence::createWithTwoActions(MoveTo::create(timer, blueBallTargetPosition), CallFunc::create(CC_CALLBACK_0(SwapLayer::finishAction, this))));
 		getEventDispatcher()->dispatchCustomEvent(MOVE_TO_SIDES);
 	}
+}
+
+Vec2 SwapLayer::getLinePosition() {
+	return swapLinePosition;
 }
 
 void SwapLayer::finishAction() {
