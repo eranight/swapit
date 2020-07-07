@@ -17,6 +17,8 @@ public:
 	const cocos2d::Sprite * getCenterSprite() { return centerSprite; }
 	const cocos2d::Sprite * getRightSprite() { return rightSprite; }
 
+	const LineInfo getLineInfo() { return lineInfo; }
+
 	void destroyLeftSprite();
 	void destroyCenterSprite();
 	void destroyRightSprite();
@@ -25,6 +27,8 @@ private:
 	cocos2d::Sprite * leftSprite;
 	cocos2d::Sprite * centerSprite;
 	cocos2d::Sprite * rightSprite;
+
+	LineInfo lineInfo;
 
 	cocos2d::Sprite * initSpriteLike(LineInfo::Element, const cocos2d::Vec2 &);
 };

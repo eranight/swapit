@@ -18,6 +18,8 @@ bool LineSprites::init(LineInfo & line) {
 		return false;
 	}
 
+	this->lineInfo = line;
+
 	this->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
 
 	leftSprite = initSpriteLike(line.getLeft(), Vec2(SPR_MANAGER->getColumn(SpriteManager::SpriteColumn::left), 0));
@@ -41,6 +43,7 @@ void LineSprites::destroyLeftSprite() {
 	if (leftSprite != nullptr) {
 		this->removeChild(leftSprite);
 		leftSprite = nullptr;
+		lineInfo = LineInfo(LineInfo::Element::none, lineInfo.getMiddle(), lineInfo.getRight());
 	}
 }
 
@@ -48,6 +51,7 @@ void LineSprites::destroyCenterSprite() {
 	if (centerSprite != nullptr) {
 		this->removeChild(centerSprite);
 		centerSprite = nullptr;
+		lineInfo = LineInfo(lineInfo.getLeft(), LineInfo::Element::none, lineInfo.getRight());
 	}
 }
 
@@ -55,5 +59,6 @@ void LineSprites::destroyRightSprite() {
 	if (rightSprite != nullptr) {
 		this->removeChild(rightSprite);
 		rightSprite = nullptr;
+		lineInfo = LineInfo(lineInfo.getLeft(), lineInfo.getMiddle(), LineInfo::Element::none);
 	}
 }
