@@ -30,4 +30,7 @@ private:
 
 	LineSupplier * lineSupplier;
 	CollisionDetector * detector;
+
+	int score;
+	cocos2d::Vec2 center;
 };

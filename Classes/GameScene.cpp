@@ -31,7 +31,7 @@ bool GameScene::init() {
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	Vec2 center = (origin + visibleSize) * 0.5f;
+	center = (origin + visibleSize) * 0.5f;
 
 	swapLayer = SwapLayer::create();
 	swapLayer->setVelocity(visibleSize.width * 0.3f);
@@ -51,10 +51,12 @@ bool GameScene::init() {
 	scoreCover->setPosition(center);
 	gameOverLayer->addChild(scoreCover);
 	
-	scoreLabel = Label::create("kek", Configuration::getInstance()->getValue("font").asString(), Configuration::getInstance()->getValue("fontSize").asFloat());
+	float fontSize = Configuration::getInstance()->getValue("fontSize").asFloat();
+	scoreLabel = Label::create("0", Configuration::getInstance()->getValue("font").asString(), fontSize);
 	scoreLabel->setColor(Color3B::BLACK);
-	scoreLabel->setPosition(center);
-	gameOverLayer->addChild(scoreLabel);
+	scoreLabel->setPosition(Vec2(center.x, (origin.y + visibleSize.height) - fontSize * 0.5f));
+	this->addChild(scoreLabel);
+	//gameOverLayer->addChild(scoreLabel);
 	auto backItem = MenuItemImage::create("backNormal.png", "backSelected.png", [](Ref * ref) {
 		Director::getInstance()->replaceScene(SceneFactory::createMenuScene());
 	});
@@ -73,6 +75,8 @@ bool GameScene::init() {
 
 	detector = CollisionDetector::create(swapLayer, linesLayer, CC_CALLBACK_2(GameScene::collide, this));
 	this->addChild(detector);
+
+	score = 0;
 
 	return true;
 }
@@ -94,7 +98,21 @@ void GameScene::run() {
 void GameScene::gameOver() {
 	swapLayer->block();
 	linesLayer->block();
+	detector->unscheduleUpdate();
 	gameOverLayer->setVisible(true);
+	this->stopAllActions();
+	scoreLabel->setOpacity(0);
+	scoreLabel->setPosition(center);
+	scoreLabel->setParent(nullptr);
+	gameOverLayer->addChild(scoreLabel);
+	int bestScore = UserDefault::getInstance()->getIntegerForKey("score", 0);
+	if (bestScore < score) {
+		UserDefault::getInstance()->setIntegerForKey("score", score);
+		Sprite * cups = Sprite::create("cups.png");
+		cups->setPosition(center);
+		cups->setOpacity(0);
+		gameOverLayer->addChild(cups);
+	}
 	auto fadeInAction = FadeIn::create(Configuration::getInstance()->getValue("fadeInTime").asFloat());
 	auto children = gameOverLayer->getChildren();
 	std::for_each(children.begin(), children.end(), [fadeInAction](Node * child) { child->runAction(fadeInAction->clone()); });
@@ -122,5 +140,13 @@ std::vector<LevelProbabilities> GameScene::convert() {
 }
 
 bool GameScene::collide(const LineInfo::Element & first, const LineInfo::Element & second) {
-	return first == second;
+	if (first == second) {
+		++score;
+		scoreLabel->setString(String::createWithFormat("%d", score)->getCString());
+		return true;
+	}
+	else if (first != LineInfo::Element::violet && second != LineInfo::Element::violet) {
+		gameOver();
+	}
+	return false;
 }
