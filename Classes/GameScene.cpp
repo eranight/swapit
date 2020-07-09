@@ -97,14 +97,11 @@ void GameScene::run() {
 
 void GameScene::gameOver() {
 	swapLayer->block();
+	swapLayer->pause();
 	linesLayer->block();
 	detector->unscheduleUpdate();
 	gameOverLayer->setVisible(true);
 	this->stopAllActions();
-	scoreLabel->setOpacity(0);
-	scoreLabel->setPosition(center);
-	scoreLabel->setParent(nullptr);
-	gameOverLayer->addChild(scoreLabel);
 	int bestScore = UserDefault::getInstance()->getIntegerForKey("score", 0);
 	if (bestScore < score) {
 		UserDefault::getInstance()->setIntegerForKey("score", score);
@@ -116,6 +113,9 @@ void GameScene::gameOver() {
 	auto fadeInAction = FadeIn::create(Configuration::getInstance()->getValue("fadeInTime").asFloat());
 	auto children = gameOverLayer->getChildren();
 	std::for_each(children.begin(), children.end(), [fadeInAction](Node * child) { child->runAction(fadeInAction->clone()); });
+	scoreLabel->setOpacity(0);
+	scoreLabel->setPosition(center);
+	scoreLabel->runAction(fadeInAction->clone());
 	this->runAction(Sequence::createWithTwoActions(fadeInAction, CallFunc::create([this]() { menu->setEnabled(true); })));
 }
 
@@ -139,13 +139,14 @@ std::vector<LevelProbabilities> GameScene::convert() {
 	return levelVector;
 }
 
+// first is always from lines layer, second is from swap
 bool GameScene::collide(const LineInfo::Element & first, const LineInfo::Element & second) {
 	if (first == second) {
 		++score;
 		scoreLabel->setString(String::createWithFormat("%d", score)->getCString());
 		return true;
 	}
-	else if (first != LineInfo::Element::violet && second != LineInfo::Element::violet) {
+	else if (first == LineInfo::Element::green || (first != second && first != LineInfo::Element::violet)) {
 		gameOver();
 	}
 	return false;
