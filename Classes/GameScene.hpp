@@ -32,5 +32,6 @@ private:
 	CollisionDetector * detector;
 
 	int score;
+	int nextLevelScore;
 	cocos2d::Vec2 center;
 };

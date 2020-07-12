@@ -56,7 +56,7 @@ bool GameScene::init() {
 	scoreLabel->setColor(Color3B::BLACK);
 	scoreLabel->setPosition(Vec2(center.x, (origin.y + visibleSize.height) - fontSize * 0.5f));
 	this->addChild(scoreLabel);
-	//gameOverLayer->addChild(scoreLabel);
+
 	auto backItem = MenuItemImage::create("backNormal.png", "backSelected.png", [](Ref * ref) {
 		Director::getInstance()->replaceScene(SceneFactory::createMenuScene());
 	});
@@ -77,6 +77,7 @@ bool GameScene::init() {
 	this->addChild(detector);
 
 	score = 0;
+	nextLevelScore = Configuration::getInstance()->getValue("nextLevelScore").asInt();
 
 	return true;
 }
@@ -144,6 +145,10 @@ bool GameScene::collide(const LineInfo::Element & first, const LineInfo::Element
 	if (first == second) {
 		++score;
 		scoreLabel->setString(String::createWithFormat("%d", score)->getCString());
+		if (score % nextLevelScore == 0) {
+			CCLOG("next level");
+			dynamic_cast<GameLineSupplier *>(lineSupplier)->nextLevel();
+		}
 		return true;
 	}
 	else if (first == LineInfo::Element::green || (first != second && first != LineInfo::Element::violet)) {

@@ -143,5 +143,6 @@ void AppDelegate::initConfiguration(int width, int height) {
 		levels.push_back(Value(map));
 	}
 	config->setValue("levels", Value(levels));
+	config->setValue("nextLevelScore", Value(configDoc.FindMember("nextLevelScore")->value.GetInt()));
 	fclose(configFilePointer);
 }
