@@ -98,6 +98,9 @@ void TutorialScene::onExit() {
 	if (!prompts.empty()) {
 		getEventDispatcher()->removeCustomEventListeners(prompts.front().awaitedEvent);
 	}
+	else {
+		getEventDispatcher()->removeCustomEventListeners(SwapLayer::ARRIVED_TO_SIDES);
+	}
 }
 
 void TutorialScene::menuSkipCallback(Ref * sender) {
