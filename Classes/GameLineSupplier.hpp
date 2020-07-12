@@ -9,6 +9,7 @@ public:
 	GameLineSupplier(const LineInfo & initialLine, std::vector<LevelProbabilities> levels = {});
 	LineInfo getNextLine() override;
 	void reset(const LineInfo & initialLine);
+	void nextLevel();
 private:
 	enum class Action { stand = 0, swap, middle };
 

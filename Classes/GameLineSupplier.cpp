@@ -43,6 +43,13 @@ LineInfo GameLineSupplier::getNextLine() {
 	return LineInfo(LineInfo::Element(mask[LEFT]), LineInfo::Element(mask[MID]), LineInfo::Element(mask[RIGHT]));
 }
 
+void GameLineSupplier::nextLevel() {
+	auto nextLevelInterator = currentLevel + 1;
+	if (nextLevelInterator != levels.end()) {
+		currentLevel = nextLevelInterator;
+	}
+}
+
 int GameLineSupplier::castDice(vector<const int> events) {
 	vector<int> values = vector<int>(events.size(), 0);
 	partial_sum(events.begin(), events.end(), values.begin(), plus<int>());
