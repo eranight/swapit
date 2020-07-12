@@ -144,5 +144,8 @@ void AppDelegate::initConfiguration(int width, int height) {
 	}
 	config->setValue("levels", Value(levels));
 	config->setValue("nextLevelScore", Value(configDoc.FindMember("nextLevelScore")->value.GetInt()));
+	config->setValue("nextVelocityScore", Value(configDoc.FindMember("nextVelocityScore")->value.GetInt()));
+	config->setValue("velocityCoefficient", Value(configDoc.FindMember("velocityCoefficient")->value.GetDouble()));
+	config->setValue("maxVelocity", Value(configDoc.FindMember("maxVelocity")->value.GetDouble()));
 	fclose(configFilePointer);
 }

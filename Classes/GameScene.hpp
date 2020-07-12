@@ -34,4 +34,9 @@ private:
 	int score;
 	int nextLevelScore;
 	cocos2d::Vec2 center;
+
+	float velocity;
+	float maxVelocity;
+	int nextVelocityScore;
+	float velocityCoefficient;
 };

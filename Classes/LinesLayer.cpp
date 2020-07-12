@@ -5,7 +5,6 @@
 USING_NS_CC;
 
 const std::string LinesLayer::GENERATE_NEW_LINE_EVENT = "generate new line event";
-const std::string LinesLayer::SET_VELOCITY_EVENT = "set velocity event";
 
 LinesLayer * LinesLayer::create(const LinesLayerConfiguration & configuration, LineSupplier * lineSupplier) {
 	auto pRef = new (std::nothrow) LinesLayer();
@@ -47,13 +46,11 @@ void LinesLayer::onEnter() {
 	Layer::onEnter();
 	isBlocked = false;
 	getEventDispatcher()->addCustomEventListener(GENERATE_NEW_LINE_EVENT, CC_CALLBACK_0(LinesLayer::generateNewLine, this));
-	getEventDispatcher()->addCustomEventListener(SET_VELOCITY_EVENT, CC_CALLBACK_1(LinesLayer::setVelocity, this));
 }
 
 void LinesLayer::onExit() {
 	Layer::onExit();
 	getEventDispatcher()->removeCustomEventListeners(GENERATE_NEW_LINE_EVENT);
-	getEventDispatcher()->removeCustomEventListeners(SET_VELOCITY_EVENT);
 }
 
 void LinesLayer::update(float dt) {
@@ -83,8 +80,8 @@ void LinesLayer::generateNewLine()
 	CCLOG("generate new line");
 }
 
-void LinesLayer::setVelocity(cocos2d::EventCustom * event) {
-	this->velocity = *(reinterpret_cast<float *>(event->getUserData()));
+void LinesLayer::setVelocity(float velocity) {
+	this->velocity = velocity;
 	recalculateTime();
 	for (auto line : lines) {
 		line->stopAllActions();

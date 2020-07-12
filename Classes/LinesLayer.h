@@ -23,7 +23,6 @@ class LinesLayer : public cocos2d::Layer, public Blockable
 {
 public:
 	static const std::string GENERATE_NEW_LINE_EVENT;
-	static const std::string SET_VELOCITY_EVENT;
 public:
 	static LinesLayer * create(const LinesLayerConfiguration & configuration, LineSupplier * lineSupplier);
 	~LinesLayer();
@@ -47,9 +46,11 @@ public:
 	const cocos2d::Vec2 & getStartPosition() { return startPosition; }
 	const cocos2d::Vec2 & getFinishPosition() { return finishPosition; }
 
+public:
+	void setVelocity(float velocity);
+
 private: //events
 	void generateNewLine();
-	void setVelocity(cocos2d::EventCustom *);
 private:
 	void recalculateTime();
 	void removeLine(Node *);

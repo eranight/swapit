@@ -33,15 +33,22 @@ bool GameScene::init() {
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	center = (origin + visibleSize) * 0.5f;
 
+	auto config = Configuration::getInstance();
+
+	velocity = visibleSize.width * 0.3f;
+	maxVelocity = config->getValue("maxVelocity").asFloat();
+	nextVelocityScore = config->getValue("nextVelocityScore").asInt();
+	velocityCoefficient = config->getValue("velocityCoefficient").asFloat();
+
 	swapLayer = SwapLayer::create();
-	swapLayer->setVelocity(visibleSize.width * 0.3f);
+	swapLayer->setVelocity(velocity);
 	this->addChild(swapLayer);
 
 	auto levels = convert();
 	lineSupplier = new GameLineSupplier(LineInfo(LineInfo::Element::red, LineInfo::Element::none, LineInfo::Element::blue), levels);
-	Vec2 startPosition = Vec2(origin.x, (origin + visibleSize).y + SPR_MANAGER->getSpriteSize());
+	Vec2 startPosition = Vec2(origin.x, (origin + visibleSize).y);
 	Vec2 finishPosition = Vec2(origin.x, origin.y - SPR_MANAGER->getSpriteSize());
-	linesLayer = LinesLayer::create({ startPosition, finishPosition, visibleSize.height * 0.25f }, lineSupplier);
+	linesLayer = LinesLayer::create({ startPosition, finishPosition, velocity }, lineSupplier);
 	this->addChild(linesLayer);
 
 	gameOverLayer = LayerColor::create(Color4B(Color3B::WHITE, 50));
@@ -51,8 +58,8 @@ bool GameScene::init() {
 	scoreCover->setPosition(center);
 	gameOverLayer->addChild(scoreCover);
 	
-	float fontSize = Configuration::getInstance()->getValue("fontSize").asFloat();
-	scoreLabel = Label::create("0", Configuration::getInstance()->getValue("font").asString(), fontSize);
+	float fontSize = config->getValue("fontSize").asFloat();
+	scoreLabel = Label::create("0", config->getValue("font").asString(), fontSize);
 	scoreLabel->setColor(Color3B::BLACK);
 	scoreLabel->setPosition(Vec2(center.x, (origin.y + visibleSize.height) - fontSize * 0.5f));
 	this->addChild(scoreLabel);
@@ -77,7 +84,7 @@ bool GameScene::init() {
 	this->addChild(detector);
 
 	score = 0;
-	nextLevelScore = Configuration::getInstance()->getValue("nextLevelScore").asInt();
+	nextLevelScore = config->getValue("nextLevelScore").asInt();
 
 	return true;
 }
@@ -93,7 +100,8 @@ void GameScene::onEnter() {
 
 void GameScene::run() {
 	getEventDispatcher()->dispatchCustomEvent(LinesLayer::GENERATE_NEW_LINE_EVENT);
-	this->runAction(Sequence::createWithTwoActions(DelayTime::create(3.0f), CallFunc::create(CC_CALLBACK_0(GameScene::run, this))));
+	float dt = ((linesLayer->getStartPosition() - swapLayer->getLinePosition()).y - SPR_MANAGER->getSpriteSize()) / velocity;
+	this->runAction(Sequence::createWithTwoActions(DelayTime::create(dt), CallFunc::create(CC_CALLBACK_0(GameScene::run, this))));
 }
 
 void GameScene::gameOver() {
@@ -145,6 +153,16 @@ bool GameScene::collide(const LineInfo::Element & first, const LineInfo::Element
 	if (first == second) {
 		++score;
 		scoreLabel->setString(String::createWithFormat("%d", score)->getCString());
+		if (velocity < maxVelocity &&  score % nextVelocityScore == 0) {
+			velocity *= velocityCoefficient;
+			if (velocity > maxVelocity) {
+				CCLOG("max velocity is reached");
+				velocity = maxVelocity;
+			}
+			CCLOG("velocity=%.3f", velocity);
+			swapLayer->setVelocity(velocity);
+			linesLayer->setVelocity(velocity);
+		}
 		if (score % nextLevelScore == 0) {
 			CCLOG("next level");
 			dynamic_cast<GameLineSupplier *>(lineSupplier)->nextLevel();
