@@ -5,6 +5,7 @@
 #include "Blockable.h"
 #include "LineSupplier.hpp"
 #include "LineSprites.h"
+#include "LineSpritePool.hpp"
 
 class LinesLayerConfiguration {
 public:
@@ -55,7 +56,6 @@ private:
 	void recalculateTime();
 	void removeLine(Node *);
 	void recreateLineActions();
-
 private:
 	cocos2d::Vec2 startPosition;
 	cocos2d::Vec2 finishPosition;
@@ -65,6 +65,7 @@ private:
 	float timer;
 
 	LineSupplier * lineSupplier;
+	LineSpritePool * factory;
 
 	bool isBlocked;
 };

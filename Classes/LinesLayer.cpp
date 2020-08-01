@@ -19,7 +19,9 @@ LinesLayer * LinesLayer::create(const LinesLayerConfiguration & configuration, L
 	}
 }
 
-LinesLayer::~LinesLayer() {}
+LinesLayer::~LinesLayer() {
+	CC_SAFE_DELETE(factory);
+}
 
 bool LinesLayer::init(const LinesLayerConfiguration & configuration, LineSupplier * lineSupplier)
 {
@@ -36,6 +38,8 @@ bool LinesLayer::init(const LinesLayerConfiguration & configuration, LineSupplie
 	this->velocity = configuration.getVelocity();
 	recalculateTime();
 	this->lineSupplier = lineSupplier;
+
+	this->factory = new (std::nothrow) LineSpritePool(6, 6);
 
 	scheduleUpdate();
 
@@ -72,7 +76,7 @@ void LinesLayer::unblock() {
 void LinesLayer::generateNewLine()
 {
 	LineInfo lineInfo = lineSupplier->getNextLine();
-	LineSprites * line = LineSprites::create(lineInfo);
+	LineSprites * line = LineSprites::create(lineInfo, factory);
 	line->setPosition(startPosition);
 	this->addChild(line);
 	lines.pushBack(line);

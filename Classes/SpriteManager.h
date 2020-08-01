@@ -13,6 +13,11 @@ public: //enums
 		center,
 		right
 	};
+	enum class SpriteType
+	{
+		circle = 0,
+		square
+	};
 
 private:
 	SpriteManager();
@@ -26,6 +31,7 @@ public: //interface
 	float getCollisionSpriteSize() { return collisionSpriteSize; }
 	float getColumn(SpriteManager::SpriteColumn);
 	cocos2d::Sprite * getSprite(LineInfo::Element);
+	cocos2d::Sprite * getSprite(SpriteType);
 	cocos2d::Color3B getColor(LineInfo::Element el) { return colorsMap[el]; }
 	LineInfo::Element getKeyByColor(const cocos2d::Color3B & color);
 

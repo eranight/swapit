@@ -4,13 +4,14 @@
 #include "cocos2d.h"
 #include "LineInfo.h"
 #include "SpriteManager.h"
+#include "LineSpritePool.hpp"
 
 class LineSprites : public cocos2d::Node
 {
 public:
 
-	static LineSprites * create(LineInfo &);
-	bool init(LineInfo &);
+	static LineSprites * create(LineInfo &, LineSpritePool *);
+	bool init(LineInfo &, LineSpritePool *);
 
 	//getters
 	const cocos2d::Sprite * getLeftSprite() { return leftSprite; }
@@ -29,6 +30,7 @@ private:
 	cocos2d::Sprite * rightSprite;
 
 	LineInfo lineInfo;
+	LineSpritePool * factory;
 
 	cocos2d::Sprite * initSpriteLike(LineInfo::Element, const cocos2d::Vec2 &);
 };

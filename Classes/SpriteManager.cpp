@@ -64,6 +64,12 @@ Sprite * SpriteManager::getSprite(LineInfo::Element spriteType)
 	return sprite;
 }
 
+Sprite * SpriteManager::getSprite(SpriteManager::SpriteType spriteType) {
+	Sprite * sprite = Sprite::createWithTexture(spriteType == SpriteType::circle ? ballTexture : squareTexture);
+	sprite->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+	return sprite;
+}
+
 LineInfo::Element SpriteManager::getKeyByColor(const cocos2d::Color3B & color) {
 	for (auto pair : colorsMap) {
 		if (pair.second == color) {
